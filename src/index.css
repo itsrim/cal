@@ -1,5 +1,6 @@
 :root {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 body {
@@ -33,6 +34,23 @@ body {
 }
 
 .tabs li.is-active a {
-  border-bottom-color: #485fc7;
-  color: #485fc7;
+  border-bottom-color: #c532d5;
+  color: #a429d9;
+}
+
+/* iOS: empêcher l’auto-zoom en forçant >=16px sur tous les champs */
+input,
+select,
+textarea,
+button {
+  font-size: 16px; /* clé anti-zoom */
+  -webkit-text-size-adjust: 100%;
+  min-height: 44px; /* confortable au doigt (HIG Apple) */
+}
+
+/* optionnel: améliore le tap sur mobile */
+button,
+[role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }

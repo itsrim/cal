@@ -31,6 +31,10 @@ const SearchInput = styled.input`
   border: 1px solid #262631;
   background-color: #1a1a22;
   color: #f5f5f7;
+  font-size: 16px;
+  &::placeholder {
+    font-size: 16px;
+  }
 `;
 
 const Button = styled.button`

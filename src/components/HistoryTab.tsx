@@ -85,6 +85,7 @@ const QtyInput = styled.input`
   color: #f5f5f7;
   text-align: center;
   border: 1px solid #262631;
+  font-size: 16px;
 `;
 
 const LeftRow = styled.div`

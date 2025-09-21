@@ -58,21 +58,13 @@ const Indicator = styled.div<{ $x: number; $w: number }>`
   position: absolute;
   bottom: 0;
   height: 3px;
-  background: #6366f1;
+  background:rgb(188, 75, 228);
   border-radius: 3px;
   transition: transform 0.25s ease, width 0.25s ease;
   transform: translateX(${(p) => p.$x}px);
   width: ${(p) => p.$w}px;
 `;
 
-// const Panels = styled.div`
-//   width: 100%;
-//   padding-top: 12px;
-// `;
-
-// const Panel = styled.section`
-//   width: 100%;
-// `;
 
 type TabId = "search" | "history";
 
@@ -149,27 +141,6 @@ export default function App() {
           <Indicator $x={underline.x} $w={underline.w} />
         </TabBar>
 
-        {/* <Panels>
-          <Panel
-            id="panel-search"
-            role="tabpanel"
-            aria-labelledby="tab-search"
-            hidden={active !== "search"}
-          >
-            {active === "search" && (
-              <SearchTab onSaved={() => setActive("history")} />
-            )}
-          </Panel>
-
-          <Panel
-            id="panel-history"
-            role="tabpanel"
-            aria-labelledby="tab-history"
-            hidden={active !== "history"}
-          >
-            {active === "history" && <HistoryTab />}
-          </Panel>
-        </Panels> */}
         <Panel
           id="panel-search"
           role="tabpanel"
