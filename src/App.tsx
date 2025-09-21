@@ -25,12 +25,6 @@ const Content = styled.main`
   gap: 16px;
 `;
 
-const Panels = styled.div`
-  flex: 1;                  /* ← occupe tout le reste */
-  min-height: 0;            /* ← permet le scroll interne */
-  display: grid;            /* 1 seul panneau visible à la fois */
-`;
-
 const Panel = styled.section`
   width: 100%;
   min-height: 0;            /* important pour que l’intérieur puisse scroller */

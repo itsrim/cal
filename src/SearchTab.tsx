@@ -9,17 +9,6 @@ import type {
 } from "./types";
 import { storage } from "./storage";
 
-const Screen = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;   /* ← prend toute la hauteur du Panel */
-  min-height: 0;
-`;
-
-const Grow = styled.div`
-  flex: 1;        /* ← remplit le vide quand il n’y a pas de cartes */
-`;
-
 const ListScroll = styled.div`
   flex: 1;
   min-height: 0;  /* ← autorise le scroll quand il y a des éléments */
