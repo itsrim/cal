@@ -235,7 +235,7 @@ export const HistoryTab = () => {
                       onClick={() => removeItem(it.id)}
                       aria-label="Supprimer définitivement"
                     >
-                      <Trash>🗑️</Trash>
+                      <Trash>✖</Trash>
                     </IconButton>
                     <ProductName>{it.product_name}</ProductName>
                   </LeftRow>
