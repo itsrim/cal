@@ -1,99 +1,116 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { ScrollView, TextInput } from "react-native";
-import styled from "styled-components/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { SavedItem } from "./types";
+import React from "react";
+import styled from "styled-components";
+import { SavedItem } from "../types";
+import { storage } from "../utils/storage";
 
-const CalendarStrip = styled.View`
+const CalendarStrip = styled.div`
   height: 64px;
+  overflow-x: auto;
+  display: flex;
+  gap: 10px;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
 `;
 
-const DayPill = styled.TouchableOpacity<{ selected?: boolean }>`
+const DayPill = styled.button<{ $selected?: boolean }>`
   height: 48px;
   width: 56px;
-  margin-right: 10px;
+  min-width: 56px;
   border-radius: 12px;
-  background-color: ${(p) => (p.selected ? "#4f46e5" : "#1a1a22")};
-  align-items: center;
-  justify-content: center;
-`;
-
-const DayText = styled.Text`
+  border: 0;
+  background-color: ${(p) => (p.$selected ? "#4f46e5" : "#1a1a22")};
   color: #e6e6eb;
   font-weight: 700;
-  text-align: center;
+  white-space: pre-line;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
 `;
 
-const Card = styled.View`
+const Card = styled.div`
   margin-top: 12px;
   padding: 16px;
   border-radius: 16px;
   background-color: #13131a;
+  display: grid;
   gap: 8px;
 `;
 
-const Row = styled.View`
-  flex-direction: row;
+const Row = styled.div`
+  display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
 `;
 
-const ProductName = styled.Text`
+const ProductName = styled.div`
   color: #c7c7d1;
   font-size: 16px;
   font-weight: 600;
 `;
 
-const InlineHint = styled.Text`
+const InlineHint = styled.span`
   color: #6b7280;
   font-size: 12px;
   margin-left: 6px;
 `;
 
-const Label = styled.Text`
+const Label = styled.span`
   color: #9da3ae;
 `;
 
-const Value = styled.Text`
+const Value = styled.span`
   color: #e6e6eb;
   font-weight: 700;
 `;
 
-const Hint = styled.Text`
+const Hint = styled.p`
   color: #6b7280;
+  margin: 8px 0;
 `;
 
-const IconButton = styled.TouchableOpacity`
+const IconButton = styled.button`
   padding: 8px;
   margin-left: 8px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 `;
 
-const QtyInput = styled.TextInput`
+const QtyInput = styled.input`
   width: 72px;
   height: 36px;
   border-radius: 8px;
   background-color: #1a1a22;
   color: #f5f5f7;
   text-align: center;
-` as unknown as typeof TextInput;
+  border: 1px solid #262631;
+`;
 
-const LeftRow = styled.View`
-  flex-direction: row;
+const LeftRow = styled.div`
+  display: flex;
   align-items: center;
   gap: 8px;
 `;
 
-const Trash = styled.Text`
+const Trash = styled.span`
   color: #ef4444;
   font-weight: 900;
   font-size: 16px;
 `;
 
+const ListScroll = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 260px);
+  padding-right: 4px;
+`;
+
 const storageKey = "cal-history-v1";
 
-export default function HistoryTab() {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [saved, setSaved] = useState<SavedItem[]>([]);
+export const HistoryTab = () => {
+  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
+  const [saved, setSaved] = React.useState<SavedItem[]>([]);
 
   const startOfDay = (d: Date) => {
     const x = new Date(d);
@@ -103,22 +120,26 @@ export default function HistoryTab() {
   const sameDay = (a: number, b: number) =>
     startOfDay(new Date(a)) === startOfDay(new Date(b));
 
-  useEffect(() => {
+  React.useEffect(() => {
+    let alive = true;
     const load = async () => {
       try {
-        const raw = await AsyncStorage.getItem(storageKey);
+        const raw = await storage.getItem(storageKey);
         const list: SavedItem[] = raw ? JSON.parse(raw) : [];
-        setSaved(Array.isArray(list) ? list : []);
+        if (alive) setSaved(Array.isArray(list) ? list : []);
       } catch {
-        setSaved([]);
+        if (alive) setSaved([]);
       }
     };
-    const unsubscribe = setInterval(load, 1000);
+    const id = setInterval(load, 1000);
     load();
-    return () => clearInterval(unsubscribe as unknown as number);
+    return () => {
+      alive = false;
+      clearInterval(id);
+    };
   }, []);
 
-  const daysStrip = useMemo(() => {
+  const daysStrip = React.useMemo(() => {
     const base = new Date();
     base.setHours(0, 0, 0, 0);
     const arr: Date[] = [];
@@ -137,19 +158,18 @@ export default function HistoryTab() {
     return `${w.toUpperCase()}\n${day}`;
   };
 
-  const itemsForSelectedDay = useMemo(
+  const itemsForSelectedDay = React.useMemo(
     () => saved.filter((s) => sameDay(s.timestamp, selectedDate.getTime())),
     [saved, selectedDate]
   );
 
-  const totalQtyForDay = useMemo(() => {
-    return itemsForSelectedDay.reduce(
-      (sum, it) => sum + (it.quantity ?? 100),
-      0
-    );
-  }, [itemsForSelectedDay]);
+  const totalQtyForDay = React.useMemo(
+    () =>
+      itemsForSelectedDay.reduce((sum, it) => sum + (it.quantity ?? 100), 0),
+    [itemsForSelectedDay]
+  );
 
-  const totalKcalForDay = useMemo(() => {
+  const totalKcalForDay = React.useMemo(() => {
     return itemsForSelectedDay.reduce((sum, it) => {
       const base =
         (it.nutriments as any)?.["energy-kcal_100g"] ??
@@ -165,29 +185,25 @@ export default function HistoryTab() {
     try {
       const next = saved.filter((s) => s.id !== id);
       setSaved(next);
-      await AsyncStorage.setItem(storageKey, JSON.stringify(next));
-    } catch {
-      // ignore
-    }
+      await storage.setItem(storageKey, JSON.stringify(next));
+    } catch {}
   };
 
   return (
     <>
       <CalendarStrip>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {daysStrip.map((d) => {
-            const selected = sameDay(d.getTime(), selectedDate.getTime());
-            return (
-              <DayPill
-                key={d.toISOString()}
-                selected={selected}
-                onPress={() => setSelectedDate(d)}
-              >
-                <DayText>{displayDay(d)}</DayText>
-              </DayPill>
-            );
-          })}
-        </ScrollView>
+        {daysStrip.map((d) => {
+          const selected = sameDay(d.getTime(), selectedDate.getTime());
+          return (
+            <DayPill
+              key={d.toISOString()}
+              $selected={selected}
+              onClick={() => setSelectedDate(d)}
+            >
+              {displayDay(d)}
+            </DayPill>
+          );
+        })}
       </CalendarStrip>
 
       <Row>
@@ -197,7 +213,7 @@ export default function HistoryTab() {
         </Value>
       </Row>
 
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+      <ListScroll>
         {itemsForSelectedDay.length === 0 ? (
           <Hint>Aucun aliment enregistré ce jour.</Hint>
         ) : (
@@ -215,8 +231,8 @@ export default function HistoryTab() {
                 <Row>
                   <LeftRow>
                     <IconButton
-                      onPress={() => removeItem(it.id)}
-                      accessibilityLabel="Supprimer définitivement"
+                      onClick={() => removeItem(it.id)}
+                      aria-label="Supprimer définitivement"
                     >
                       <Trash>🗑️</Trash>
                     </IconButton>
@@ -224,21 +240,19 @@ export default function HistoryTab() {
                   </LeftRow>
                   <Row>
                     <QtyInput
-                      keyboardType="numeric"
+                      inputMode="numeric"
                       value={String(it.quantity ?? 100)}
-                      onChangeText={async (text) => {
+                      onChange={async (e) => {
+                        const text = (e.target as HTMLInputElement).value;
                         const v = Math.max(0, parseInt(text || "0", 10) || 0);
                         const next = saved.map((s) =>
                           s.id === it.id ? { ...s, quantity: v } : s
                         );
                         setSaved(next);
-                        await AsyncStorage.setItem(
-                          storageKey,
-                          JSON.stringify(next)
-                        );
+                        await storage.setItem(storageKey, JSON.stringify(next));
                       }}
                     />
-                    <InlineHint style={{ marginLeft: 4 }}>g</InlineHint>
+                    <InlineHint>g</InlineHint>
                   </Row>
                 </Row>
                 <Row>
@@ -265,7 +279,7 @@ export default function HistoryTab() {
             );
           })
         )}
-      </ScrollView>
+      </ListScroll>
     </>
   );
-}
+};

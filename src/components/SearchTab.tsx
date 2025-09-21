@@ -1,50 +1,49 @@
 import React from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import type {
   Nutriments,
   SearchResult,
   SavedItem,
   RecentEntry,
   FavoriteEntry,
-} from "./types";
-import { storage } from "./storage";
+} from "../types";
+import { storage } from "../utils/storage";
 
-/* ----------------------- styles (équivalents RN) ----------------------- */
+const ListScroll = styled.div`
+  flex: 1;
+  min-height: 0; /* ← autorise le scroll quand il y a des éléments */
+  overflow-y: auto;
+  padding-right: 4px;
+`;
 
 const Row = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 `;
 
 const SearchInput = styled.input`
-  flex: 1 1 auto;
+  flex: 1 1 260px;
   height: 48px;
   padding: 0 14px;
   border-radius: 12px;
-  border: 0;
-  outline: none;
+  border: 1px solid #262631;
   background-color: #1a1a22;
   color: #f5f5f7;
-  &::placeholder {
-    color: #6b7280;
-  }
 `;
 
-const Button = styled.button<{ disabled?: boolean }>`
+const Button = styled.button`
   height: 48px;
   padding: 0 18px;
   border-radius: 12px;
   border: 0;
   background-color: #4f46e5;
-  color: #fff;
+  color: white;
   font-weight: 700;
   cursor: pointer;
   display: grid;
   place-items: center;
-  opacity: ${(p) => (p.disabled ? 0.6 : 1)};
-  pointer-events: ${(p) => (p.disabled ? "none" : "auto")};
 `;
 
 const Card = styled.div`
@@ -100,45 +99,23 @@ const Heart = styled.span<{ $active?: boolean }>`
   color: ${(p) => (p.$active ? "#ec4899" : "#e6e6eb")};
   font-weight: 700;
   font-size: 18px;
-  user-select: none;
   cursor: pointer;
 `;
 
-const ScrollView = styled.div`
-  flex: 1;
-  overflow-y: auto;
-  max-height: calc(100vh - 300px);
-  padding-right: 4px;
-`;
+// const ListScroll = styled.div`
+//   flex: 1;
+//   overflow-y: auto;
+//   max-height: calc(100vh - 300px);
+//   padding-right: 4px;
+// `;
 
-const RowSpaceBetween = styled(Row)`
-  justify-content: space-between;
-`;
-
-/* loader style proche d'ActivityIndicator */
-const spin = keyframes`
-  to { transform: rotate(360deg); }
-`;
-const Spinner = styled.div`
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: ${spin} 0.8s linear infinite;
-`;
-
-/* ----------------------- constantes stockage ----------------------- */
+type SearchTabProps = { onSaved?: () => void };
 
 const storageKey = "cal-history-v1";
 const recentKey = "cal-recents-v1";
 const favoritesKey = "cal-favorites-v1";
 
-type Props = { onSaved?: () => void };
-
-/* ----------------------- composant ----------------------- */
-
-export default function SearchTab({ onSaved }: Props) {
+export const SearchTab = ({ onSaved }: SearchTabProps) => {
   const [query, setQuery] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -147,7 +124,6 @@ export default function SearchTab({ onSaved }: Props) {
   const [expanded, setExpanded] = React.useState<Record<string, boolean>>({});
   const [favorites, setFavorites] = React.useState<FavoriteEntry[]>([]);
 
-  /* --------- chargement récents + favoris (équivalent AsyncStorage.getItem) --------- */
   React.useEffect(() => {
     (async () => {
       try {
@@ -172,7 +148,6 @@ export default function SearchTab({ onSaved }: Props) {
     [query, loading]
   );
 
-  /* -------------------- fetch premier produit OFF -------------------- */
   const fetchFirstProduct = React.useCallback(async () => {
     if (!canSearch) return;
     setLoading(true);
@@ -210,7 +185,6 @@ export default function SearchTab({ onSaved }: Props) {
     }
   }, [canSearch, query]);
 
-  /* -------------------- nutriments calculés -------------------- */
   const nutriments: Nutriments | undefined = result?.nutriments;
   const fat = nutriments?.fat_100g ?? null;
   const sugars = nutriments?.sugars_100g ?? null;
@@ -220,7 +194,6 @@ export default function SearchTab({ onSaved }: Props) {
     (nutriments as any)?.energy_kcal_100g ??
     null;
 
-  /* -------------------- sauvegarde dans l’historique jour -------------------- */
   const saveResult = React.useCallback(
     async (r: SearchResult | null) => {
       if (!r || !r.nutriments) return;
@@ -237,9 +210,7 @@ export default function SearchTab({ onSaved }: Props) {
         const next = [item, ...existing];
         await storage.setItem(storageKey, JSON.stringify(next));
         onSaved?.();
-      } catch {
-        // ignore
-      }
+      } catch {}
     },
     [onSaved]
   );
@@ -249,7 +220,6 @@ export default function SearchTab({ onSaved }: Props) {
     [saveResult, result]
   );
 
-  /* -------------------- expand + favoris (persistants) -------------------- */
   const toggleExpand = React.useCallback((id: string) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
   }, []);
@@ -267,7 +237,6 @@ export default function SearchTab({ onSaved }: Props) {
     });
   }, []);
 
-  /* -------------------- rendu -------------------- */
   return (
     <>
       <Row>
@@ -280,7 +249,7 @@ export default function SearchTab({ onSaved }: Props) {
           }}
         />
         <Button onClick={fetchFirstProduct} disabled={!canSearch}>
-          {loading ? <Spinner /> : "Entrer"}
+          {loading ? "..." : "Entrer"}
         </Button>
       </Row>
 
@@ -294,18 +263,24 @@ export default function SearchTab({ onSaved }: Props) {
             </ProductName>
             <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
           </HeaderRow>
-          <RowSpaceBetween>
+          <Row
+            style={{ justifyContent: "space-between" } as React.CSSProperties}
+          >
             <Label>Lipides</Label>
             <Value>{fat !== null ? `${fat} g` : "—"}</Value>
-          </RowSpaceBetween>
-          <RowSpaceBetween>
+          </Row>
+          <Row
+            style={{ justifyContent: "space-between" } as React.CSSProperties}
+          >
             <Label>Sucres</Label>
             <Value>{sugars !== null ? `${sugars} g` : "—"}</Value>
-          </RowSpaceBetween>
-          <RowSpaceBetween>
+          </Row>
+          <Row
+            style={{ justifyContent: "space-between" } as React.CSSProperties}
+          >
             <Label>Protéines</Label>
             <Value>{proteins !== null ? `${proteins} g` : "—"}</Value>
-          </RowSpaceBetween>
+          </Row>
           <Button onClick={handleSave}>Enregistrer</Button>
         </Card>
       )}
@@ -314,9 +289,8 @@ export default function SearchTab({ onSaved }: Props) {
         <Hint>Entrez une recherche puis appuyez sur Entrer.</Hint>
       ) : null}
 
-      <ScrollView>
+      <ListScroll>
         {favorites.length > 0 && <Hint style={{ marginTop: 12 }}>Favoris</Hint>}
-
         {favorites.map((h) => {
           const r = h.item;
           const n: Nutriments | undefined = r.nutriments;
@@ -332,11 +306,11 @@ export default function SearchTab({ onSaved }: Props) {
             <Card key={`fav-${h.id}`}>
               <HeaderRow>
                 <LeftRow>
-                  <span onClick={() => toggleFavorite(h)}>
-                    <Heart $active>♥</Heart>
-                  </span>
-                  <span
-                    style={{ flex: 1, cursor: "pointer" }}
+                  <Heart $active onClick={() => toggleFavorite(h)}>
+                    ♥
+                  </Heart>
+                  <div
+                    style={{ flex: 1 }}
                     onClick={() =>
                       setExpanded((prev) => ({
                         ...prev,
@@ -345,30 +319,46 @@ export default function SearchTab({ onSaved }: Props) {
                     }
                   >
                     <ProductName>
-                      {r.product_name || "Produit"}
+                      {r.product_name || "Produit"}{" "}
                       <InlineHint>(100g)</InlineHint>
                     </ProductName>
-                  </span>
+                  </div>
                 </LeftRow>
                 <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
               </HeaderRow>
               {isOpen && (
                 <>
-                  <RowSpaceBetween>
+                  <Row
+                    style={
+                      { justifyContent: "space-between" } as React.CSSProperties
+                    }
+                  >
                     <Label>Lipides</Label>
                     <Value>{fat !== null ? `${fat} g` : "—"}</Value>
-                  </RowSpaceBetween>
-                  <RowSpaceBetween>
+                  </Row>
+                  <Row
+                    style={
+                      { justifyContent: "space-between" } as React.CSSProperties
+                    }
+                  >
                     <Label>Sucres</Label>
                     <Value>{sugars !== null ? `${sugars} g` : "—"}</Value>
-                  </RowSpaceBetween>
-                  <RowSpaceBetween>
+                  </Row>
+                  <Row
+                    style={
+                      { justifyContent: "space-between" } as React.CSSProperties
+                    }
+                  >
                     <Label>Protéines</Label>
                     <Value>{proteins !== null ? `${proteins} g` : "—"}</Value>
-                  </RowSpaceBetween>
-                  <RowSpaceBetween>
+                  </Row>
+                  <Row
+                    style={
+                      { justifyContent: "space-between" } as React.CSSProperties
+                    }
+                  >
                     <Button onClick={() => saveResult(r)}>Enregistrer</Button>
-                  </RowSpaceBetween>
+                  </Row>
                 </>
               )}
             </Card>
@@ -400,42 +390,57 @@ export default function SearchTab({ onSaved }: Props) {
               <Card key={h.id}>
                 <HeaderRow>
                   <LeftRow>
-                    <span onClick={() => toggleFavorite(h)}>
-                      <Heart $active={isFav}>{isFav ? "♥" : "♡"}</Heart>
-                    </span>
-                    <span
-                      style={{ flex: 1, cursor: "pointer" }}
-                      onClick={() => toggleExpand(h.id)}
-                    >
+                    <Heart $active={isFav} onClick={() => toggleFavorite(h)}>
+                      {isFav ? "♥" : "♡"}
+                    </Heart>
+                    <div style={{ flex: 1 }} onClick={() => toggleExpand(h.id)}>
                       <ProductName>
-                        {r.product_name || "Produit"}
+                        {r.product_name || "Produit"}{" "}
                         <InlineHint>(100g)</InlineHint>
                       </ProductName>
-                    </span>
+                    </div>
                   </LeftRow>
                   <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
                 </HeaderRow>
                 {isOpen && (
                   <>
-                    <RowSpaceBetween>
+                    <Row
+                      style={
+                        {
+                          justifyContent: "space-between",
+                        } as React.CSSProperties
+                      }
+                    >
                       <Label>Lipides</Label>
                       <Value>{fat !== null ? `${fat} g` : "—"}</Value>
-                    </RowSpaceBetween>
-                    <RowSpaceBetween>
+                    </Row>
+                    <Row
+                      style={
+                        {
+                          justifyContent: "space-between",
+                        } as React.CSSProperties
+                      }
+                    >
                       <Label>Sucres</Label>
                       <Value>{sugars !== null ? `${sugars} g` : "—"}</Value>
-                    </RowSpaceBetween>
-                    <RowSpaceBetween>
+                    </Row>
+                    <Row
+                      style={
+                        {
+                          justifyContent: "space-between",
+                        } as React.CSSProperties
+                      }
+                    >
                       <Label>Protéines</Label>
                       <Value>{proteins !== null ? `${proteins} g` : "—"}</Value>
-                    </RowSpaceBetween>
+                    </Row>
                     <Button onClick={() => saveResult(r)}>Enregistrer</Button>
                   </>
                 )}
               </Card>
             );
           })}
-      </ScrollView>
+      </ListScroll>
     </>
   );
-}
+};

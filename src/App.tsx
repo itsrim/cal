@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { HistoryTab } from "./HistoryTab";
-import { SearchTab } from "./SearchTab";
+import { HistoryTab } from "./components/HistoryTab";
+import { SearchTab } from "./components/SearchTab";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -16,18 +16,17 @@ const Title = styled.h1`
   font-size: clamp(22px, 2vw + 10px, 32px);
 `;
 
-
 const Content = styled.main`
   flex: 1;
   padding: clamp(16px, 2vw, 24px);
-  display: flex;            /* ← au lieu de grid */
+  display: flex; /* ← au lieu de grid */
   flex-direction: column;
   gap: 16px;
 `;
 
 const Panel = styled.section`
   width: 100%;
-  min-height: 0;            /* important pour que l’intérieur puisse scroller */
+  min-height: 0; /* important pour que l’intérieur puisse scroller */
 `;
 /* ---------- Tabs ---------- */
 const TabBar = styled.div`

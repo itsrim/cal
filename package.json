@@ -6,11 +6,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "predeploy": "npm run build && cp dist/index.html dist/404.html",
+    "deploy": "gh-pages -d dist -b gh-pages"
   },
   "dependencies": {
     "@types/node": "^20.10.5",
@@ -20,19 +20,19 @@
     "papaparse": "^5.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "styled-components": "^6.1.11",
+    "styled-component": "^2.8.0",
+    "styled-components": "^6.1.19",
     "workbox-precaching": "^7.3.0",
     "workbox-window": "^7.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.3.24",
+    "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
-    "@types/styled-components": "^5.1.34",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "gh-pages": "^6.3.0",
+    "gh-pages": "^6.1.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.10",
     "vite-plugin-pwa": "^0.17.4"

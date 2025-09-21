@@ -116,7 +116,7 @@ Error generating stack: `+o.message+`
 `,li="cal-history-v1",sg=()=>{const[e,t]=A.useState(new Date),[n,r]=A.useState([]),l=d=>{const m=new Date(d);return m.setHours(0,0,0,0),m.getTime()},o=(d,m)=>l(new Date(d))===l(new Date(m));A.useEffect(()=>{let d=!0;const m=async()=>{try{const S=await dt.getItem(li),z=S?JSON.parse(S):[];d&&r(Array.isArray(z)?z:[])}catch{d&&r([])}},v=setInterval(m,1e3);return m(),()=>{d=!1,clearInterval(v)}},[]);const i=A.useMemo(()=>{const d=new Date;d.setHours(0,0,0,0);const m=[];for(let v=-7;v<=7;v+=1){const S=new Date(d);S.setDate(d.getDate()+v),m.push(S)}return m},[]),u=d=>{const m=d.getDate(),v={weekday:"short"};return`${new Intl.DateTimeFormat("fr-FR",v).format(d).toUpperCase()}
 ${m}`},s=A.useMemo(()=>n.filter(d=>o(d.timestamp,e.getTime())),[n,e]),c=A.useMemo(()=>s.reduce((d,m)=>d+(m.quantity??100),0),[s]),g=A.useMemo(()=>s.reduce((d,m)=>{var f,a;const v=((f=m.nutriments)==null?void 0:f["energy-kcal_100g"])??((a=m.nutriments)==null?void 0:a.energy_kcal_100g)??null,S=m.quantity??100,z=typeof v=="number"?v*S/100:0;return d+z},0),[s]),h=async d=>{try{const m=n.filter(v=>v.id!==d);r(m),await dt.setItem(li,JSON.stringify(m))}catch{}};return w.jsxs(w.Fragment,{children:[w.jsx(Jm,{children:i.map(d=>{const m=o(d.getTime(),e.getTime());return w.jsx(qm,{$selected:m,onClick:()=>t(d),children:u(d)},d.toISOString())})}),w.jsxs(Kt,{children:[w.jsx(lr,{children:"Total du jour"}),w.jsxs(or,{children:[c," g · ",Math.round(g)," kcal"]})]}),w.jsx(ug,{children:s.length===0?w.jsx(ng,{children:"Aucun aliment enregistré ce jour."}):s.map(d=>{const m=d.nutriments,v=(m==null?void 0:m.fat_100g)??null,S=(m==null?void 0:m.sugars_100g)??null,z=(m==null?void 0:m.proteins_100g)??null,f=(m==null?void 0:m["energy-kcal_100g"])??(m==null?void 0:m.energy_kcal_100g)??null;return w.jsxs(bm,{children:[w.jsxs(Kt,{children:[w.jsxs(og,{children:[w.jsx(rg,{onClick:()=>h(d.id),"aria-label":"Supprimer définitivement",children:w.jsx(ig,{children:"🗑️"})}),w.jsx(eg,{children:d.product_name})]}),w.jsxs(Kt,{children:[w.jsx(lg,{inputMode:"numeric",value:String(d.quantity??100),onChange:async a=>{const p=a.target.value,y=Math.max(0,parseInt(p||"0",10)||0),C=n.map(x=>x.id===d.id?{...x,quantity:y}:x);r(C),await dt.setItem(li,JSON.stringify(C))}}),w.jsx(tg,{children:"g"})]})]}),w.jsxs(Kt,{children:[w.jsx(lr,{children:"cals"}),w.jsx(or,{children:f!==null?`${Math.round(f*(d.quantity??100)/100)} kcal`:"—"})]}),w.jsxs(Kt,{children:[w.jsx(lr,{children:"Lipides"}),w.jsx(or,{children:v!==null?`${v} g`:"—"})]}),w.jsxs(Kt,{children:[w.jsx(lr,{children:"Sucres"}),w.jsx(or,{children:S!==null?`${S} g`:"—"})]}),w.jsxs(Kt,{children:[w.jsx(lr,{children:"Protéines"}),w.jsx(or,{children:z!==null?`${z} g`:"—"})]})]},d.id)})})]})},ag=D.div`
   flex: 1;
-  min-height: 0;  /* ← autorise le scroll quand il y a des éléments */
+  min-height: 0; /* ← autorise le scroll quand il y a des éléments */
   overflow-y: auto;
   padding-right: 4px;
 `,Ye=D.div`
@@ -194,12 +194,12 @@ ${m}`},s=A.useMemo(()=>n.filter(d=>o(d.timestamp,e.getTime())),[n,e]),c=A.useMem
 `,hg=D.main`
   flex: 1;
   padding: clamp(16px, 2vw, 24px);
-  display: flex;            /* ← au lieu de grid */
+  display: flex; /* ← au lieu de grid */
   flex-direction: column;
   gap: 16px;
 `,Da=D.section`
   width: 100%;
-  min-height: 0;            /* important pour que l’intérieur puisse scroller */
+  min-height: 0; /* important pour que l’intérieur puisse scroller */
 `,mg=D.div`
   position: relative;
   display: flex;
