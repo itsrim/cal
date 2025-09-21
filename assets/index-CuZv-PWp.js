@@ -100,6 +100,7 @@ Error generating stack: `+o.message+`
   color: #f5f5f7;
   text-align: center;
   border: 1px solid #262631;
+  font-size: 16px;
 `,og=D.div`
   display: flex;
   align-items: center;
@@ -132,6 +133,7 @@ ${m}`},s=A.useMemo(()=>n.filter(d=>o(d.timestamp,e.getTime())),[n,e]),c=A.useMem
   border: 1px solid #262631;
   background-color: #1a1a22;
   color: #f5f5f7;
+  font-size: 16px;
 `,fl=D.button`
   height: 48px;
   padding: 0 18px;
