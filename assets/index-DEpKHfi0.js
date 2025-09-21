@@ -134,6 +134,9 @@ ${m}`},s=A.useMemo(()=>n.filter(d=>o(d.timestamp,e.getTime())),[n,e]),c=A.useMem
   background-color: #1a1a22;
   color: #f5f5f7;
   font-size: 16px;
+  &::placeholder {
+    font-size: 16px;
+  }
 `,fl=D.button`
   height: 48px;
   padding: 0 18px;
@@ -227,7 +230,7 @@ ${m}`},s=A.useMemo(()=>n.filter(d=>o(d.timestamp,e.getTime())),[n,e]),c=A.useMem
   position: absolute;
   bottom: 0;
   height: 3px;
-  background: #6366f1;
+  background:rgb(188, 75, 228);
   border-radius: 3px;
   transition: transform 0.25s ease, width 0.25s ease;
   transform: translateX(${e=>e.$x}px);
