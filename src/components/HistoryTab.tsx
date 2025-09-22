@@ -1,117 +1,43 @@
-import React from "react";
-import styled from "styled-components";
-import { SavedItem } from "../types";
+import React, { useEffect, useMemo, useState, useRef } from "react";
+import { Nutriments, SavedItem } from "../types";
 import { storage } from "../utils/storage";
-
-const CalendarStrip = styled.div`
-  height: 64px;
-  overflow-x: auto;
-  display: flex;
-  gap: 10px;
-  padding-bottom: 6px;
-  scrollbar-width: thin;
-`;
-
-const DayPill = styled.button<{ $selected?: boolean }>`
-  height: 48px;
-  width: 56px;
-  min-width: 56px;
-  border-radius: 12px;
-  border: 0;
-  background-color: ${(p) => (p.$selected ? "#4f46e5" : "#1a1a22")};
-  color: #e6e6eb;
-  font-weight: 700;
-  white-space: pre-line;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-`;
-
-const Card = styled.div`
-  margin-top: 12px;
-  padding: 16px;
-  border-radius: 16px;
-  background-color: #13131a;
-  display: grid;
-  gap: 8px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-`;
-
-const ProductName = styled.div`
-  color: #c7c7d1;
-  font-size: 16px;
-  font-weight: 600;
-`;
-
-const InlineHint = styled.span`
-  color: #6b7280;
-  font-size: 12px;
-  margin-left: 6px;
-`;
-
-const Label = styled.span`
-  color: #9da3ae;
-`;
-
-const Value = styled.span`
-  color: #e6e6eb;
-  font-weight: 700;
-`;
-
-const Hint = styled.p`
-  color: #6b7280;
-  margin: 8px 0;
-`;
-
-const IconButton = styled.button`
-  padding: 8px;
-  margin-left: 8px;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-`;
-
-const QtyInput = styled.input`
-  width: 72px;
-  height: 36px;
-  border-radius: 8px;
-  background-color: #1a1a22;
-  color: #f5f5f7;
-  text-align: center;
-  border: 1px solid #262631;
-  font-size: 16px;
-`;
-
-const LeftRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const Trash = styled.span`
-  color: #ef4444;
-  font-weight: 900;
-  font-size: 16px;
-`;
-
-const ListScroll = styled.div`
-  flex: 1;
-  overflow-y: auto;
-  max-height: calc(100vh - 260px);
-  padding-right: 4px;
-`;
+import {
+  CalendarStrip,
+  Card,
+  DayPill,
+  Fill,
+  Hint,
+  IconButton,
+  InlineHint,
+  Label,
+  LeftRow,
+  LegendRow,
+  ListScroll,
+  Pct,
+  PctLeft,
+  ProductName,
+  ProgressWrap,
+  QtyInput,
+  RightInfo,
+  Row,
+  SubTitle,
+  Track,
+  Trash,
+  Value,
+} from "./StyleHistoryTab";
 
 const storageKey = "cal-history-v1";
 
 export const HistoryTab = () => {
-  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
-  const [saved, setSaved] = React.useState<SavedItem[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [saved, setSaved] = useState<SavedItem[]>([]);
+
+  // Max journaliers (équilibré pour 2000 kcal)
+  const MAX_CARBS = 250; // g
+  const MAX_FAT = 70; // g
+  const MAX_PROT = 75; // g
+
+  const todayRef = useRef<HTMLButtonElement>(null);
 
   const startOfDay = (d: Date) => {
     const x = new Date(d);
@@ -139,8 +65,11 @@ export const HistoryTab = () => {
       clearInterval(id);
     };
   }, []);
+  useEffect(() => {
+    todayRef.current?.scrollIntoView({ inline: "center", block: "nearest" });
+  }, []);
 
-  const daysStrip = React.useMemo(() => {
+  const daysStrip = useMemo(() => {
     const base = new Date();
     base.setHours(0, 0, 0, 0);
     const arr: Date[] = [];
@@ -159,18 +88,18 @@ export const HistoryTab = () => {
     return `${w.toUpperCase()}\n${day}`;
   };
 
-  const itemsForSelectedDay = React.useMemo(
+  const itemsForSelectedDay = useMemo(
     () => saved.filter((s) => sameDay(s.timestamp, selectedDate.getTime())),
     [saved, selectedDate]
   );
 
-  const totalQtyForDay = React.useMemo(
+  const totalQtyForDay = useMemo(
     () =>
       itemsForSelectedDay.reduce((sum, it) => sum + (it.quantity ?? 100), 0),
     [itemsForSelectedDay]
   );
 
-  const totalKcalForDay = React.useMemo(() => {
+  const totalKcalForDay = useMemo(() => {
     return itemsForSelectedDay.reduce((sum, it) => {
       const base =
         (it.nutriments as any)?.["energy-kcal_100g"] ??
@@ -190,6 +119,47 @@ export const HistoryTab = () => {
     } catch {}
   };
 
+  // helpers: récupère la valeur “par 100g” en priorité carbohydrates_100g
+  const getCarbs100 = (n?: Nutriments | null) =>
+    (n as any)?.carbohydrates_100g ??
+    (n as any)?.carbs_100g ??
+    (n as any)?.sugars_100g ??
+    null;
+
+  const getFat100 = (n?: Nutriments | null) => n?.fat_100g ?? null;
+
+  const getProt100 = (n?: Nutriments | null) => n?.proteins_100g ?? null;
+
+  // somme grammes journaliers ajustés à la quantité
+  const totalCarbs = useMemo(() => {
+    return itemsForSelectedDay.reduce((sum, it) => {
+      const per100 = getCarbs100(it.nutriments);
+      const qty = it.quantity ?? 100;
+      const g = typeof per100 === "number" ? (per100 * qty) / 100 : 0;
+      return sum + g;
+    }, 0);
+  }, [itemsForSelectedDay]);
+
+  const totalFat = useMemo(() => {
+    return itemsForSelectedDay.reduce((sum, it) => {
+      const per100 = getFat100(it.nutriments);
+      const qty = it.quantity ?? 100;
+      const g = typeof per100 === "number" ? (per100 * qty) / 100 : 0;
+      return sum + g;
+    }, 0);
+  }, [itemsForSelectedDay]);
+
+  const totalProt = useMemo(() => {
+    return itemsForSelectedDay.reduce((sum, it) => {
+      const per100 = getProt100(it.nutriments);
+      const qty = it.quantity ?? 100;
+      const g = typeof per100 === "number" ? (per100 * qty) / 100 : 0;
+      return sum + g;
+    }, 0);
+  }, [itemsForSelectedDay]);
+
+  const pct = (val: number, max: number) => (max > 0 ? (val / max) * 100 : 0);
+
   return (
     <>
       <CalendarStrip>
@@ -200,6 +170,7 @@ export const HistoryTab = () => {
               key={d.toISOString()}
               $selected={selected}
               onClick={() => setSelectedDate(d)}
+              ref={selected ? todayRef : undefined}
             >
               {displayDay(d)}
             </DayPill>
@@ -208,11 +179,55 @@ export const HistoryTab = () => {
       </CalendarStrip>
 
       <Row>
-        <Label>Total du jour</Label>
+        <SubTitle>Total du jour</SubTitle>
         <Value>
           {totalQtyForDay} g · {Math.round(totalKcalForDay)} kcal
         </Value>
       </Row>
+
+      <ProgressWrap>
+        {/* Glucides */}
+        <Track>
+          <Fill $pct={pct(totalCarbs, MAX_CARBS)} $color="#22c55e" />
+          <PctLeft $over={pct(totalCarbs, MAX_CARBS) > 100}>
+            {Math.round(pct(totalCarbs, MAX_CARBS))}%
+          </PctLeft>
+          <RightInfo>
+            <span>Glucides</span>
+            <span>
+              {Math.round(totalCarbs)} g / {MAX_CARBS} g
+            </span>
+          </RightInfo>
+        </Track>
+
+        {/* Lipides */}
+        <Track>
+          <Fill $pct={pct(totalFat, MAX_FAT)} $color="#0ea5a6" />
+          <PctLeft $over={pct(totalFat, MAX_FAT) > 100}>
+            {Math.round(pct(totalFat, MAX_FAT))}%
+          </PctLeft>
+          <RightInfo>
+            <span>Lipides</span>
+            <span>
+              {Math.round(totalFat)} g / {MAX_FAT} g
+            </span>
+          </RightInfo>
+        </Track>
+
+        {/* Protéines */}
+        <Track>
+          <Fill $pct={pct(totalProt, MAX_PROT)} $color="#facc15" />
+          <PctLeft $over={pct(totalProt, MAX_PROT) > 100}>
+            {Math.round(pct(totalProt, MAX_PROT))}%
+          </PctLeft>
+          <RightInfo>
+            <span>Protéines</span>
+            <span>
+              {Math.round(totalProt)} g / {MAX_PROT} g
+            </span>
+          </RightInfo>
+        </Track>
+      </ProgressWrap>
 
       <ListScroll>
         {itemsForSelectedDay.length === 0 ? (
