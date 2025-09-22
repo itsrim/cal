@@ -14,6 +14,7 @@ const Title = styled.h1`
   font-weight: 700;
   margin: 0;
   font-size: clamp(22px, 2vw + 10px, 32px);
+  text-align: center;
 `;
 
 const Content = styled.main`
@@ -58,13 +59,12 @@ const Indicator = styled.div<{ $x: number; $w: number }>`
   position: absolute;
   bottom: 0;
   height: 3px;
-  background:rgb(188, 75, 228);
+  background: rgb(188, 75, 228);
   border-radius: 3px;
   transition: transform 0.25s ease, width 0.25s ease;
   transform: translateX(${(p) => p.$x}px);
   width: ${(p) => p.$w}px;
 `;
-
 
 type TabId = "search" | "history";
 
@@ -116,7 +116,7 @@ export default function App() {
   return (
     <Container>
       <Content>
-        <Title>Compteur de cals</Title>
+        <Title>Compteur de calories 🍆🍑</Title>
 
         <TabBar
           role="tablist"

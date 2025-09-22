@@ -10,93 +10,22 @@ import { storage } from "../utils/storage";
 import {
   Button,
   Card,
-  ClearIcon,
   HeaderRow,
   Heart,
   Hint,
   InlineHint,
+  InnerIndicator,
+  InnerTabBar,
+  InnerTabBtn,
   Label,
   LeftRow,
   ListScroll,
   ProductName,
   Row,
   SearchInput,
+  Section,
   Value,
 } from "./StyleSearchTab";
-
-/* ---------- styles locaux : sous-onglets + clear input ---------- */
-import styled from "styled-components";
-
-const InnerTabBar = styled.div`
-  position: relative;
-  display: flex;
-  gap: 24px;
-  border-bottom: 1px solid #262631;
-  margin-top: 16px;
-`;
-
-const InnerTabBtn = styled.button<{ $active?: boolean }>`
-  appearance: none;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  color: ${(p) => (p.$active ? "#e6e6eb" : "#9da3ae")};
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 1;
-  padding: 10px 2px 12px;
-  position: relative;
-  outline: none;
-  &:focus-visible {
-    box-shadow: 0 0 0 2px #6366f1aa;
-    border-radius: 8px;
-  }
-`;
-
-const InnerIndicator = styled.div<{ $x: number; $w: number }>`
-  position: absolute;
-  bottom: 0;
-  height: 3px;
-  background: #6366f1;
-  border-radius: 3px;
-  transition: transform 0.25s ease, width 0.25s ease;
-  transform: translateX(${(p) => p.$x}px);
-  width: ${(p) => p.$w}px;
-  pointer-events: none;
-`;
-
-const Section = styled.section`
-  padding-top: 12px;
-`;
-
-/* input avec bouton clear */
-const InputWrap = styled.div`
-  position: relative;
-  flex: 1 1 260px;
-`;
-const SearchInputWithClear = styled(SearchInput)`
-  padding-right: 40px; /* place pour la croix */
-`;
-const ClearBtn = styled.button`
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 28px;
-  min-width: 28px;
-  padding: 0;
-  border: 0;
-  border-radius: 14px;
-  background: #262631;
-  color: #c7c7d1;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  line-height: 1;
-  font-size: 16px;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-`;
 
 /* ---------- clés de stockage ---------- */
 const storageKey = "cal-history-v1";
