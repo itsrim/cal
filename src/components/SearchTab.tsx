@@ -1,4 +1,5 @@
 import React from "react";
+import { Search, Ellipsis, Barcode } from "lucide-react";
 import type {
   Nutriments,
   SearchResult,
@@ -26,6 +27,8 @@ import {
   Section,
   Value,
 } from "./StyleSearchTab";
+import { fetchProductByBarcode } from "../api/openfoodfacts";
+import { BarCodeScanner } from "./BarreCodeScanner";
 
 /* ---------- clés de stockage ---------- */
 const storageKey = "cal-history-v1";
@@ -43,7 +46,32 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
   const [history, setHistory] = React.useState<RecentEntry[]>([]);
   const [expanded, setExpanded] = React.useState<Record<string, boolean>>({});
   const [favorites, setFavorites] = React.useState<FavoriteEntry[]>([]);
+  const [scanOpen, setScanOpen] = React.useState(false);
 
+  // scan
+  const fetchByEAN = React.useCallback(async (ean: string) => {
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    try {
+      const prod = await fetchProductByBarcode(ean);
+      const first = {
+        product_name: prod.product_name ?? "Produit",
+        nutriments: prod.nutriments ?? {},
+      } as SearchResult;
+      setResult(first);
+      const id = `${Date.now()}-${first.product_name || "Produit"}`;
+      setHistory((prev) => {
+        const next = [{ id, item: first }, ...prev].slice(0, 10);
+        storage.setItem("cal-recents-v1", JSON.stringify(next)).catch(() => {});
+        return next;
+      });
+    } catch {
+      setError("Produit introuvable pour ce code-barres.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
   // sous-onglets
   const [innerTab, setInnerTab] = React.useState<InnerTabId>("favorites");
   const innerTabs = [
@@ -199,8 +227,20 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
           autoCapitalize="none"
           spellCheck={false}
         />
-        <Button onClick={fetchFirstProduct} disabled={!canSearch}>
-          {loading ? "..." : "Entrer"}
+        <Button
+          onClick={fetchFirstProduct}
+          disabled={!canSearch}
+          aria-label="Rechercher"
+        >
+          {loading ? <Ellipsis /> : <Search />}
+        </Button>
+
+        <Button
+          onClick={() => setScanOpen(true)}
+          disabled={loading}
+          aria-label="Scanner code-barres"
+        >
+          <Barcode />
         </Button>
       </Row>
 
@@ -467,6 +507,15 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
           )}
         </Section>
       </ListScroll>
+      {scanOpen && (
+        <BarCodeScanner
+          onClose={() => setScanOpen(false)}
+          onDetected={(ean) => {
+            setScanOpen(false);
+            fetchByEAN(ean);
+          }}
+        />
+      )}
     </>
   );
 };
