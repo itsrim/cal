@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { Nutriments, SavedItem } from "../types";
 import { storage } from "../utils/storage";
+import { Trash2 } from "lucide-react";
 import {
   CalendarStrip,
   Card,
@@ -11,9 +12,7 @@ import {
   InlineHint,
   Label,
   LeftRow,
-  LegendRow,
   ListScroll,
-  Pct,
   PctLeft,
   ProductName,
   ProgressWrap,
@@ -188,7 +187,7 @@ export const HistoryTab = () => {
       <ProgressWrap>
         {/* Glucides */}
         <Track>
-          <Fill $pct={pct(totalCarbs, MAX_CARBS)} $color="#22c55e" />
+          <Fill $pct={pct(totalCarbs, MAX_CARBS)} $color="#ff9f43" />
           <PctLeft $over={pct(totalCarbs, MAX_CARBS) > 100}>
             {Math.round(pct(totalCarbs, MAX_CARBS))}%
           </PctLeft>
@@ -202,7 +201,7 @@ export const HistoryTab = () => {
 
         {/* Lipides */}
         <Track>
-          <Fill $pct={pct(totalFat, MAX_FAT)} $color="#0ea5a6" />
+          <Fill $pct={pct(totalFat, MAX_FAT)} $color="#9980FA" />
           <PctLeft $over={pct(totalFat, MAX_FAT) > 100}>
             {Math.round(pct(totalFat, MAX_FAT))}%
           </PctLeft>
@@ -216,7 +215,7 @@ export const HistoryTab = () => {
 
         {/* Protéines */}
         <Track>
-          <Fill $pct={pct(totalProt, MAX_PROT)} $color="#facc15" />
+          <Fill $pct={pct(totalProt, MAX_PROT)} $color="#1dd1a1" />
           <PctLeft $over={pct(totalProt, MAX_PROT) > 100}>
             {Math.round(pct(totalProt, MAX_PROT))}%
           </PctLeft>
@@ -250,7 +249,9 @@ export const HistoryTab = () => {
                       onClick={() => removeItem(it.id)}
                       aria-label="Supprimer définitivement"
                     >
-                      <Trash>✖</Trash>
+                      <Trash>
+                        <Trash2 size={20} />
+                      </Trash>
                     </IconButton>
                     <ProductName>{it.product_name}</ProductName>
                   </LeftRow>
@@ -272,7 +273,7 @@ export const HistoryTab = () => {
                   </Row>
                 </Row>
                 <Row>
-                  <Label>cals</Label>
+                  <Label>Calories</Label>
                   <Value>
                     {k !== null
                       ? `${Math.round((k * (it.quantity ?? 100)) / 100)} kcal`
