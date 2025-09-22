@@ -166,7 +166,7 @@ export const InnerIndicator = styled.div<{ $x: number; $w: number }>`
   position: absolute;
   bottom: 0;
   height: 3px;
-  background: #6366f1;
+  background: #ec4899;
   border-radius: 3px;
   transition: transform 0.25s ease, width 0.25s ease;
   transform: translateX(${(p) => p.$x}px);

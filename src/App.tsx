@@ -59,11 +59,28 @@ const Indicator = styled.div<{ $x: number; $w: number }>`
   position: absolute;
   bottom: 0;
   height: 3px;
-  background: rgb(188, 75, 228);
   border-radius: 3px;
   transition: transform 0.25s ease, width 0.25s ease;
   transform: translateX(${(p) => p.$x}px);
   width: ${(p) => p.$w}px;
+  /* Dégradé + animation */
+  background: linear-gradient(
+    90deg,
+    #ec4899 0%,
+    /* rose */ rgb(188, 75, 228) 50%,
+    /* violet intermédiaire */ rgba(99, 102, 241, 0.67) 100%
+      /* indigo #6366f1aa */
+  );
+  background-size: 200% 100%; /* plus large pour l’animation */
+  animation: gradientShift 2.2s ease-in-out infinite alternate;
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 0;
+    }
+    100% {
+      background-position: 100% 0;
+    }
+  }
 `;
 
 type TabId = "search" | "history";
