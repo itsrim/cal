@@ -325,7 +325,7 @@ ${y}`},h=q.useMemo(()=>n.filter(m=>c(m.timestamp,e.getTime())),[n,e]),x=q.useMem
   position: absolute;
   bottom: 0;
   height: 3px;
-  background: #6366f1;
+  background: #ec4899;
   border-radius: 3px;
   transition: transform 0.25s ease, width 0.25s ease;
   transform: translateX(${e=>e.$x}px);
@@ -397,9 +397,26 @@ ${y}`},h=q.useMemo(()=>n.filter(m=>c(m.timestamp,e.getTime())),[n,e]),x=q.useMem
   position: absolute;
   bottom: 0;
   height: 3px;
-  background: rgb(188, 75, 228);
   border-radius: 3px;
   transition: transform 0.25s ease, width 0.25s ease;
   transform: translateX(${e=>e.$x}px);
   width: ${e=>e.$w}px;
+  /* Dégradé + animation */
+  background: linear-gradient(
+    90deg,
+    #ec4899 0%,
+    /* rose */ rgb(188, 75, 228) 50%,
+    /* violet intermédiaire */ rgba(99, 102, 241, 0.67) 100%
+      /* indigo #6366f1aa */
+  );
+  background-size: 200% 100%; /* plus large pour l’animation */
+  animation: gradientShift 2.2s ease-in-out infinite alternate;
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 0;
+    }
+    100% {
+      background-position: 100% 0;
+    }
+  }
 `;function Fg(){const[e,t]=H.useState("search"),n=[{id:"search",label:"Recherche"},{id:"history",label:"Historique"}],r=H.useRef(null),[l,o]=H.useState({x:0,w:0}),i=s=>{var x;const c=(x=r.current)==null?void 0:x.querySelector(`[data-tab="${s}"]`);if(!c)return;const{left:g,width:p}=c.getBoundingClientRect(),h=r.current.getBoundingClientRect().left;o({x:g-h,w:p})};H.useEffect(()=>{i(e)},[e]);const u=s=>{const c=n.findIndex(g=>g.id===e);s.key==="ArrowRight"&&(t(n[(c+1)%n.length].id),s.preventDefault()),s.key==="ArrowLeft"&&(t(n[(c-1+n.length)%n.length].id),s.preventDefault()),s.key==="Home"&&(t(n[0].id),s.preventDefault()),s.key==="End"&&(t(n[n.length-1].id),s.preventDefault()),requestAnimationFrame(()=>i(e))};return v.jsx(Rg,{children:v.jsxs(Ig,{children:[v.jsx(Lg,{children:"Compteur de calories 🍆🍑"}),v.jsxs(Og,{role:"tablist","aria-label":"Navigation principale",ref:r,onKeyDown:u,children:[n.map(s=>v.jsx(Dg,{"data-tab":s.id,role:"tab","aria-selected":e===s.id,"aria-controls":`panel-${s.id}`,id:`tab-${s.id}`,$active:e===s.id,onClick:()=>t(s.id),children:s.label},s.id)),v.jsx(Mg,{$x:l.x,$w:l.w})]}),v.jsx(Ha,{id:"panel-search",role:"tabpanel","aria-labelledby":"tab-search",hidden:e!=="search",children:e==="search"&&v.jsx(Tg,{onSaved:()=>t("history")})}),v.jsx(Ha,{id:"panel-history",role:"tabpanel","aria-labelledby":"tab-history",hidden:e!=="history",children:e==="history"&&v.jsx(Pg,{})})]})})}const Ag="modulepreload",Ug=function(e){return"/cal/"+e},Va={},Bg=function(t,n,r){let l=Promise.resolve();if(n&&n.length>0){document.getElementsByTagName("link");const i=document.querySelector("meta[property=csp-nonce]"),u=(i==null?void 0:i.nonce)||(i==null?void 0:i.getAttribute("nonce"));l=Promise.allSettled(n.map(s=>{if(s=Ug(s),s in Va)return;Va[s]=!0;const c=s.endsWith(".css"),g=c?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${s}"]${g}`))return;const p=document.createElement("link");if(p.rel=c?"stylesheet":Ag,c||(p.as="script"),p.crossOrigin="",p.href=s,u&&p.setAttribute("nonce",u),document.head.appendChild(p),c)return new Promise((h,x)=>{p.addEventListener("load",h),p.addEventListener("error",()=>x(new Error(`Unable to preload CSS for ${s}`)))})}))}function o(i){const u=new Event("vite:preloadError",{cancelable:!0});if(u.payload=i,window.dispatchEvent(u),!u.defaultPrevented)throw i}return l.then(i=>{for(const u of i||[])u.status==="rejected"&&o(u.reason);return t().catch(o)})};function Hg(e={}){const{immediate:t=!1,onNeedRefresh:n,onOfflineReady:r,onRegistered:l,onRegisteredSW:o,onRegisterError:i}=e;let u,s;const c=async(p=!0)=>{await s};async function g(){if("serviceWorker"in navigator){if(u=await Bg(async()=>{const{Workbox:p}=await import("./workbox-window.prod.es5-B9K5rw8f.js");return{Workbox:p}},[]).then(({Workbox:p})=>new p("/cal/sw.js",{scope:"/cal/",type:"classic"})).catch(p=>{i==null||i(p)}),!u)return;u.addEventListener("activated",p=>{(p.isUpdate||p.isExternal)&&window.location.reload()}),u.addEventListener("installed",p=>{p.isUpdate||r==null||r()}),u.register({immediate:t}).then(p=>{o?o("/cal/sw.js",p):l==null||l(p)}).catch(p=>{i==null||i(p)})}}return s=g(),c}const Vg=Hg({onNeedRefresh(){confirm("New content available. Reload?")&&Vg(!0)},onOfflineReady(){console.log("Content cached for offline use.")}});rd(document.getElementById("root")).render(v.jsx(q.StrictMode,{children:v.jsx(Fg,{})}));
