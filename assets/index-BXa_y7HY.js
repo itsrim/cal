@@ -465,8 +465,10 @@ ${S}`},d=Se.useMemo(()=>r.filter(_=>l(_.timestamp,t.getTime())),[r,t]),h=Se.useM
   color: #e6e6eb;
   font-weight: 700;
   margin: 0;
-  font-size: clamp(22px, 2vw + 10px, 32px);
+  font-size: clamp(26px, 2vw + 10px, 38px);
   text-align: center;
+  font-family: "Dancing Script", cursive;
+  font-weight: 700;
 `,Vw=U.main`
   flex: 1;
   padding: clamp(16px, 2vw, 24px);
@@ -490,7 +492,7 @@ ${S}`},d=Se.useMemo(()=>r.filter(_=>l(_.timestamp,t.getTime())),[r,t]),h=Se.useM
   font-weight: 700;
   font-size: 16px;
   line-height: 1;
-  padding: 10px 2px 12px; /* <- contrôle la “hauteur visuelle” */
+  padding: 10px 2px 12px;
   position: relative;
   outline: none;
   &:focus-visible {
