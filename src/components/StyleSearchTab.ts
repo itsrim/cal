@@ -29,6 +29,48 @@ export const SearchInput = styled.input`
   }
 `;
 
+// wrapper pour mettre une icône DANS le champ
+export const InputWrap = styled.div`
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+`;
+
+// variante de l'input avec padding à gauche pour l'icône
+export const SearchInputWithLeftIcon = styled(SearchInput)`
+  flex: none;
+  width: 100%;
+  padding-left: 44px; /* place pour l’icône scanner */
+`;
+
+// icône scanner positionnée à gauche dans le champ
+export const ScanIconBtnLeft = styled.button`
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border: 0;
+  background: transparent;
+  color: #c7c7d1;
+  display: grid;
+  place-items: center;
+  line-height: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+
+  &:hover,
+  &:focus-visible {
+    color: #e6e6eb;
+    outline: none;
+  }
+
+  svg { width: 18px; height: 18px; }
+`;
+
+
 export const Button = styled.button`
   height: 48px;
   padding: 0 18px;
@@ -96,11 +138,6 @@ export const Heart = styled.span<{ $active?: boolean }>`
   font-weight: 700;
   font-size: 18px;
   cursor: pointer;
-`;
-// styles locaux
-export const InputWrap = styled.div`
-  position: relative;
-  flex: 1 1 260px;
 `;
 
 export const SearchInputWithClear = styled(SearchInput)`

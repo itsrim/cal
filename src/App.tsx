@@ -13,8 +13,10 @@ const Title = styled.h1`
   color: #e6e6eb;
   font-weight: 700;
   margin: 0;
-  font-size: clamp(22px, 2vw + 10px, 32px);
+  font-size: clamp(26px, 2vw + 10px, 38px);
   text-align: center;
+  font-family: "Dancing Script", cursive;
+  font-weight: 700;
 `;
 
 const Content = styled.main`
@@ -46,7 +48,7 @@ const TabBtn = styled.button<{ $active?: boolean }>`
   font-weight: 700;
   font-size: 16px;
   line-height: 1;
-  padding: 10px 2px 12px; /* <- contrôle la “hauteur visuelle” */
+  padding: 10px 2px 12px;
   position: relative;
   outline: none;
   &:focus-visible {

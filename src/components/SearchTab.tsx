@@ -26,6 +26,9 @@ import {
   SearchInput,
   Section,
   Value,
+  InputWrap,
+  SearchInputWithLeftIcon,
+  ScanIconBtnLeft,
 } from "./StyleSearchTab";
 import { fetchProductByBarcode } from "../api/openfoodfacts";
 import { BarCodeScanner } from "./BarreCodeScanner";
@@ -213,34 +216,38 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
     <>
       {/* Barre de recherche + bouton clear */}
       <Row>
-        <SearchInput
-          as="input"
-          type="search" // clear natif iOS/Chrome
-          inputMode="search"
-          placeholder="Rechercher un aliment (ex: yaourt, pomme...)"
-          value={query}
-          onChange={(e) => setQuery((e.target as HTMLInputElement).value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") fetchFirstProduct();
-          }}
-          autoCorrect="off"
-          autoCapitalize="none"
-          spellCheck={false}
-        />
+        <InputWrap>
+          <ScanIconBtnLeft
+            aria-label="Scanner code-barres"
+            title="Scanner"
+            onClick={() => setScanOpen(true)}
+            disabled={loading}
+          >
+            <ScanBarcode />
+          </ScanIconBtnLeft>
+
+          <SearchInputWithLeftIcon
+            as="input"
+            type="search" // garde la croix native
+            inputMode="search"
+            placeholder="Scan ou Rechercher un aliment (ex: yaourt, pomme...)"
+            value={query}
+            onChange={(e) => setQuery((e.target as HTMLInputElement).value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") fetchFirstProduct();
+            }}
+            autoCorrect="off"
+            autoCapitalize="none"
+            spellCheck={false}
+          />
+        </InputWrap>
+
         <Button
           onClick={fetchFirstProduct}
           disabled={!canSearch}
           aria-label="Rechercher"
         >
           {loading ? <Ellipsis /> : <Search />}
-        </Button>
-
-        <Button
-          onClick={() => setScanOpen(true)}
-          disabled={loading}
-          aria-label="Scanner code-barres"
-        >
-          <ScanBarcode />
         </Button>
       </Row>
 
@@ -277,7 +284,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
       )}
 
       {!result && !error && !loading ? (
-        <Hint>Entrez une recherche puis appuyez sur Entrer.</Hint>
+        <Hint>Scan ou Entre une recherche puis appuyez sur Entrer.</Hint>
       ) : null}
 
       {/* Sous-onglets Favoris / Récents */}
