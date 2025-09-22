@@ -24,7 +24,7 @@ export const DayPill = styled.button<{ $selected?: boolean }>`
   min-width: 56px;
   border-radius: 12px;
   border: 0;
-  background-color: ${(p) => (p.$selected ? "#4f46e5" : "#1a1a22")};
+  background-color: ${(p) => (p.$selected ? "#4f46e5" : "#46464a")};
   color: #e6e6eb;
   font-weight: 700;
   white-space: pre-line;

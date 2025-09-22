@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, Ellipsis, Barcode } from "lucide-react";
+import { Search, Ellipsis, ScanBarcode } from "lucide-react";
 import type {
   Nutriments,
   SearchResult,
@@ -240,7 +240,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
           disabled={loading}
           aria-label="Scanner code-barres"
         >
-          <Barcode />
+          <ScanBarcode />
         </Button>
       </Row>
 
