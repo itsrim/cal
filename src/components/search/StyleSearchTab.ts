@@ -7,6 +7,15 @@ export const ListScroll = styled.div`
   padding-right: 4px;
 `;
 
+export const RightColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 2px;
+  margin-left: auto;
+`;
+
 export const Row = styled.div`
   display: flex;
   align-items: center;
@@ -15,13 +24,13 @@ export const Row = styled.div`
 `;
 
 export const SearchInput = styled.input`
-  flex: 1 1 auto;      /* prend tout l’espace dispo */
-  min-width: 0;        /* important pour éviter le débordement */
+  flex: 1 1 auto; /* prend tout l’espace dispo */
+  min-width: 0; /* important pour éviter le débordement */
   height: 48px;
   padding: 0 14px;
   border-radius: 12px;
   border: 1px solid #262631;
-  background-color:rgb(70, 70, 74);
+  background-color: rgb(70, 70, 74);
   color: #f5f5f7;
   font-size: 16px;
   &::placeholder {
@@ -67,9 +76,11 @@ export const ScanIconBtnLeft = styled.button`
     outline: none;
   }
 
-  svg { width: 18px; height: 18px; }
+  svg {
+    width: 18px;
+    height: 18px;
+  }
 `;
-
 
 export const Button = styled.button`
   height: 48px;
@@ -169,9 +180,12 @@ export const ClearIcon = styled.button`
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 
-  &:hover, &:focus-visible { color: #e6e6eb; outline: none; }
+  &:hover,
+  &:focus-visible {
+    color: #e6e6eb;
+    outline: none;
+  }
 `;
-
 
 export const InnerTabBar = styled.div`
   position: relative;

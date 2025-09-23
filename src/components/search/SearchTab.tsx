@@ -28,6 +28,7 @@ import {
   InputWrap,
   SearchInputWithLeftIcon,
   ScanIconBtnLeft,
+  RightColumn,
 } from "./StyleSearchTab";
 import { fetchProductByBarcode } from "../../api/openfoodfacts";
 import { BarCodeScanner } from "../codeBar/BarreCodeScanner";
@@ -258,9 +259,13 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
         <Card>
           <HeaderRow>
             <ProductName>
-              {result.product_name || "Produit"} <NutriScore grade={result.nutriscore_grade} /> <InlineHint>(100g)</InlineHint>
+              {result.product_name || "Produit"}
+              <InlineHint>(100g)</InlineHint>
             </ProductName>
-            <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
+            <RightColumn>
+              <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
+              <NutriScore grade={result.nutriscore_grade} />
+            </RightColumn>
           </HeaderRow>
           <Row
             style={{ justifyContent: "space-between" } as React.CSSProperties}
@@ -353,12 +358,15 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                           }
                         >
                           <ProductName>
-                            {r.product_name || "Produit"}{" "}
-                            <NutriScore grade={r.nutriscore_grade} /> <InlineHint>(100g)</InlineHint>
+                            {r.product_name || "Produit"}
+                            <InlineHint>(100g)</InlineHint>
                           </ProductName>
                         </div>
                       </LeftRow>
-                      <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
+                      <RightColumn>
+                        <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
+                        <NutriScore grade={r.nutriscore_grade} />
+                      </RightColumn>
                     </HeaderRow>
                     {isOpen && (
                       <>
@@ -461,11 +469,14 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                           >
                             <ProductName>
                               {r.product_name || "Produit"}{" "}
-                              <NutriScore grade={r.nutriscore_grade} /> <InlineHint>(100g)</InlineHint>
+                              <InlineHint>(100g)</InlineHint>
                             </ProductName>
                           </div>
                         </LeftRow>
-                        <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
+                        <RightColumn>
+                          <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
+                          <NutriScore grade={r.nutriscore_grade} />
+                        </RightColumn>
                       </HeaderRow>
                       {isOpen && (
                         <>
