@@ -93,6 +93,10 @@ export const Button = styled.button`
   cursor: pointer;
   display: grid;
   place-items: center;
+  flex: 0 0 auto; /* ne grandit pas en flex */
+  justify-self: start; /* si parent = grid */
+  align-self: flex-start; /* si parent = flex */
+  white-space: nowrap; /* évite le retour à la ligne */
 `;
 
 export const Card = styled.div`
