@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { SavedItem } from "../../types";
 import { storage } from "../../utils/storage";
 import {
@@ -35,10 +35,26 @@ import {
 export const TrackingTab = () => {
   /* objectif partagé (utilisé aussi par HistoryTab si tu lis la même clé) */
   const TARGET_KEY = "cal-target-kcal";
-  const [target, setTarget] = React.useState<number>(() => {
+  // const [target, setTarget] = React.useState<number>(2000);
+  const [target, setTarget] = useState<number>(() => {
     const saved = localStorage.getItem(TARGET_KEY);
-    return saved ? Math.max(9999, parseInt(saved, 10) || 2000) : 2000;
+    return parseInt(saved) ?? 2000;
   });
+
+  // // valeur numérique à utiliser partout
+  // const targetKcal = React.useMemo(() => {
+  //   const n = target;
+  //   return Number.isFinite(n) ? Math.max(1, n) : 2000;
+  // }, [target]);
+
+  // // on persiste seulement quand la valeur numérique est valide
+  // const persistIfValid = (s: string) => {
+  //   const n = parseInt(s, 10);
+  //   if (Number.isFinite(n)) {
+  //     localStorage.setItem(TARGET_KEY, String(Math.max(1, n)));
+  //   }
+  // };
+
   React.useEffect(() => {
     localStorage.setItem(TARGET_KEY, String(target));
   }, [target]);
@@ -149,10 +165,13 @@ export const TrackingTab = () => {
                 const n = parseInt(e.target.value, 10);
                 if (!Number.isFinite(n)) {
                   setTarget(2000);
-                } else if (n < 800) {
-                  setTarget(800);
+                } else if (n < 1) {
+                  setTarget(1);
                 } else {
                   setTarget(n);
+                }
+                if (Number.isFinite(n)) {
+                  localStorage.setItem(TARGET_KEY, String(Math.max(1, n)));
                 }
               }}
             />
