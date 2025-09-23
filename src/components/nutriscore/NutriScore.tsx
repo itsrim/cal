@@ -23,14 +23,14 @@ const NutriScoreSegment = styled.div<{
   $last?: boolean;
 }>`
   position: relative;
-  min-width: 26px;
-  height: ${({ $active }) => ($active ? "20px" : "16px")};
+  min-width: 20px;
+  height: ${({ $active }) => ($active ? "14px" : "12px")};
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  color: white;
-  font-size: ${({ $active }) => ($active ? "13px" : "10px")};
+  color: ${({ $active }) => ($active ? "white" : "grey")};
+  font-size: ${({ $active }) => ($active ? "13px" : "11px")};
   background: ${({ $grade }) => COLORS[$grade] ?? "#666"};
   opacity: ${({ $active }) => ($active ? 1 : 0.9)};
   border-radius: ${({ $first, $last, $active }) =>
@@ -57,7 +57,7 @@ const NutriScoreSegment = styled.div<{
     border-radius: 999px;
     background: ${({ $active, $grade }) =>
       $active ? COLORS[$grade] : "transparent"};
-    z-index:-1;
+    z-index: -1;
     pointer-events: none;
   }
 
