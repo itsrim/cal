@@ -24,13 +24,13 @@ const NutriScoreSegment = styled.div<{
 }>`
   position: relative;
   min-width: 20px;
-  height: ${({ $active }) => ($active ? "14px" : "12px")};
+  height: ${({ $active }) => ($active ? "14px" : "5px")};
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   color: ${({ $active }) => ($active ? "white" : "grey")};
-  font-size: ${({ $active }) => ($active ? "13px" : "11px")};
+  font-size: ${({ $active }) => ($active ? "13px" : "0px")};
   background: ${({ $grade }) => COLORS[$grade] ?? "#666"};
   opacity: ${({ $active }) => ($active ? 1 : 0.9)};
   border-radius: ${({ $first, $last, $active }) =>
