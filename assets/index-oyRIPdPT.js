@@ -130,6 +130,7 @@ Error generating stack: `+o.message+`
 `,xi=b.span`
   color: #e6e6eb;
   font-weight: 700;
+  font-size: 18px;
 `,zg=b.p`
   color: #6b7280;
   margin: 8px 0;
@@ -141,7 +142,7 @@ Error generating stack: `+o.message+`
   cursor: pointer;
 `,Hg=b.input`
   width: 72px;
-  height: 36px;
+  height: 30px;
   border-radius: 8px;
   background-color: rgb(70, 70, 74);
   color: #f5f5f7;
@@ -360,6 +361,7 @@ Error generating stack: `+o.message+`
 `,Pt=b.span`
   color: #e6e6eb;
   font-weight: 700;
+  font-size: 18px;
 `,ko=b.p`
   color: #6b7280;
   margin: 8px 0;
