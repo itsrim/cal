@@ -2,7 +2,7 @@
 
 Exemple voyage
 
- ![Alt text](https://raw.githubusercontent.com/itsrim/voyage/refs/heads/main/portugay.png)
+ ![Alt text](https://raw.githubusercontent.com/itsrim/voyage/refs/heads/main/demo.png)
 
 
 deploy

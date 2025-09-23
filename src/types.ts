@@ -11,6 +11,7 @@ export type Nutriments = {
 export type SearchResult = {
   product_name?: string;
   nutriments?: Nutriments;
+  nutriscore_grade?: string;
 };
 
 export type SavedItem = {

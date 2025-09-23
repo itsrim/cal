@@ -23,7 +23,6 @@ import {
   ListScroll,
   ProductName,
   Row,
-  SearchInput,
   Section,
   Value,
   InputWrap,
@@ -32,6 +31,7 @@ import {
 } from "./StyleSearchTab";
 import { fetchProductByBarcode } from "../../api/openfoodfacts";
 import { BarCodeScanner } from "../codeBar/BarreCodeScanner";
+import { NutriScore } from "../nutriscore/NutriScore";
 
 /* ---------- clés de stockage ---------- */
 const storageKey = "cal-history-v1";
@@ -61,6 +61,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
       const first = {
         product_name: prod.product_name ?? "Produit",
         nutriments: prod.nutriments ?? {},
+        nutriscore_grade: prod.nutriscore_grade,
       } as SearchResult;
       setResult(first);
       const id = `${Date.now()}-${first.product_name || "Produit"}`;
@@ -131,7 +132,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
         search_simple: "1",
         json: "1",
         page_size: "1",
-        fields: "nutriments,product_name",
+        fields: "product_name,nutriments,nutriscore_grade", // + nutriscore_grade
       });
       const url = `https://world.openfoodfacts.org/cgi/search.pl?${params.toString()}`;
       const res = await fetch(url);
@@ -257,7 +258,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
         <Card>
           <HeaderRow>
             <ProductName>
-              {result.product_name || "Produit"} <InlineHint>(100g)</InlineHint>
+              {result.product_name || "Produit"} <NutriScore grade={result.nutriscore_grade} /> <InlineHint>(100g)</InlineHint>
             </ProductName>
             <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
           </HeaderRow>
@@ -353,7 +354,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                         >
                           <ProductName>
                             {r.product_name || "Produit"}{" "}
-                            <InlineHint>(100g)</InlineHint>
+                            <NutriScore grade={r.nutriscore_grade} /> <InlineHint>(100g)</InlineHint>
                           </ProductName>
                         </div>
                       </LeftRow>
@@ -460,7 +461,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                           >
                             <ProductName>
                               {r.product_name || "Produit"}{" "}
-                              <InlineHint>(100g)</InlineHint>
+                              <NutriScore grade={r.nutriscore_grade} /> <InlineHint>(100g)</InlineHint>
                             </ProductName>
                           </div>
                         </LeftRow>
