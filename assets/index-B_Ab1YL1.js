@@ -219,13 +219,13 @@ Error generating stack: `+o.message+`
 `,Kg=b.div`
   position: relative;
   min-width: 20px;
-  height: ${({$active:t})=>t?"14px":"12px"};
+  height: ${({$active:t})=>t?"14px":"5px"};
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   color: ${({$active:t})=>t?"white":"grey"};
-  font-size: ${({$active:t})=>t?"13px":"11px"};
+  font-size: ${({$active:t})=>t?"13px":"0px"};
   background: ${({$grade:t})=>e1[t]??"#666"};
   opacity: ${({$active:t})=>t?1:.9};
   border-radius: ${({$first:t,$last:e,$active:r})=>r?"999px":t?"8px 0 0 8px":e?"0 8px 8px 0":"0"};
