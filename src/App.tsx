@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { HistoryTab } from "./components/HistoryTab";
-import { SearchTab } from "./components/SearchTab";
+import { HistoryTab } from "./components/history/HistoryTab";
+import { SearchTab } from "./components/search/SearchTab";
+import { TrackingTab } from "./components/tracking/TrackingTab";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -88,13 +89,14 @@ const Indicator = styled.div<{ $x: number; $w: number }>`
   }
 `;
 
-type TabId = "search" | "history";
+type TabId = "search" | "history" | "suivi";
 
 export default function App() {
   const [active, setActive] = React.useState<TabId>("search");
   const tabs = [
     { id: "search" as const, label: "Recherche" },
     { id: "history" as const, label: "Historique" },
+    { id: "suivi" as const, label: "Suivi" },
   ];
 
   // pour l’indicateur (underline)
@@ -180,6 +182,14 @@ export default function App() {
           hidden={active !== "history"}
         >
           {active === "history" && <HistoryTab />}
+        </Panel>
+        <Panel
+          id="panel-suivi"
+          role="tabpanel"
+          aria-labelledby="tab-suivi"
+          hidden={active !== "suivi"}
+        >
+          {active === "suivi" && <TrackingTab />}
         </Panel>
       </Content>
     </Container>

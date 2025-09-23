@@ -6,8 +6,8 @@ import type {
   SavedItem,
   RecentEntry,
   FavoriteEntry,
-} from "../types";
-import { storage } from "../utils/storage";
+} from "../../types";
+import { storage } from "../../utils/storage";
 import {
   Button,
   Card,
@@ -30,8 +30,8 @@ import {
   SearchInputWithLeftIcon,
   ScanIconBtnLeft,
 } from "./StyleSearchTab";
-import { fetchProductByBarcode } from "../api/openfoodfacts";
-import { BarCodeScanner } from "./BarreCodeScanner";
+import { fetchProductByBarcode } from "../../api/openfoodfacts";
+import { BarCodeScanner } from "../codeBar/BarreCodeScanner";
 
 /* ---------- clés de stockage ---------- */
 const storageKey = "cal-history-v1";

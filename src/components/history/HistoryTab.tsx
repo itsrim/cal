@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
-import { Nutriments, SavedItem } from "../types";
-import { storage } from "../utils/storage";
+import { Nutriments, SavedItem } from "../../types";
+import { storage } from "../../utils/storage";
 import { Trash2 } from "lucide-react";
 import {
   CalendarStrip,
