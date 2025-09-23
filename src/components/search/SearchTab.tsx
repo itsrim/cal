@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, Ellipsis, ScanBarcode } from "lucide-react";
+import { Search, ScanBarcode } from "lucide-react";
 import type {
   Nutriments,
   SearchResult,
@@ -29,6 +29,7 @@ import {
   SearchInputWithLeftIcon,
   ScanIconBtnLeft,
   RightColumn,
+  Spinner,
 } from "./StyleSearchTab";
 import { fetchProductByBarcode } from "../../api/openfoodfacts";
 import { BarCodeScanner } from "../codeBar/BarreCodeScanner";
@@ -177,7 +178,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
         nutriments: r.nutriments,
         timestamp: Date.now(),
         quantity: 100,
-        nutriscore_grade: r.nutriscore_grade
+        nutriscore_grade: r.nutriscore_grade,
       };
       try {
         const raw = await storage.getItem(storageKey);
@@ -250,7 +251,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
           disabled={!canSearch}
           aria-label="Rechercher"
         >
-          {loading ? <Ellipsis /> : <Search />}
+          {loading ? <Spinner aria-label="Chargement" /> : <Search />}
         </Button>
       </Row>
 

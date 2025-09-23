@@ -1,4 +1,21 @@
 import styled from "styled-components";
+import { Loader } from "lucide-react";
+
+export const Spinner = styled(Loader)`
+  animation: spin 0.9s linear infinite;
+  width: 20px;
+  height: 20px;
+  color: currentColor;
+  stroke-width: 2;
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+`;
 
 export const ListScroll = styled.div`
   flex: 1;
