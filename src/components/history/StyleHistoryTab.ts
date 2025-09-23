@@ -68,6 +68,7 @@ export const Label = styled.span`
 export const Value = styled.span`
   color: #e6e6eb;
   font-weight: 700;
+  font-size: 18px;
 `;
 
 export const Hint = styled.p`
@@ -85,7 +86,7 @@ export const IconButton = styled.button`
 
 export const QtyInput = styled.input`
   width: 72px;
-  height: 36px;
+  height: 30px;
   border-radius: 8px;
   background-color: rgb(70, 70, 74);
   color: #f5f5f7;

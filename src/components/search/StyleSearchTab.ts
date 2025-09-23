@@ -141,6 +141,7 @@ export const Label = styled.span`
 export const Value = styled.span`
   color: #e6e6eb;
   font-weight: 700;
+  font-size: 18px;
 `;
 
 export const Hint = styled.p`
