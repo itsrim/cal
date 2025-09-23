@@ -326,6 +326,10 @@ Error generating stack: `+o.message+`
   cursor: pointer;
   display: grid;
   place-items: center;
+  flex: 0 0 auto; /* ne grandit pas en flex */
+  justify-self: start; /* si parent = grid */
+  align-self: flex-start; /* si parent = flex */
+  white-space: nowrap; /* évite le retour à la ligne */
 `,Xu=b.div`
   margin-top: 12px;
   padding: 16px;
