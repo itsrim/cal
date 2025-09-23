@@ -26,10 +26,16 @@ import {
 } from "./StyleHistoryTab";
 
 const storageKey = "cal-history-v1";
+// en haut de HistoryTab:
 
 export const HistoryTab = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [saved, setSaved] = useState<SavedItem[]>([]);
+  // const TARGET_KEY = "cal-target-kcal";
+  // const [targetKcal] = useState<number>(() => {
+  //   const v = localStorage.getItem(TARGET_KEY);
+  //   return v ? Math.max(800, parseInt(v, 10) || 2000) : 2000;
+  // });
 
   // Max journaliers (équilibré pour 2000 kcal)
   const MAX_CARBS = 250; // g
