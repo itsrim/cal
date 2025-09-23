@@ -24,6 +24,8 @@ import {
   Trash,
   Value,
 } from "./StyleHistoryTab";
+import { NutriScore } from "../nutriscore/NutriScore";
+import { RightColumn } from "../search/StyleSearchTab";
 
 const storageKey = "cal-history-v1";
 // en haut de HistoryTab:
@@ -280,6 +282,9 @@ export const HistoryTab = () => {
                 </Row>
                 <Row>
                   <Label>Calories</Label>
+                  <RightColumn>
+                    <NutriScore grade={it.nutriscore_grade} />
+                  </RightColumn>
                   <Value>
                     {k !== null
                       ? `${Math.round((k * (it.quantity ?? 100)) / 100)} kcal`

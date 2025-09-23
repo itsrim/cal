@@ -177,6 +177,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
         nutriments: r.nutriments,
         timestamp: Date.now(),
         quantity: 100,
+        nutriscore_grade: r.nutriscore_grade
       };
       try {
         const raw = await storage.getItem(storageKey);

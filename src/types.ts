@@ -20,6 +20,7 @@ export type SavedItem = {
   nutriments: Nutriments;
   timestamp: number;
   quantity?: number;
+  nutriscore_grade?: string; 
 };
 
 export type RecentEntry = {
