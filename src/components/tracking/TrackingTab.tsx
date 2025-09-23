@@ -1,215 +1,35 @@
 import React from "react";
-import styled, { css, keyframes } from "styled-components";
 import { SavedItem } from "../../types";
 import { storage } from "../../utils/storage";
+import {
+  Wrap,
+  Header,
+  Title,
+  Right,
+  Nav,
+  IconBtn,
+  TargetWrap,
+  TargetInput,
+  Legend,
+  LegendBarWrap,
+  Bar,
+  Grid,
+  WeekLabel,
+  DayLabel,
+  Cell,
+  Slide,
+  BarLabels,
+} from "./StyleTrackingTab";
 
-/* ========== Styles ========== */
-const Wrap = styled.div`
-  display: grid;
-  gap: 12px;
-`;
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: #e6e6eb;
-  gap: 10px;
-  flex-wrap: wrap;
-`;
-
-const Title = styled.h3`
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
-`;
-
-const Right = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
-const Nav = styled.div`
-  display: flex;
-  gap: 8px;
-`;
-
-const IconBtn = styled.button`
-  border: 0;
-  background: #1a1a22;
-  color: #e6e6eb;
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-`;
-
-const TargetWrap = styled.label`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #9da3ae;
-  font-size: 12px;
-`;
-const TargetInput = styled.input`
-  width: 86px;
-  height: 32px;
-  padding: 0 10px;
-  border-radius: 8px;
-  border: 1px solid #262631;
-  background-color: rgb(70, 70, 74);
-  color: #e6e6eb;
-`;
-
-const Legend = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  color: #9da3ae;
-  font-size: 14px;
-  flex-wrap: wrap;
-`;
-
-/* conteneur pour la barre + labels */
-const LegendBarWrap = styled.div`
-  position: relative;
-  flex: 1 1 140px;
-  min-width: 160px;
-`;
-
-/* la barre dégradée */
-const Bar = styled.div`
-  height: 16px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #8b5cf6 0%, #ec4899 55%, #ef4444 100%);
-`;
-
-/* labels superposés dans la barre */
-const BarLabels = styled.div`
-  position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 6px;
-  font-size: 10px;
-  color: #e5e7eb;
-  pointer-events: none;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-`;
-
-const Grid = styled.div<{ $cols: number }>`
-  display: grid;
-  grid-template-columns: 56px repeat(${(p) => p.$cols}, minmax(28px, 1fr));
-  gap: 6px;
-`;
-
-const WeekLabel = styled.div`
-  color: #6b7280;
-  font-size: 11px;
-  text-align: center;
-`;
-
-const DayLabel = styled.div`
-  color: #9da3ae;
-  font-size: 12px;
-  line-height: 28px;
-  height: 28px;
-`;
-
-const Cell = styled.button<{ $bg: string; $over?: boolean }>`
-  height: 28px;
-  border-radius: 6px;
-  border: 0;
-  background: ${(p) => p.$bg};
-  color: ${(p) => (p.$over ? "#fff" : "#e6e6eb")};
-  font-size: 11px;
-  cursor: default;
-  display: grid;
-  place-items: center;
-  opacity: 0.98;
-`;
-
-/* Slide anim */
-const slideInLeft = keyframes`
-  from { opacity: .3; transform: translateX(20px); }
-  to   { opacity: 1;  transform: translateX(0); }
-`;
-const slideInRight = keyframes`
-  from { opacity: .3; transform: translateX(-20px); }
-  to   { opacity: 1;  transform: translateX(0); }
-`;
-const Slide = styled.div<{ $dir: "next" | "prev" }>`
-  animation: ${(p) =>
-    p.$dir === "next"
-      ? css`
-          ${slideInLeft} .28s ease
-        `
-      : css`
-          ${slideInRight} .28s ease
-        `};
-`;
-
-/* ========== Helpers ========== */
-const startOfDay = (d: Date) => {
-  const x = new Date(d);
-  x.setHours(0, 0, 0, 0);
-  return x.getTime();
-};
-function monthStart(d: Date) {
-  const x = new Date(d.getFullYear(), d.getMonth(), 1);
-  x.setHours(0, 0, 0, 0);
-  return x;
-}
-function monthEnd(d: Date) {
-  const x = new Date(d.getFullYear(), d.getMonth() + 1, 0);
-  x.setHours(0, 0, 0, 0);
-  return x;
-}
-function addMonths(d: Date, n: number) {
-  const x = new Date(d);
-  x.setMonth(x.getMonth() + n);
-  return x;
-}
-function startOfWeek(d: Date) {
-  // semaine démarrant Dimanche; pour Lundi: const dow=(d.getDay()+6)%7;
-  const x = new Date(d);
-  const dow = x.getDay();
-  x.setDate(x.getDate() - dow);
-  x.setHours(0, 0, 0, 0);
-  return x;
-}
-function hexToRgb(h: string) {
-  const x = h.replace("#", "");
-  return {
-    r: parseInt(x.slice(0, 2), 16),
-    g: parseInt(x.slice(2, 4), 16),
-    b: parseInt(x.slice(4, 6), 16),
-  };
-}
-function mix(a: string, b: string, t: number) {
-  const A = hexToRgb(a),
-    B = hexToRgb(b);
-  const r = Math.round(A.r * (1 - t) + B.r * t);
-  const g = Math.round(A.g * (1 - t) + B.g * t);
-  const bl = Math.round(A.b * (1 - t) + B.b * t);
-  return `rgb(${r},${g},${bl})`;
-}
-/* Violet → Rose → Rouge si >100% */
-function colorFor(pct: number) {
-  if (pct <= 0) return "#1f1f27";
-  if (pct >= 130) return "#991b1b"; // très haut
-  if (pct > 100) {
-    const t = Math.min(1, (pct - 100) / 30); // 100→130
-    return mix("#ef4444", "#ec4899", 1 - t); // vers rouge
-  }
-  // 0→100 : violet → rose
-  const t = pct / 100;
-  return mix("#8b5cf6", "#ec4899", t);
-}
+// /* ========== Helpers ========== */
+import {
+  startOfDay,
+  monthStart,
+  monthEnd,
+  addMonths,
+  startOfWeek,
+  colorFor,
+} from "../../utils/helpers";
 
 /* ========== Component ========== */
 export const TrackingTab = () => {
@@ -217,7 +37,7 @@ export const TrackingTab = () => {
   const TARGET_KEY = "cal-target-kcal";
   const [target, setTarget] = React.useState<number>(() => {
     const saved = localStorage.getItem(TARGET_KEY);
-    return saved ? Math.max(800, parseInt(saved, 10) || 2000) : 2000;
+    return saved ? Math.max(9999, parseInt(saved, 10) || 2000) : 2000;
   });
   React.useEffect(() => {
     localStorage.setItem(TARGET_KEY, String(target));
@@ -324,9 +144,17 @@ export const TrackingTab = () => {
               min={800}
               step={50}
               value={target}
-              onChange={(e) =>
-                setTarget(Math.max(800, parseInt(e.target.value || "0", 10)))
-              }
+              onChange={(e) => setTarget(parseInt(e.target.value, 10))}
+              onBlur={(e) => {
+                const n = parseInt(e.target.value, 10);
+                if (!Number.isFinite(n)) {
+                  setTarget(2000);
+                } else if (n < 800) {
+                  setTarget(800);
+                } else {
+                  setTarget(n);
+                }
+              }}
             />
             kcal
           </TargetWrap>
