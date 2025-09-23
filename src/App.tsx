@@ -33,7 +33,10 @@ const Panel = styled.section`
 `;
 /* ---------- Tabs ---------- */
 const TabBar = styled.div`
-  position: relative;
+  position: sticky;
+  top: 0; /* colle en haut de la page */
+  z-index: 10; /* passe devant le contenu au scroll */
+  background: #0b0b0f; /* évite la transparence pendant le scroll */
   display: flex;
   gap: 24px; /* horizontal seulement */
   border-bottom: 1px solid #262631;
