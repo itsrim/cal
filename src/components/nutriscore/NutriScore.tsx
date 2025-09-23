@@ -32,7 +32,7 @@ const NutriScoreSegment = styled.div<{
   color: white;
   font-size: ${({ $active }) => ($active ? "13px" : "10px")};
   background: ${({ $grade }) => COLORS[$grade] ?? "#666"};
-  opacity: ${({ $active }) => ($active ? 1 : 0.7)};
+  opacity: ${({ $active }) => ($active ? 1 : 0.9)};
   border-radius: ${({ $first, $last, $active }) =>
     $active
       ? "999px" /* pilule bien ronde quand active */
@@ -55,8 +55,9 @@ const NutriScoreSegment = styled.div<{
     position: absolute;
     inset: ${({ $active }) => ($active ? "-2px -4px" : "0")};
     border-radius: 999px;
-    background: ${({ $active }) =>
-      $active ? "rgba(255,255,255,0.28)" : "transparent"};
+    background: ${({ $active, $grade }) =>
+      $active ? COLORS[$grade] : "transparent"};
+    z-index:-1;
     pointer-events: none;
   }
 
