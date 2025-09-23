@@ -38,7 +38,7 @@ export const TrackingTab = () => {
   // const [target, setTarget] = React.useState<number>(2000);
   const [target, setTarget] = useState<number>(() => {
     const saved = localStorage.getItem(TARGET_KEY);
-    return parseInt(saved) ?? 2000;
+    return saved ? parseInt(saved, 10) : 2000;
   });
 
   // // valeur numérique à utiliser partout
