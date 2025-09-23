@@ -284,7 +284,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
       )}
 
       {!result && !error && !loading ? (
-        <Hint>Scan ou Entre une recherche puis appuyez sur Entrer.</Hint>
+        <Hint>Scan ou Entre une recherche puis Entrer</Hint>
       ) : null}
 
       {/* Sous-onglets Favoris / Récents */}
