@@ -479,7 +479,10 @@ ${S}`},d=Se.useMemo(()=>r.filter(_=>l(_.timestamp,t.getTime())),[r,t]),h=Se.useM
   width: 100%;
   min-height: 0; /* important pour que l’intérieur puisse scroller */
 `,$w=U.div`
-  position: relative;
+  position: sticky;
+  top: 0; /* colle en haut de la page */
+  z-index: 10; /* passe devant le contenu au scroll */
+  background: #0b0b0f; /* évite la transparence pendant le scroll */
   display: flex;
   gap: 24px; /* horizontal seulement */
   border-bottom: 1px solid #262631;
