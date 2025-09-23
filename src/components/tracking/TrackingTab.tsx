@@ -60,7 +60,7 @@ const TargetInput = styled.input`
   padding: 0 10px;
   border-radius: 8px;
   border: 1px solid #262631;
-  background: #15151b;
+  background-color: rgb(70, 70, 74);
   color: #e6e6eb;
 `;
 
@@ -307,7 +307,7 @@ export const TrackingTab = () => {
   return (
     <Wrap onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <Header>
-        <Title>Suivi — {monthLabel}</Title>{" "}
+        <Title>{monthLabel}</Title>{" "}
         <Nav>
           <IconBtn aria-label="Mois précédent" onClick={goPrev}>
             ‹

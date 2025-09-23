@@ -23,8 +23,8 @@ export const DayPill = styled.button<{ $selected?: boolean }>`
   width: 56px;
   min-width: 56px;
   border-radius: 12px;
-  border: 0;
-  background-color: ${(p) => (p.$selected ? "#4f46e5" : "#46464a")};
+  border: 1px solid grey;
+  background-color: ${(p) => (p.$selected ? "#4f46e5" : "#13131a")};
   color: #e6e6eb;
   font-weight: 700;
   white-space: pre-line;
@@ -87,7 +87,7 @@ export const QtyInput = styled.input`
   width: 72px;
   height: 36px;
   border-radius: 8px;
-  background-color: #1a1a22;
+  background-color: rgb(70, 70, 74);
   color: #f5f5f7;
   text-align: center;
   border: 1px solid #262631;
@@ -127,7 +127,6 @@ export const LegendRow = styled.div`
   font-weight: 600;
 `;
 
-
 export const Pct = styled.span<{ $over?: boolean }>`
   position: absolute;
   left: 12px;
@@ -137,11 +136,10 @@ export const Pct = styled.span<{ $over?: boolean }>`
   font-weight: 800;
 `;
 
-
 export const Track = styled.div`
   height: 22px;
   border-radius: 11px;
-  background: #23232b;        /* rail */
+  background: #23232b; /* rail */
   overflow: hidden;
   position: relative;
 `;
@@ -151,7 +149,7 @@ export const Fill = styled.div<{ $pct: number; $color: string }>`
   height: 100%;
   background: ${(p) => p.$color};
   border-radius: 11px 0 0 11px;
-  transition: width .25s ease;
+  transition: width 0.25s ease;
 `;
 
 export const PctLeft = styled.span<{ $over?: boolean }>`
@@ -172,9 +170,8 @@ export const RightInfo = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
-  color:rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
   font-weight: 500;
   white-space: nowrap;
-  pointer-events: none;   /* pas cliquable */
+  pointer-events: none; /* pas cliquable */
 `;
-
