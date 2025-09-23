@@ -538,6 +538,7 @@ ${S}`},d=Ee.useMemo(()=>r.filter(w=>l(w.timestamp,t.getTime())),[r,t]),h=Ee.useM
 `,$1=b.button`
   border: 0;
   background: #1a1a22;
+  border: 1px solid grey;
   color: #e6e6eb;
   width: 34px;
   height: 34px;
