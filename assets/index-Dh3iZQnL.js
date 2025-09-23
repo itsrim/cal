@@ -218,14 +218,14 @@ Error generating stack: `+o.message+`
   overflow: visible; /* pour laisser dépasser la "pilule" active */
 `,Kg=b.div`
   position: relative;
-  min-width: 26px;
-  height: ${({$active:t})=>t?"20px":"16px"};
+  min-width: 20px;
+  height: ${({$active:t})=>t?"14px":"12px"};
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  color: white;
-  font-size: ${({$active:t})=>t?"13px":"10px"};
+  color: ${({$active:t})=>t?"white":"grey"};
+  font-size: ${({$active:t})=>t?"13px":"11px"};
   background: ${({$grade:t})=>e1[t]??"#666"};
   opacity: ${({$active:t})=>t?1:.9};
   border-radius: ${({$first:t,$last:e,$active:r})=>r?"999px":t?"8px 0 0 8px":e?"0 8px 8px 0":"0"};
@@ -243,7 +243,7 @@ Error generating stack: `+o.message+`
     inset: ${({$active:t})=>t?"-2px -4px":"0"};
     border-radius: 999px;
     background: ${({$active:t,$grade:e})=>t?e1[e]:"transparent"};
-    z-index:-1;
+    z-index: -1;
     pointer-events: none;
   }
 
