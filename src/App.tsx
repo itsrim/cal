@@ -293,9 +293,13 @@ export default function App() {
 
   // Fermer le menu quand on clique ailleurs
   React.useEffect(() => {
-    const handleClickOutside = () => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (menuOpen) {
-        setMenuOpen(false);
+        // Ne pas fermer si on clique dans le menu déroulant ou sur le bouton burger
+        const target = event.target as Element;
+        if (!target.closest('[data-menu-dropdown]') && !target.closest('[data-burger-button]')) {
+          setMenuOpen(false);
+        }
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -354,17 +358,15 @@ export default function App() {
           </TabBar>
           
           <BurgerButton
-            onClick={(e) => {
-              e.stopPropagation();
-              setMenuOpen(!menuOpen);
-            }}
+            onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Menu"
             aria-expanded={menuOpen}
+            data-burger-button
           >
             <Menu size={20} />
           </BurgerButton>
           
-          <MenuDropdown $open={menuOpen} onClick={(e) => e.stopPropagation()}>
+          <MenuDropdown $open={menuOpen} data-menu-dropdown onClick={(e) => e.stopPropagation()}>
             <MenuItem onClick={(e) => {
               e.stopPropagation();
               clearStorage();
