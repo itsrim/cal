@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { SavedItem } from "../../types";
 import { storage } from "../../utils/storage";
+import { useI18n } from "../../contexts/I18nContext";
 import {
   Wrap,
   Header,
@@ -35,6 +36,7 @@ import {
 type TrackingTabProps = { isDarkMode: boolean };
 
 export const TrackingTab = ({ isDarkMode }: TrackingTabProps) => {
+  const { t } = useI18n();
   /* objectif partagé (utilisé aussi par HistoryTab si tu lis la même clé) */
   const TARGET_KEY = "cal-target-kcal";
   // const [target, setTarget] = React.useState<number>(2000);
@@ -147,10 +149,10 @@ export const TrackingTab = ({ isDarkMode }: TrackingTabProps) => {
       <Header $isDarkMode={isDarkMode}>
         <Title $isDarkMode={isDarkMode}>{monthLabel}</Title>{" "}
         <Nav>
-          <IconBtn $isDarkMode={isDarkMode} aria-label="Mois précédent" onClick={goPrev}>
+          <IconBtn $isDarkMode={isDarkMode} aria-label={t('tracking.previousMonth')} onClick={goPrev}>
             ‹
           </IconBtn>
-          <IconBtn $isDarkMode={isDarkMode} aria-label="Mois suivant" onClick={goNext}>
+          <IconBtn $isDarkMode={isDarkMode} aria-label={t('tracking.nextMonth')} onClick={goNext}>
             ›
           </IconBtn>
         </Nav>

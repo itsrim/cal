@@ -8,6 +8,7 @@ import type {
   FavoriteEntry,
 } from "../../types";
 import { storage } from "../../utils/storage";
+import { useI18n } from "../../contexts/I18nContext";
 import {
   Button,
   Card,
@@ -44,6 +45,7 @@ type SearchTabProps = { onSaved?: () => void; isDarkMode: boolean };
 type InnerTabId = "favorites" | "recents";
 
 export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
+  const { t } = useI18n();
   const [query, setQuery] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -61,12 +63,12 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
     try {
       const prod = await fetchProductByBarcode(ean);
       const first = {
-        product_name: prod.product_name ?? "Produit",
+        product_name: prod.product_name ?? t('search.product'),
         nutriments: prod.nutriments ?? {},
         nutriscore_grade: prod.nutriscore_grade,
       } as SearchResult;
       setResult(first);
-      const id = `${Date.now()}-${first.product_name || "Produit"}`;
+      const id = `${Date.now()}-${first.product_name || t('search.product')}`;
       setHistory((prev) => {
         const next = [{ id, item: first }, ...prev].slice(0, 10);
         storage.setItem("cal-recents-v1", JSON.stringify(next)).catch(() => {});
@@ -81,8 +83,8 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
   // sous-onglets
   const [innerTab, setInnerTab] = React.useState<InnerTabId>("favorites");
   const innerTabs = [
-    { id: "favorites" as const, label: "Favoris" },
-    { id: "recents" as const, label: "Récents" },
+    { id: "favorites" as const, label: t('search.favorites') },
+    { id: "recents" as const, label: t('search.recents') },
   ];
   const innerRef = React.useRef<HTMLDivElement>(null);
   const [underline, setUnderline] = React.useState({ x: 0, w: 0 });
@@ -146,7 +148,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
         setResult(null);
       } else {
         setResult(first);
-        const id = `${Date.now()}-${first.product_name || "Produit"}`;
+        const id = `${Date.now()}-${first.product_name || t('search.product')}`;
         setHistory((prev) => {
           const next = [{ id, item: first }, ...prev].slice(0, 10);
           storage.setItem(recentKey, JSON.stringify(next)).catch(() => {});
@@ -174,7 +176,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
       if (!r || !r.nutriments) return;
       const item: SavedItem = {
         id: `${Date.now()}`,
-        product_name: r.product_name || "Produit",
+        product_name: r.product_name || t('search.product'),
         nutriments: r.nutriments,
         timestamp: Date.now(),
         quantity: 100,
@@ -224,7 +226,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
           <ScanIconBtnLeft
             $isDarkMode={isDarkMode}
             aria-label="Scanner code-barres"
-            title="Scanner"
+            title={t('search.scanner')}
             onClick={() => setScanOpen(true)}
             disabled={loading}
           >
@@ -251,9 +253,9 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
         <Button
           onClick={fetchFirstProduct}
           disabled={!canSearch}
-          aria-label="Rechercher"
+          aria-label={t('search.searchPlaceholder')}
         >
-          {loading ? <Spinner aria-label="Chargement" /> : <Search />}
+          {loading ? <Spinner aria-label={t('search.loading')} /> : <Search />}
         </Button>
       </Row>
 
@@ -263,7 +265,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
         <Card $isDarkMode={isDarkMode}>
           <HeaderRow>
             <ProductName $isDarkMode={isDarkMode}>
-              {result.product_name || "Produit"}
+              {result.product_name || t('search.product')}
               <InlineHint $isDarkMode={isDarkMode}>(100g)</InlineHint>
             </ProductName>
             <RightColumn>

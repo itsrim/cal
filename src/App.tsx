@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { Menu, X, Moon, Sun } from "lucide-react";
+import { Menu, X, Moon, Sun, Languages } from "lucide-react";
 import { HistoryTab } from "./components/history/HistoryTab";
 import { SearchTab } from "./components/search/SearchTab";
 import { TrackingTab } from "./components/tracking/TrackingTab";
 import { storage } from "./utils/storage";
+import { I18nProvider, useI18n, Language } from "./contexts/I18nContext";
 
 const Container = styled.div<{ $isDarkMode: boolean }>`
   min-height: 100vh;
@@ -235,7 +236,8 @@ const TabBarContainer = styled.div`
 
 type TabId = "search" | "history" | "suivi";
 
-export default function App() {
+function AppContent() {
+  const { language, setLanguage, t } = useI18n();
   const [active, setActive] = React.useState<TabId>("search");
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [pwaModalOpen, setPwaModalOpen] = React.useState(false);
@@ -244,9 +246,9 @@ export default function App() {
   const [isDarkMode, setIsDarkMode] = React.useState(true); // Dark mode par défaut
   
   const tabs = [
-    { id: "search" as const, label: "Recherche" },
-    { id: "history" as const, label: "Historique" },
-    { id: "suivi" as const, label: "Suivi" },
+    { id: "search" as const, label: t('app.tabs.search') },
+    { id: "history" as const, label: t('app.tabs.history') },
+    { id: "suivi" as const, label: t('app.tabs.tracking') },
   ];
 
   // pour l'indicateur (underline)
@@ -304,6 +306,12 @@ export default function App() {
     localStorage.setItem('cal-theme', newTheme ? 'dark' : 'light');
   }, [isDarkMode]);
 
+  // Changer de langue
+  const toggleLanguage = React.useCallback(() => {
+    const newLanguage: Language = language === 'fr' ? 'en' : 'fr';
+    setLanguage(newLanguage);
+  }, [language, setLanguage]);
+
   // Effacer le localStorage
   const clearStorage = React.useCallback(async () => {
     try {
@@ -360,7 +368,7 @@ export default function App() {
   return (
     <Container $isDarkMode={isDarkMode}>
       <Content>
-        <Title $isDarkMode={isDarkMode}>Compteur de calories 🍆🍑</Title>
+        <Title $isDarkMode={isDarkMode}>{t('app.title')}</Title>
 
         <TabBarContainer data-menu-container>
           <TabBar
@@ -405,27 +413,35 @@ export default function App() {
               setMenuOpen(false);
             }}>
               {isDarkMode ? <Sun size={16} style={{ marginRight: '8px' }} /> : <Moon size={16} style={{ marginRight: '8px' }} />}
-              {isDarkMode ? 'Mode clair' : 'Mode sombre'}
+              {isDarkMode ? t('app.menu.lightMode') : t('app.menu.darkMode')}
+            </MenuItem>
+            <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
+              e.stopPropagation();
+              toggleLanguage();
+              setMenuOpen(false);
+            }}>
+              <Languages size={16} style={{ marginRight: '8px' }} />
+              {t('app.menu.language')} ({language === 'fr' ? 'FR 🇫🇷' : 'EN 🇺🇸'}) {'->'} {language === 'fr' ? 'EN 🇺🇸' : 'FR 🇫🇷'}
             </MenuItem>
             <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
               e.stopPropagation();
               setPwaModalOpen(true);
               setMenuOpen(false);
             }}>
-              démo d'utilisation
+              {t('app.menu.demo')}
             </MenuItem>
             <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
               e.stopPropagation();
               setDemoModalOpen(true);
               setMenuOpen(false);
             }}>
-              Installation
+              {t('app.menu.installation')}
             </MenuItem>
             <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
               e.stopPropagation();
               clearStorage();
             }}>
-              Effacer données (<StorageSize>{storageSize} Mo</StorageSize>)
+              {t('app.menu.clearData')} (<StorageSize>{storageSize} Mo</StorageSize>)
             </MenuItem>
           </MenuDropdown>
         </TabBarContainer>
@@ -462,25 +478,33 @@ export default function App() {
       <ModalOverlay $open={pwaModalOpen} onClick={() => setPwaModalOpen(false)}>
         <ModalContent $isDarkMode={isDarkMode} onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={() => setPwaModalOpen(false)}>
-          Fermer<X size={20} />
+          {t('app.menu.close')}<X size={20} />
           </CloseButton>
           <ModalImage 
             src="/cal/pwa_ios.png" 
-            alt="Instructions d'installation PWA sur iOS"
+            alt={t('app.menu.installInstructions')}
           />
         </ModalContent>
       </ModalOverlay>
       <ModalOverlay $open={demoModalOpen} onClick={() => setDemoModalOpen(false)}>
         <ModalContent $isDarkMode={isDarkMode} onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={() => setDemoModalOpen(false)}>
-            Fermer<X size={20} />
+            {t('app.menu.close')}<X size={20} />
           </CloseButton>
           <ModalImage 
             src="/cal/demo.gif" 
-            alt="Démo de l'application"
+            alt={t('app.menu.demoAlt')}
           />
         </ModalContent>
       </ModalOverlay>
     </Container>
+  );
+}
+
+export default function App() {
+  return (
+    <I18nProvider>
+      <AppContent />
+    </I18nProvider>
   );
 }

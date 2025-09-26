@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState, useRef } from "react";
 import { Nutriments, SavedItem } from "../../types";
 import { storage } from "../../utils/storage";
 import { Trash2 } from "lucide-react";
+import { useI18n } from "../../contexts/I18nContext";
 import {
   CalendarStrip,
   Card,
@@ -33,6 +34,7 @@ const storageKey = "cal-history-v1";
 type HistoryTabProps = { isDarkMode: boolean };
 
 export const HistoryTab = ({ isDarkMode }: HistoryTabProps) => {
+  const { t } = useI18n();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [saved, setSaved] = useState<SavedItem[]>([]);
   // const TARGET_KEY = "cal-target-kcal";
@@ -258,7 +260,7 @@ export const HistoryTab = ({ isDarkMode }: HistoryTabProps) => {
                   <LeftRow>
                     <IconButton
                       onClick={() => removeItem(it.id)}
-                      aria-label="Supprimer définitivement"
+                      aria-label={t('history.delete')}
                     >
                       <Trash>
                         <Trash2 size={20} />
