@@ -216,7 +216,7 @@ const CloseButton = styled.button`
   color: white;
   cursor: pointer;
   padding: 8px;
-  border-radius: 50%;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -409,16 +409,10 @@ export default function App() {
             </MenuItem>
             <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
               e.stopPropagation();
-              clearStorage();
-            }}>
-              Effacer données (<StorageSize>{storageSize} Mo</StorageSize>)
-            </MenuItem>
-            <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
-              e.stopPropagation();
               setPwaModalOpen(true);
               setMenuOpen(false);
             }}>
-              demo
+              démo d'utilisation
             </MenuItem>
             <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
               e.stopPropagation();
@@ -426,6 +420,12 @@ export default function App() {
               setMenuOpen(false);
             }}>
               Installation
+            </MenuItem>
+            <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
+              e.stopPropagation();
+              clearStorage();
+            }}>
+              Effacer données (<StorageSize>{storageSize} Mo</StorageSize>)
             </MenuItem>
           </MenuDropdown>
         </TabBarContainer>
@@ -462,7 +462,7 @@ export default function App() {
       <ModalOverlay $open={pwaModalOpen} onClick={() => setPwaModalOpen(false)}>
         <ModalContent $isDarkMode={isDarkMode} onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={() => setPwaModalOpen(false)}>
-            <X size={20} />
+          Fermer<X size={20} />
           </CloseButton>
           <ModalImage 
             src="/cal/pwa_ios.png" 
@@ -473,7 +473,7 @@ export default function App() {
       <ModalOverlay $open={demoModalOpen} onClick={() => setDemoModalOpen(false)}>
         <ModalContent $isDarkMode={isDarkMode} onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={() => setDemoModalOpen(false)}>
-            <X size={20} />
+            Fermer<X size={20} />
           </CloseButton>
           <ModalImage 
             src="/cal/demo.gif" 

@@ -219,7 +219,7 @@ export const TrackingTab = ({ isDarkMode }: TrackingTabProps) => {
                 const kcal = Math.round(kcalByDay.get(key) || 0);
                 const pct = Math.min(200, (kcal / Math.max(1, target)) * 100);
                 const over = pct > 100;
-                const bg = inMonth ? colorFor(pct) : (isDarkMode ? "#121218" : "#f3f4f6");
+                const bg = inMonth ? colorFor(pct, isDarkMode) : (isDarkMode ? "#121218" : "#f3f4f6");
                 return (
                   <Cell
                     key={key + String(row)}

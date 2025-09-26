@@ -45,8 +45,8 @@ export const mix = (a: string, b: string, t: number) => {
   return `rgb(${r},${g},${bl})`;
 };
 
-export const colorFor = (pct: number) => {
-  if (pct <= 0) return "#1f1f27";
+export const colorFor = (pct: number, isDarkMode: boolean) => {
+  if (pct <= 0) return isDarkMode ? "#1f1f27" : "#f3f4f6";
   if (pct >= 130) return "#991b1b"; // très haut
   if (pct > 100) {
     const t = Math.min(1, (pct - 100) / 30); // 100→130

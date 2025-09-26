@@ -236,7 +236,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
             as="input"
             type="search" // garde la croix native
             inputMode="search"
-            placeholder="Scan ou Rechercher un aliment (ex: yaourt, pomme...)"
+            placeholder="Scan ou chercher un aliment (ex: yaourt, pomme...)"
             value={query}
             onChange={(e) => setQuery((e.target as HTMLInputElement).value)}
             onKeyDown={(e) => {
@@ -294,7 +294,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
       )}
 
       {!result && !error && !loading ? (
-        <Hint $isDarkMode={isDarkMode}>Scan ou Entre une recherche puis Entrer</Hint>
+        <Hint $isDarkMode={isDarkMode}>Scan ou entre une recherche puis Entrer</Hint>
       ) : null}
 
       {/* Sous-onglets Favoris / Récents */}
