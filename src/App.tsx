@@ -227,6 +227,7 @@ export default function App() {
   const [active, setActive] = React.useState<TabId>("search");
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [pwaModalOpen, setPwaModalOpen] = React.useState(false);
+  const [demoModalOpen, setDemoModalOpen] = React.useState(false);
   const [storageSize, setStorageSize] = React.useState(0);
   
   const tabs = [
@@ -378,6 +379,13 @@ export default function App() {
               setPwaModalOpen(true);
               setMenuOpen(false);
             }}>
+              demo
+            </MenuItem>
+            <MenuItem onClick={(e) => {
+              e.stopPropagation();
+              setDemoModalOpen(true);
+              setMenuOpen(false);
+            }}>
               Installation
             </MenuItem>
           </MenuDropdown>
@@ -420,6 +428,17 @@ export default function App() {
           <ModalImage 
             src="/cal/pwa_ios.png" 
             alt="Instructions d'installation PWA sur iOS"
+          />
+        </ModalContent>
+      </ModalOverlay>
+      <ModalOverlay $open={demoModalOpen} onClick={() => setDemoModalOpen(false)}>
+        <ModalContent onClick={(e) => e.stopPropagation()}>
+          <CloseButton onClick={() => setDemoModalOpen(false)}>
+            <X size={20} />
+          </CloseButton>
+          <ModalImage 
+            src="/cal/demo.gif" 
+            alt="Démo de l'application"
           />
         </ModalContent>
       </ModalOverlay>
