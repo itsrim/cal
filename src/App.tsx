@@ -283,17 +283,18 @@ export default function App() {
       await storage.removeItem("cal-favorites-v1");
       // Effacer aussi le localStorage directement
       localStorage.clear();
-      calculateStorageSize();
       setMenuOpen(false);
+      // Recharger la page pour mettre à jour l'interface
+      window.location.reload();
     } catch (error) {
       console.error("Erreur lors de l'effacement des données:", error);
     }
-  }, [calculateStorageSize]);
+  }, []);
 
   // Fermer le menu quand on clique ailleurs
   React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuOpen && !(event.target as Element).closest('[data-menu-container]')) {
+    const handleClickOutside = () => {
+      if (menuOpen) {
         setMenuOpen(false);
       }
     };
@@ -353,18 +354,25 @@ export default function App() {
           </TabBar>
           
           <BurgerButton
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setMenuOpen(!menuOpen);
+            }}
             aria-label="Menu"
             aria-expanded={menuOpen}
           >
             <Menu size={20} />
           </BurgerButton>
           
-          <MenuDropdown $open={menuOpen}>
-            <MenuItem onClick={clearStorage}>
+          <MenuDropdown $open={menuOpen} onClick={(e) => e.stopPropagation()}>
+            <MenuItem onClick={(e) => {
+              e.stopPropagation();
+              clearStorage();
+            }}>
               Effacer données (<StorageSize>{storageSize} Mo</StorageSize>)
             </MenuItem>
-            <MenuItem onClick={() => {
+            <MenuItem onClick={(e) => {
+              e.stopPropagation();
               setPwaModalOpen(true);
               setMenuOpen(false);
             }}>
@@ -408,7 +416,7 @@ export default function App() {
             <X size={20} />
           </CloseButton>
           <ModalImage 
-            src="/pwa_ios.png" 
+            src="/cal/pwa_ios.png" 
             alt="Instructions d'installation PWA sur iOS"
           />
         </ModalContent>
