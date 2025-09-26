@@ -147,16 +147,6 @@ export const TrackingTab = ({ isDarkMode }: TrackingTabProps) => {
   return (
     <Wrap onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <Header $isDarkMode={isDarkMode}>
-        <Title $isDarkMode={isDarkMode}>{monthLabel}</Title>{" "}
-        <Nav>
-          <IconBtn $isDarkMode={isDarkMode} aria-label={t('tracking.previousMonth')} onClick={goPrev}>
-            ‹
-          </IconBtn>
-          <IconBtn $isDarkMode={isDarkMode} aria-label={t('tracking.nextMonth')} onClick={goNext}>
-            ›
-          </IconBtn>
-        </Nav>
-        <Right>
           <TargetWrap $isDarkMode={isDarkMode}>
             max
             <TargetInput
@@ -182,6 +172,17 @@ export const TrackingTab = ({ isDarkMode }: TrackingTabProps) => {
             />
             kcal
           </TargetWrap>
+        <Right>
+          <Title $isDarkMode={isDarkMode}>{monthLabel}</Title>
+        
+          <Nav>
+          <IconBtn $isDarkMode={isDarkMode} aria-label={t('tracking.previousMonth')} onClick={goPrev}>
+            ‹
+          </IconBtn>
+          <IconBtn $isDarkMode={isDarkMode} aria-label={t('tracking.nextMonth')} onClick={goNext}>
+            ›
+          </IconBtn>
+        </Nav>
         </Right>
       </Header>
 

@@ -21,6 +21,7 @@ export const Title = styled.h3<{ $isDarkMode: boolean }>`
   font-size: 16px;
   font-weight: 700;
   color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
+
   transition: color 0.3s ease;
 `;
 
