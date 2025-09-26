@@ -15,6 +15,7 @@ import {
   HeaderRow,
   Heart,
   Hint,
+  ErrorHint,
   InlineHint,
   InnerIndicator,
   InnerTabBar,
@@ -144,7 +145,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
       const data = await res.json();
       const first: SearchResult | undefined = data?.products?.[0];
       if (!first) {
-        setError("Aucun produit trouvé.");
+        setError(t('search.noProductFound'));
         setResult(null);
       } else {
         setResult(first);
@@ -238,7 +239,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
             as="input"
             type="search" // garde la croix native
             inputMode="search"
-            placeholder="Scan ou chercher un aliment (ex: yaourt, pomme...)"
+            placeholder={t('search.placeholder')}
             value={query}
             onChange={(e) => setQuery((e.target as HTMLInputElement).value)}
             onKeyDown={(e) => {
@@ -259,15 +260,30 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
         </Button>
       </Row>
 
-      {error ? <Hint $isDarkMode={isDarkMode}>{error}</Hint> : null}
+      {error ? <ErrorHint $isDarkMode={isDarkMode}>{error}</ErrorHint> : null}
 
       {result && (
         <Card $isDarkMode={isDarkMode}>
           <HeaderRow>
-            <ProductName $isDarkMode={isDarkMode}>
-              {result.product_name || t('search.product')}
-              <InlineHint $isDarkMode={isDarkMode}>(100g)</InlineHint>
-            </ProductName>
+            <LeftRow>
+              <Heart 
+                $active={favorites.some(f => f.item.product_name === result.product_name)}
+                $isDarkMode={isDarkMode} 
+                onClick={() => {
+                  const entry: RecentEntry = {
+                    id: `${Date.now()}-${result.product_name || t('search.product')}`,
+                    item: result
+                  };
+                  toggleFavorite(entry);
+                }}
+              >
+                {favorites.some(f => f.item.product_name === result.product_name) ? "♥" : "♡"}
+              </Heart>
+              <ProductName $isDarkMode={isDarkMode}>
+                {result.product_name || t('search.product')}
+                <InlineHint $isDarkMode={isDarkMode}>(100g)</InlineHint>
+              </ProductName>
+            </LeftRow>
             <RightColumn>
               <Value $isDarkMode={isDarkMode}>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
               <NutriScore grade={result.nutriscore_grade} />
@@ -276,27 +292,27 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
           <Row
             style={{ justifyContent: "space-between" } as React.CSSProperties}
           >
-            <Label $isDarkMode={isDarkMode}>Lipides</Label>
+            <Label $isDarkMode={isDarkMode}>{t('search.fats')}</Label>
             <Value $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</Value>
           </Row>
           <Row
             style={{ justifyContent: "space-between" } as React.CSSProperties}
           >
-            <Label $isDarkMode={isDarkMode}>Sucres</Label>
+            <Label $isDarkMode={isDarkMode}>{t('search.sugars')}</Label>
             <Value $isDarkMode={isDarkMode}>{sugars !== null ? `${sugars} g` : "—"}</Value>
           </Row>
           <Row
             style={{ justifyContent: "space-between" } as React.CSSProperties}
           >
-            <Label $isDarkMode={isDarkMode}>Protéines</Label>
+            <Label $isDarkMode={isDarkMode}>{t('search.proteins')}</Label>
             <Value $isDarkMode={isDarkMode}>{proteins !== null ? `${proteins} g` : "—"}</Value>
           </Row>
-          <Button onClick={handleSave}>Enregistrer</Button>
+          <Button onClick={handleSave}>{t('search.save')}</Button>
         </Card>
       )}
 
       {!result && !error && !loading ? (
-        <Hint $isDarkMode={isDarkMode}>Scan ou entre une recherche puis Entrer</Hint>
+        <Hint $isDarkMode={isDarkMode}>{t('search.hint')}</Hint>
       ) : null}
 
       {/* Sous-onglets Favoris / Récents */}
@@ -335,7 +351,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
           {innerTab === "favorites" && (
             <>
               {favorites.length === 0 ? (
-                <Hint $isDarkMode={isDarkMode}>Aucun favori pour le moment.</Hint>
+                <Hint $isDarkMode={isDarkMode}>{t('search.noFavorites')}</Hint>
               ) : null}
 
               {favorites.map((h) => {
@@ -385,7 +401,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                             } as React.CSSProperties
                           }
                         >
-                          <Label $isDarkMode={isDarkMode}>Lipides</Label>
+                          <Label $isDarkMode={isDarkMode}>{t('search.fats')}</Label>
                           <Value $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</Value>
                         </Row>
                         <Row
@@ -395,7 +411,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                             } as React.CSSProperties
                           }
                         >
-                          <Label $isDarkMode={isDarkMode}>Sucres</Label>
+                          <Label $isDarkMode={isDarkMode}>{t('search.sugars')}</Label>
                           <Value $isDarkMode={isDarkMode}>{sugars !== null ? `${sugars} g` : "—"}</Value>
                         </Row>
                         <Row
@@ -405,7 +421,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                             } as React.CSSProperties
                           }
                         >
-                          <Label $isDarkMode={isDarkMode}>Protéines</Label>
+                          <Label $isDarkMode={isDarkMode}>{t('search.proteins')}</Label>
                           <Value $isDarkMode={isDarkMode}>
                             {proteins !== null ? `${proteins} g` : "—"}
                           </Value>
@@ -418,7 +434,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                           }
                         >
                           <Button onClick={() => saveResult(r)}>
-                            Enregistrer
+                            {t('search.save')}
                           </Button>
                         </Row>
                       </>
@@ -441,7 +457,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
             <>
               {history.filter((h) => h.item !== result).slice(0, 5).length ===
               0 ? (
-                <Hint $isDarkMode={isDarkMode}>Aucune recherche récente.</Hint>
+                <Hint $isDarkMode={isDarkMode}>{t('search.noRecentSearch')}</Hint>
               ) : null}
 
               {history
@@ -477,8 +493,8 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                             onClick={() => toggleExpand(h.id)}
                           >
                             <ProductName $isDarkMode={isDarkMode}>
-                              {r.product_name || "Produit"}{" "}
-                              <InlineHint $isDarkMode={isDarkMode}>(100g)</InlineHint>
+                              {r.product_name || "Produit"}
+                              <InlineHint $isDarkMode={isDarkMode}> (100g)</InlineHint>
                             </ProductName>
                           </div>
                         </LeftRow>
@@ -496,7 +512,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                               } as React.CSSProperties
                             }
                           >
-                            <Label $isDarkMode={isDarkMode}>Lipides</Label>
+                            <Label $isDarkMode={isDarkMode}>{t('search.fats')}</Label>
                             <Value $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</Value>
                           </Row>
                           <Row
@@ -506,7 +522,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                               } as React.CSSProperties
                             }
                           >
-                            <Label $isDarkMode={isDarkMode}>Sucres</Label>
+                            <Label $isDarkMode={isDarkMode}>{t('search.sugars')}</Label>
                             <Value $isDarkMode={isDarkMode}>
                               {sugars !== null ? `${sugars} g` : "—"}
                             </Value>
@@ -518,13 +534,13 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                               } as React.CSSProperties
                             }
                           >
-                            <Label $isDarkMode={isDarkMode}>Protéines</Label>
+                            <Label $isDarkMode={isDarkMode}>{t('search.proteins')}</Label>
                             <Value $isDarkMode={isDarkMode}>
                               {proteins !== null ? `${proteins} g` : "—"}
                             </Value>
                           </Row>
                           <Button onClick={() => saveResult(r)}>
-                            Enregistrer
+                            {t('search.save')}
                           </Button>
                         </>
                       )}

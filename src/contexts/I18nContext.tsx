@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export type Language = 'fr' | 'en';
 
@@ -35,9 +35,24 @@ const translations = {
     'search.scanner': 'Scanner',
     'search.searchPlaceholder': 'Rechercher',
     'search.loading': 'Chargement',
+    'search.noProductFound': 'Aucun produit trouvé.',
+    'search.noRecentSearch': 'Aucune recherche récente.',
+    'search.noFavorites': 'Aucun favori pour le moment.',
+    'search.proteins': 'Protéines',
+    'search.sugars': 'Sucres',
+    'search.fats': 'Lipides',
+    'search.save': 'Enregistrer',
+    'search.placeholder': 'Scan ou chercher un aliment (ex: yaourt, pomme...)',
+    'search.hint': 'Scan ou entre une recherche puis Entrer',
     
     // HistoryTab
     'history.delete': 'Supprimer définitivement',
+    'history.totalDay': 'Total du jour',
+    'history.noFoodToday': 'Aucun aliment enregistré ce jour.',
+    'history.carbs': 'Glucides',
+    'history.fats': 'Lipides',
+    'history.proteins': 'Protéines',
+    'history.sugars': 'Sucres',
     
     // TrackingTab
     'tracking.previousMonth': 'Mois précédent',
@@ -66,9 +81,24 @@ const translations = {
     'search.scanner': 'Scanner',
     'search.searchPlaceholder': 'Search',
     'search.loading': 'Loading',
+    'search.noProductFound': 'No product found.',
+    'search.noRecentSearch': 'No recent search.',
+    'search.noFavorites': 'No favorites yet.',
+    'search.proteins': 'Proteins',
+    'search.sugars': 'Sugars',
+    'search.fats': 'Fats',
+    'search.save': 'Save',
+    'search.placeholder': 'Scan or search for a food (e.g. yogurt, apple...)',
+    'search.hint': 'Scan or enter a search then Enter',
     
     // HistoryTab
     'history.delete': 'Delete permanently',
+    'history.totalDay': 'Daily total',
+    'history.noFoodToday': 'No food recorded today.',
+    'history.carbs': 'Carbs',
+    'history.fats': 'Fats',
+    'history.proteins': 'Proteins',
+    'history.sugars': 'Sugars',
     
     // TrackingTab
     'tracking.previousMonth': 'Previous month',

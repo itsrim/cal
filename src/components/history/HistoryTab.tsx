@@ -191,7 +191,7 @@ export const HistoryTab = ({ isDarkMode }: HistoryTabProps) => {
       </CalendarStrip>
 
       <Row>
-        <SubTitle $isDarkMode={isDarkMode}>Total du jour</SubTitle>
+        <SubTitle $isDarkMode={isDarkMode}>{t('history.totalDay')}</SubTitle>
         <Value $isDarkMode={isDarkMode}>
           {totalQtyForDay} g · {Math.round(totalKcalForDay)} kcal
         </Value>
@@ -205,7 +205,7 @@ export const HistoryTab = ({ isDarkMode }: HistoryTabProps) => {
             {Math.round(pct(totalCarbs, MAX_CARBS))}%
           </PctLeft>
           <RightInfo $isDarkMode={isDarkMode}>
-            <span>Glucides</span>
+            <span>{t('history.carbs')}</span>
             <span>
               {Math.round(totalCarbs)} g / {MAX_CARBS} g
             </span>
@@ -219,7 +219,7 @@ export const HistoryTab = ({ isDarkMode }: HistoryTabProps) => {
             {Math.round(pct(totalFat, MAX_FAT))}%
           </PctLeft>
           <RightInfo $isDarkMode={isDarkMode}>
-            <span>Lipides</span>
+            <span>{t('history.fats')}</span>
             <span>
               {Math.round(totalFat)} g / {MAX_FAT} g
             </span>
@@ -233,7 +233,7 @@ export const HistoryTab = ({ isDarkMode }: HistoryTabProps) => {
             {Math.round(pct(totalProt, MAX_PROT))}%
           </PctLeft>
           <RightInfo $isDarkMode={isDarkMode}>
-            <span>Protéines</span>
+            <span>{t('history.proteins')}</span>
             <span>
               {Math.round(totalProt)} g / {MAX_PROT} g
             </span>
@@ -243,7 +243,7 @@ export const HistoryTab = ({ isDarkMode }: HistoryTabProps) => {
 
       <ListScroll>
         {itemsForSelectedDay.length === 0 ? (
-          <Hint $isDarkMode={isDarkMode}>Aucun aliment enregistré ce jour.</Hint>
+          <Hint $isDarkMode={isDarkMode}>{t('history.noFoodToday')}</Hint>
         ) : (
           itemsForSelectedDay.map((it) => {
             const nf = it.nutriments;
@@ -298,15 +298,15 @@ export const HistoryTab = ({ isDarkMode }: HistoryTabProps) => {
                   </Value>
                 </Row>
                 <Row>
-                  <Label $isDarkMode={isDarkMode}>Lipides</Label>
+                  <Label $isDarkMode={isDarkMode}>{t('history.fats')}</Label>
                   <Value $isDarkMode={isDarkMode}>{f !== null ? `${f} g` : "—"}</Value>
                 </Row>
                 <Row>
-                  <Label $isDarkMode={isDarkMode}>Sucres</Label>
+                  <Label $isDarkMode={isDarkMode}>{t('history.sugars')}</Label>
                   <Value $isDarkMode={isDarkMode}>{s !== null ? `${s} g` : "—"}</Value>
                 </Row>
                 <Row>
-                  <Label $isDarkMode={isDarkMode}>Protéines</Label>
+                  <Label $isDarkMode={isDarkMode}>{t('history.proteins')}</Label>
                   <Value $isDarkMode={isDarkMode}>{p !== null ? `${p} g` : "—"}</Value>
                 </Row>
               </Card>

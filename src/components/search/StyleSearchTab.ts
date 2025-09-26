@@ -175,6 +175,12 @@ export const Hint = styled.p<{ $isDarkMode: boolean }>`
   transition: color 0.3s ease;
 `;
 
+export const ErrorHint = styled.p<{ $isDarkMode: boolean }>`
+  color: #4f46e5;
+  margin: 8px 0;
+  transition: color 0.3s ease;
+`;
+
 export const Heart = styled.span<{ $active?: boolean; $isDarkMode: boolean }>`
   color: ${(p) => (p.$active ? "#ec4899" : (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f"))};
   font-weight: 700;
