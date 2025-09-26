@@ -1,25 +1,27 @@
 import React from "react";
 import styled from "styled-components";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Moon, Sun } from "lucide-react";
 import { HistoryTab } from "./components/history/HistoryTab";
 import { SearchTab } from "./components/search/SearchTab";
 import { TrackingTab } from "./components/tracking/TrackingTab";
 import { storage } from "./utils/storage";
 
-const Container = styled.div`
+const Container = styled.div<{ $isDarkMode: boolean }>`
   min-height: 100vh;
-  background: #0b0b0f;
+  background: ${(p) => (p.$isDarkMode ? "#0b0b0f" : "#ffffff")};
   display: flex;
   flex-direction: column;
+  transition: background-color 0.3s ease;
 `;
-const Title = styled.h1`
-  color: #e6e6eb;
+const Title = styled.h1<{ $isDarkMode: boolean }>`
+  color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
   font-weight: 700;
   margin: 0;
   font-size: clamp(26px, 2vw + 10px, 38px);
   text-align: center;
   font-family: "Dancing Script", cursive;
   font-weight: 700;
+  transition: color 0.3s ease;
 `;
 
 const Content = styled.main`
@@ -35,28 +37,34 @@ const Panel = styled.section`
   min-height: 0; /* important pour que l’intérieur puisse scroller */
 `;
 /* ---------- Tabs ---------- */
-const TabBar = styled.div`
+const TabBar = styled.div<{ $isDarkMode: boolean }>`
   position: sticky;
   top: 0; /* colle en haut de la page */
   z-index: 10; /* passe devant le contenu au scroll */
-  background: #0b0b0f; /* évite la transparence pendant le scroll */
+  background: ${(p) => (p.$isDarkMode ? "#0b0b0f" : "#ffffff")}; /* évite la transparence pendant le scroll */
   display: flex;
   gap: 24px; /* horizontal seulement */
-  border-bottom: 1px solid #262631;
+  border-bottom: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 `;
 
-const TabBtn = styled.button<{ $active?: boolean }>`
+const TabBtn = styled.button<{ $active?: boolean; $isDarkMode: boolean }>`
   appearance: none;
   border: 0;
   background: transparent;
   cursor: pointer;
-  color: ${(p) => (p.$active ? "#e6e6eb" : "#9da3ae")};
+  color: ${(p) => 
+    p.$active 
+      ? (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")
+      : (p.$isDarkMode ? "#9da3ae" : "#6b7280")
+  };
   font-weight: 700;
   font-size: 16px;
   line-height: 1;
   padding: 10px 2px 12px;
   position: relative;
   outline: none;
+  transition: color 0.3s ease;
   &:focus-visible {
     box-shadow: 0 0 0 2px #6366f1aa;
     border-radius: 8px;
@@ -91,12 +99,12 @@ const Indicator = styled.div<{ $x: number; $w: number }>`
   }
 `;
 
-const BurgerButton = styled.button`
+const BurgerButton = styled.button<{ $isDarkMode: boolean }>`
   appearance: none;
   border: 0;
   background: transparent;
   cursor: pointer;
-  color: #9da3ae;
+  color: ${(p) => (p.$isDarkMode ? "#9da3ae" : "#6b7280")};
   padding: 10px 8px;
   margin-left: auto;
   outline: none;
@@ -107,8 +115,8 @@ const BurgerButton = styled.button`
   transition: all 0.2s ease;
   
   &:hover {
-    color: #e6e6eb;
-    background: rgba(255, 255, 255, 0.05);
+    color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
+    background: ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)")};
   }
   
   &:focus-visible {
@@ -116,14 +124,17 @@ const BurgerButton = styled.button`
   }
 `;
 
-const MenuDropdown = styled.div<{ $open: boolean }>`
+const MenuDropdown = styled.div<{ $open: boolean; $isDarkMode: boolean }>`
   position: absolute;
   top: 100%;
   right: 0;
-  background: #1a1a1f;
-  border: 1px solid #262631;
+  background: ${(p) => (p.$isDarkMode ? "#1a1a1f" : "#ffffff")};
+  border: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: ${(p) => p.$isDarkMode 
+    ? "0 8px 32px rgba(0, 0, 0, 0.3)" 
+    : "0 8px 32px rgba(0, 0, 0, 0.1)"
+  };
   min-width: 200px;
   z-index: 1000;
   opacity: ${(p) => (p.$open ? 1 : 0)};
@@ -133,25 +144,25 @@ const MenuDropdown = styled.div<{ $open: boolean }>`
   margin-top: 8px;
 `;
 
-const MenuItem = styled.button`
+const MenuItem = styled.button<{ $isDarkMode: boolean }>`
   appearance: none;
   border: 0;
   background: transparent;
   cursor: pointer;
-  color: #e6e6eb;
+  color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
   padding: 12px 16px;
   width: 100%;
   text-align: left;
   font-size: 14px;
   transition: background-color 0.2s ease;
-  border-bottom: 1px solid #262631;
+  border-bottom: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
   
   &:last-child {
     border-bottom: none;
   }
   
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)")};
   }
   
   &:focus-visible {
@@ -179,13 +190,14 @@ const ModalOverlay = styled.div<{ $open: boolean }>`
   padding: 20px;
 `;
 
-const ModalContent = styled.div`
+const ModalContent = styled.div<{ $isDarkMode: boolean }>`
   position: relative;
-  background: #1a1a1f;
+  background: ${(p) => (p.$isDarkMode ? "#1a1a1f" : "#ffffff")};
   border-radius: 16px;
   max-width: 90vw;
   max-height: 90vh;
   overflow: hidden;
+  transition: background-color 0.3s ease;
 `;
 
 const ModalImage = styled.img`
@@ -229,6 +241,7 @@ export default function App() {
   const [pwaModalOpen, setPwaModalOpen] = React.useState(false);
   const [demoModalOpen, setDemoModalOpen] = React.useState(false);
   const [storageSize, setStorageSize] = React.useState(0);
+  const [isDarkMode, setIsDarkMode] = React.useState(true); // Dark mode par défaut
   
   const tabs = [
     { id: "search" as const, label: "Recherche" },
@@ -275,6 +288,21 @@ export default function App() {
   React.useEffect(() => {
     calculateStorageSize();
   }, [calculateStorageSize]);
+
+  // Charger la préférence du thème depuis le localStorage
+  React.useEffect(() => {
+    const savedTheme = localStorage.getItem('cal-theme');
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    }
+  }, []);
+
+  // Sauvegarder la préférence du thème
+  const toggleDarkMode = React.useCallback(() => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    localStorage.setItem('cal-theme', newTheme ? 'dark' : 'light');
+  }, [isDarkMode]);
 
   // Effacer le localStorage
   const clearStorage = React.useCallback(async () => {
@@ -330,9 +358,9 @@ export default function App() {
   };
 
   return (
-    <Container>
+    <Container $isDarkMode={isDarkMode}>
       <Content>
-        <Title>Compteur de calories 🍆🍑</Title>
+        <Title $isDarkMode={isDarkMode}>Compteur de calories 🍆🍑</Title>
 
         <TabBarContainer data-menu-container>
           <TabBar
@@ -340,6 +368,7 @@ export default function App() {
             aria-label="Navigation principale"
             ref={listRef}
             onKeyDown={onKeyDown}
+            $isDarkMode={isDarkMode}
           >
             {tabs.map((t) => (
               <TabBtn
@@ -350,6 +379,7 @@ export default function App() {
                 aria-controls={`panel-${t.id}`}
                 id={`tab-${t.id}`}
                 $active={active === t.id}
+                $isDarkMode={isDarkMode}
                 onClick={() => setActive(t.id)}
               >
                 {t.label}
@@ -363,25 +393,34 @@ export default function App() {
             aria-label="Menu"
             aria-expanded={menuOpen}
             data-burger-button
+            $isDarkMode={isDarkMode}
           >
             <Menu size={20} />
           </BurgerButton>
           
-          <MenuDropdown $open={menuOpen} data-menu-dropdown onClick={(e) => e.stopPropagation()}>
-            <MenuItem onClick={(e) => {
+          <MenuDropdown $open={menuOpen} $isDarkMode={isDarkMode} data-menu-dropdown onClick={(e) => e.stopPropagation()}>
+            <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
+              e.stopPropagation();
+              toggleDarkMode();
+              setMenuOpen(false);
+            }}>
+              {isDarkMode ? <Sun size={16} style={{ marginRight: '8px' }} /> : <Moon size={16} style={{ marginRight: '8px' }} />}
+              {isDarkMode ? 'Mode clair' : 'Mode sombre'}
+            </MenuItem>
+            <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
               e.stopPropagation();
               clearStorage();
             }}>
               Effacer données (<StorageSize>{storageSize} Mo</StorageSize>)
             </MenuItem>
-            <MenuItem onClick={(e) => {
+            <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
               e.stopPropagation();
               setPwaModalOpen(true);
               setMenuOpen(false);
             }}>
               demo
             </MenuItem>
-            <MenuItem onClick={(e) => {
+            <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
               e.stopPropagation();
               setDemoModalOpen(true);
               setMenuOpen(false);
@@ -398,7 +437,7 @@ export default function App() {
           hidden={active !== "search"}
         >
           {active === "search" && (
-            <SearchTab onSaved={() => setActive("history")} />
+            <SearchTab onSaved={() => setActive("history")} isDarkMode={isDarkMode} />
           )}
         </Panel>
         <Panel
@@ -407,7 +446,7 @@ export default function App() {
           aria-labelledby="tab-history"
           hidden={active !== "history"}
         >
-          {active === "history" && <HistoryTab />}
+          {active === "history" && <HistoryTab isDarkMode={isDarkMode} />}
         </Panel>
         <Panel
           id="panel-suivi"
@@ -415,13 +454,13 @@ export default function App() {
           aria-labelledby="tab-suivi"
           hidden={active !== "suivi"}
         >
-          {active === "suivi" && <TrackingTab />}
+          {active === "suivi" && <TrackingTab isDarkMode={isDarkMode} />}
         </Panel>
       </Content>
       
       {/* Modal PWA */}
       <ModalOverlay $open={pwaModalOpen} onClick={() => setPwaModalOpen(false)}>
-        <ModalContent onClick={(e) => e.stopPropagation()}>
+        <ModalContent $isDarkMode={isDarkMode} onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={() => setPwaModalOpen(false)}>
             <X size={20} />
           </CloseButton>
@@ -432,7 +471,7 @@ export default function App() {
         </ModalContent>
       </ModalOverlay>
       <ModalOverlay $open={demoModalOpen} onClick={() => setDemoModalOpen(false)}>
-        <ModalContent onClick={(e) => e.stopPropagation()}>
+        <ModalContent $isDarkMode={isDarkMode} onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={() => setDemoModalOpen(false)}>
             <X size={20} />
           </CloseButton>

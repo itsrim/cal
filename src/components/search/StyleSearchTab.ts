@@ -40,18 +40,20 @@ export const Row = styled.div`
   flex-wrap: nowrap;
 `;
 
-export const SearchInput = styled.input`
-  flex: 1 1 auto; /* prend tout l’espace dispo */
+export const SearchInput = styled.input<{ $isDarkMode: boolean }>`
+  flex: 1 1 auto; /* prend tout l'espace dispo */
   min-width: 0; /* important pour éviter le débordement */
   height: 48px;
   padding: 0 14px;
   border-radius: 12px;
-  border: 1px solid #262631;
-  background-color: rgb(70, 70, 74);
-  color: #f5f5f7;
+  border: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
+  background-color: ${(p) => (p.$isDarkMode ? "rgb(70, 70, 74)" : "#ffffff")};
+  color: ${(p) => (p.$isDarkMode ? "#f5f5f7" : "#1a1a1f")};
   font-size: 16px;
+  transition: all 0.3s ease;
   &::placeholder {
     font-size: 16px;
+    color: ${(p) => (p.$isDarkMode ? "#9da3ae" : "#6b7280")};
   }
 `;
 
@@ -70,7 +72,7 @@ export const SearchInputWithLeftIcon = styled(SearchInput)`
 `;
 
 // icône scanner positionnée à gauche dans le champ
-export const ScanIconBtnLeft = styled.button`
+export const ScanIconBtnLeft = styled.button<{ $isDarkMode: boolean }>`
   position: absolute;
   left: 10px;
   top: 50%;
@@ -79,17 +81,18 @@ export const ScanIconBtnLeft = styled.button`
   height: 24px;
   border: 0;
   background: transparent;
-  color: #c7c7d1;
+  color: ${(p) => (p.$isDarkMode ? "#c7c7d1" : "#6b7280")};
   display: grid;
   place-items: center;
   line-height: 0;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  transition: color 0.3s ease;
 
   &:hover,
   &:focus-visible {
-    color: #e6e6eb;
+    color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
     outline: none;
   }
 
@@ -116,13 +119,14 @@ export const Button = styled.button`
   white-space: nowrap; /* évite le retour à la ligne */
 `;
 
-export const Card = styled.div`
+export const Card = styled.div<{ $isDarkMode: boolean }>`
   margin-top: 12px;
   padding: 16px;
   border-radius: 16px;
-  background-color: #13131a;
+  background-color: ${(p) => (p.$isDarkMode ? "#13131a" : "#f9fafb")};
   display: grid;
   gap: 8px;
+  transition: background-color 0.3s ease;
 `;
 
 export const HeaderRow = styled.div`
@@ -139,38 +143,44 @@ export const LeftRow = styled.div`
   flex: 1;
 `;
 
-export const ProductName = styled.div`
-  color: #c7c7d1;
+export const ProductName = styled.div<{ $isDarkMode: boolean }>`
+  color: ${(p) => (p.$isDarkMode ? "#c7c7d1" : "#1a1a1f")};
   font-size: 16px;
   font-weight: 600;
+  transition: color 0.3s ease;
 `;
 
-export const InlineHint = styled.span`
-  color: #6b7280;
+export const InlineHint = styled.span<{ $isDarkMode: boolean }>`
+  color: ${(p) => (p.$isDarkMode ? "#6b7280" : "#9ca3af")};
   font-size: 12px;
   margin-left: 6px;
+  transition: color 0.3s ease;
 `;
 
-export const Label = styled.span`
-  color: #9da3ae;
+export const Label = styled.span<{ $isDarkMode: boolean }>`
+  color: ${(p) => (p.$isDarkMode ? "#9da3ae" : "#6b7280")};
+  transition: color 0.3s ease;
 `;
 
-export const Value = styled.span`
-  color: #e6e6eb;
+export const Value = styled.span<{ $isDarkMode: boolean }>`
+  color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
   font-weight: 700;
   font-size: 18px;
+  transition: color 0.3s ease;
 `;
 
-export const Hint = styled.p`
-  color: #6b7280;
+export const Hint = styled.p<{ $isDarkMode: boolean }>`
+  color: ${(p) => (p.$isDarkMode ? "#6b7280" : "#9ca3af")};
   margin: 8px 0;
+  transition: color 0.3s ease;
 `;
 
-export const Heart = styled.span<{ $active?: boolean }>`
-  color: ${(p) => (p.$active ? "#ec4899" : "#e6e6eb")};
+export const Heart = styled.span<{ $active?: boolean; $isDarkMode: boolean }>`
+  color: ${(p) => (p.$active ? "#ec4899" : (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f"))};
   font-weight: 700;
   font-size: 18px;
   cursor: pointer;
+  transition: color 0.3s ease;
 `;
 
 export const SearchInputWithClear = styled(SearchInput)`
@@ -209,26 +219,32 @@ export const ClearIcon = styled.button`
   }
 `;
 
-export const InnerTabBar = styled.div`
+export const InnerTabBar = styled.div<{ $isDarkMode: boolean }>`
   position: relative;
   display: flex;
   gap: 24px;
-  border-bottom: 1px solid #262631;
+  border-bottom: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
   margin-top: 16px;
+  transition: border-color 0.3s ease;
 `;
 
-export const InnerTabBtn = styled.button<{ $active?: boolean }>`
+export const InnerTabBtn = styled.button<{ $active?: boolean; $isDarkMode: boolean }>`
   appearance: none;
   border: 0;
   background: transparent;
   cursor: pointer;
-  color: ${(p) => (p.$active ? "#e6e6eb" : "#9da3ae")};
+  color: ${(p) => 
+    p.$active 
+      ? (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")
+      : (p.$isDarkMode ? "#9da3ae" : "#6b7280")
+  };
   font-weight: 700;
   font-size: 16px;
   line-height: 1;
   padding: 10px 2px 12px;
   position: relative;
   outline: none;
+  transition: color 0.3s ease;
   &:focus-visible {
     box-shadow: 0 0 0 2px #6366f1aa;
     border-radius: 8px;
@@ -259,7 +275,7 @@ export const Section = styled.section`
 // export const SearchInputWithClear = styled(SearchInput)`
 //   padding-right: 40px; /* place pour la croix */
 // `;
-export const ClearBtn = styled.button`
+export const ClearBtn = styled.button<{ $isDarkMode: boolean }>`
   position: absolute;
   right: 8px;
   top: 50%;
@@ -269,8 +285,8 @@ export const ClearBtn = styled.button`
   padding: 0;
   border: 0;
   border-radius: 14px;
-  background: #262631;
-  color: #c7c7d1;
+  background: ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
+  color: ${(p) => (p.$isDarkMode ? "#c7c7d1" : "#6b7280")};
   cursor: pointer;
   display: grid;
   place-items: center;
@@ -278,4 +294,5 @@ export const ClearBtn = styled.button`
   font-size: 16px;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  transition: all 0.3s ease;
 `;

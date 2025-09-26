@@ -40,10 +40,10 @@ const storageKey = "cal-history-v1";
 const recentKey = "cal-recents-v1";
 const favoritesKey = "cal-favorites-v1";
 
-type SearchTabProps = { onSaved?: () => void };
+type SearchTabProps = { onSaved?: () => void; isDarkMode: boolean };
 type InnerTabId = "favorites" | "recents";
 
-export const SearchTab = ({ onSaved }: SearchTabProps) => {
+export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
   const [query, setQuery] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -213,8 +213,8 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
     });
   }, []);
 
-  // ref pour remettre le focus après clear
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  // ref pour remettre le focus après clear (non utilisé pour l'instant)
+  // const inputRef = React.useRef<HTMLInputElement>(null);
 
   return (
     <>
@@ -222,6 +222,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
       <Row>
         <InputWrap>
           <ScanIconBtnLeft
+            $isDarkMode={isDarkMode}
             aria-label="Scanner code-barres"
             title="Scanner"
             onClick={() => setScanOpen(true)}
@@ -231,6 +232,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
           </ScanIconBtnLeft>
 
           <SearchInputWithLeftIcon
+            $isDarkMode={isDarkMode}
             as="input"
             type="search" // garde la croix native
             inputMode="search"
@@ -255,48 +257,49 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
         </Button>
       </Row>
 
-      {error ? <Hint>{error}</Hint> : null}
+      {error ? <Hint $isDarkMode={isDarkMode}>{error}</Hint> : null}
 
       {result && (
-        <Card>
+        <Card $isDarkMode={isDarkMode}>
           <HeaderRow>
-            <ProductName>
+            <ProductName $isDarkMode={isDarkMode}>
               {result.product_name || "Produit"}
-              <InlineHint>(100g)</InlineHint>
+              <InlineHint $isDarkMode={isDarkMode}>(100g)</InlineHint>
             </ProductName>
             <RightColumn>
-              <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
+              <Value $isDarkMode={isDarkMode}>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
               <NutriScore grade={result.nutriscore_grade} />
             </RightColumn>
           </HeaderRow>
           <Row
             style={{ justifyContent: "space-between" } as React.CSSProperties}
           >
-            <Label>Lipides</Label>
-            <Value>{fat !== null ? `${fat} g` : "—"}</Value>
+            <Label $isDarkMode={isDarkMode}>Lipides</Label>
+            <Value $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</Value>
           </Row>
           <Row
             style={{ justifyContent: "space-between" } as React.CSSProperties}
           >
-            <Label>Sucres</Label>
-            <Value>{sugars !== null ? `${sugars} g` : "—"}</Value>
+            <Label $isDarkMode={isDarkMode}>Sucres</Label>
+            <Value $isDarkMode={isDarkMode}>{sugars !== null ? `${sugars} g` : "—"}</Value>
           </Row>
           <Row
             style={{ justifyContent: "space-between" } as React.CSSProperties}
           >
-            <Label>Protéines</Label>
-            <Value>{proteins !== null ? `${proteins} g` : "—"}</Value>
+            <Label $isDarkMode={isDarkMode}>Protéines</Label>
+            <Value $isDarkMode={isDarkMode}>{proteins !== null ? `${proteins} g` : "—"}</Value>
           </Row>
           <Button onClick={handleSave}>Enregistrer</Button>
         </Card>
       )}
 
       {!result && !error && !loading ? (
-        <Hint>Scan ou Entre une recherche puis Entrer</Hint>
+        <Hint $isDarkMode={isDarkMode}>Scan ou Entre une recherche puis Entrer</Hint>
       ) : null}
 
       {/* Sous-onglets Favoris / Récents */}
       <InnerTabBar
+        $isDarkMode={isDarkMode}
         role="tablist"
         aria-label="Favoris et récents"
         ref={innerRef}
@@ -310,6 +313,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
             aria-controls={`inner-panel-${t.id}`}
             id={`inner-tab-${t.id}`}
             $active={innerTab === t.id}
+            $isDarkMode={isDarkMode}
             onClick={() => setInnerTab(t.id)}
           >
             {t.label}
@@ -329,7 +333,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
           {innerTab === "favorites" && (
             <>
               {favorites.length === 0 ? (
-                <Hint>Aucun favori pour le moment.</Hint>
+                <Hint $isDarkMode={isDarkMode}>Aucun favori pour le moment.</Hint>
               ) : null}
 
               {favorites.map((h) => {
@@ -344,10 +348,10 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                   null;
                 const isOpen = !!expanded[`fav-${h.id}`];
                 return (
-                  <Card key={`fav-${h.id}`}>
+                  <Card key={`fav-${h.id}`} $isDarkMode={isDarkMode}>
                     <HeaderRow>
                       <LeftRow>
-                        <Heart $active onClick={() => toggleFavorite(h)}>
+                        <Heart $active $isDarkMode={isDarkMode} onClick={() => toggleFavorite(h)}>
                           ♥
                         </Heart>
                         <div
@@ -359,14 +363,14 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                             }))
                           }
                         >
-                          <ProductName>
+                          <ProductName $isDarkMode={isDarkMode}>
                             {r.product_name || "Produit"}
-                            <InlineHint>(100g)</InlineHint>
+                            <InlineHint $isDarkMode={isDarkMode}>(100g)</InlineHint>
                           </ProductName>
                         </div>
                       </LeftRow>
                       <RightColumn>
-                        <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
+                        <Value $isDarkMode={isDarkMode}>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
                         <NutriScore grade={r.nutriscore_grade} />
                       </RightColumn>
                     </HeaderRow>
@@ -379,8 +383,8 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                             } as React.CSSProperties
                           }
                         >
-                          <Label>Lipides</Label>
-                          <Value>{fat !== null ? `${fat} g` : "—"}</Value>
+                          <Label $isDarkMode={isDarkMode}>Lipides</Label>
+                          <Value $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</Value>
                         </Row>
                         <Row
                           style={
@@ -389,8 +393,8 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                             } as React.CSSProperties
                           }
                         >
-                          <Label>Sucres</Label>
-                          <Value>{sugars !== null ? `${sugars} g` : "—"}</Value>
+                          <Label $isDarkMode={isDarkMode}>Sucres</Label>
+                          <Value $isDarkMode={isDarkMode}>{sugars !== null ? `${sugars} g` : "—"}</Value>
                         </Row>
                         <Row
                           style={
@@ -399,8 +403,8 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                             } as React.CSSProperties
                           }
                         >
-                          <Label>Protéines</Label>
-                          <Value>
+                          <Label $isDarkMode={isDarkMode}>Protéines</Label>
+                          <Value $isDarkMode={isDarkMode}>
                             {proteins !== null ? `${proteins} g` : "—"}
                           </Value>
                         </Row>
@@ -435,7 +439,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
             <>
               {history.filter((h) => h.item !== result).slice(0, 5).length ===
               0 ? (
-                <Hint>Aucune recherche récente.</Hint>
+                <Hint $isDarkMode={isDarkMode}>Aucune recherche récente.</Hint>
               ) : null}
 
               {history
@@ -456,11 +460,12 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                     (f) => f.item.product_name === r.product_name
                   );
                   return (
-                    <Card key={h.id}>
+                    <Card key={h.id} $isDarkMode={isDarkMode}>
                       <HeaderRow>
                         <LeftRow>
                           <Heart
                             $active={isFav}
+                            $isDarkMode={isDarkMode}
                             onClick={() => toggleFavorite(h)}
                           >
                             {isFav ? "♥" : "♡"}
@@ -469,14 +474,14 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                             style={{ flex: 1 }}
                             onClick={() => toggleExpand(h.id)}
                           >
-                            <ProductName>
+                            <ProductName $isDarkMode={isDarkMode}>
                               {r.product_name || "Produit"}{" "}
-                              <InlineHint>(100g)</InlineHint>
+                              <InlineHint $isDarkMode={isDarkMode}>(100g)</InlineHint>
                             </ProductName>
                           </div>
                         </LeftRow>
                         <RightColumn>
-                          <Value>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
+                          <Value $isDarkMode={isDarkMode}>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
                           <NutriScore grade={r.nutriscore_grade} />
                         </RightColumn>
                       </HeaderRow>
@@ -489,8 +494,8 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                               } as React.CSSProperties
                             }
                           >
-                            <Label>Lipides</Label>
-                            <Value>{fat !== null ? `${fat} g` : "—"}</Value>
+                            <Label $isDarkMode={isDarkMode}>Lipides</Label>
+                            <Value $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</Value>
                           </Row>
                           <Row
                             style={
@@ -499,8 +504,8 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                               } as React.CSSProperties
                             }
                           >
-                            <Label>Sucres</Label>
-                            <Value>
+                            <Label $isDarkMode={isDarkMode}>Sucres</Label>
+                            <Value $isDarkMode={isDarkMode}>
                               {sugars !== null ? `${sugars} g` : "—"}
                             </Value>
                           </Row>
@@ -511,8 +516,8 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
                               } as React.CSSProperties
                             }
                           >
-                            <Label>Protéines</Label>
-                            <Value>
+                            <Label $isDarkMode={isDarkMode}>Protéines</Label>
+                            <Value $isDarkMode={isDarkMode}>
                               {proteins !== null ? `${proteins} g` : "—"}
                             </Value>
                           </Row>
@@ -535,6 +540,7 @@ export const SearchTab = ({ onSaved }: SearchTabProps) => {
             setScanOpen(false);
             fetchByEAN(ean);
           }}
+          isDarkMode={isDarkMode}
         />
       )}
     </>

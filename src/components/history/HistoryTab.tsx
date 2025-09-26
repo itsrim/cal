@@ -30,7 +30,9 @@ import { RightColumn } from "../search/StyleSearchTab";
 const storageKey = "cal-history-v1";
 // en haut de HistoryTab:
 
-export const HistoryTab = () => {
+type HistoryTabProps = { isDarkMode: boolean };
+
+export const HistoryTab = ({ isDarkMode }: HistoryTabProps) => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [saved, setSaved] = useState<SavedItem[]>([]);
   // const TARGET_KEY = "cal-target-kcal";
@@ -176,6 +178,7 @@ export const HistoryTab = () => {
             <DayPill
               key={d.toISOString()}
               $selected={selected}
+              $isDarkMode={isDarkMode}
               onClick={() => setSelectedDate(d)}
               ref={selected ? todayRef : undefined}
             >
@@ -186,20 +189,20 @@ export const HistoryTab = () => {
       </CalendarStrip>
 
       <Row>
-        <SubTitle>Total du jour</SubTitle>
-        <Value>
+        <SubTitle $isDarkMode={isDarkMode}>Total du jour</SubTitle>
+        <Value $isDarkMode={isDarkMode}>
           {totalQtyForDay} g · {Math.round(totalKcalForDay)} kcal
         </Value>
       </Row>
 
       <ProgressWrap>
         {/* Glucides */}
-        <Track>
+        <Track $isDarkMode={isDarkMode}>
           <Fill $pct={pct(totalCarbs, MAX_CARBS)} $color="#ff9f43" />
-          <PctLeft $over={pct(totalCarbs, MAX_CARBS) > 100}>
+          <PctLeft $over={pct(totalCarbs, MAX_CARBS) > 100} $isDarkMode={isDarkMode}>
             {Math.round(pct(totalCarbs, MAX_CARBS))}%
           </PctLeft>
-          <RightInfo>
+          <RightInfo $isDarkMode={isDarkMode}>
             <span>Glucides</span>
             <span>
               {Math.round(totalCarbs)} g / {MAX_CARBS} g
@@ -208,12 +211,12 @@ export const HistoryTab = () => {
         </Track>
 
         {/* Lipides */}
-        <Track>
+        <Track $isDarkMode={isDarkMode}>
           <Fill $pct={pct(totalFat, MAX_FAT)} $color="#9980FA" />
-          <PctLeft $over={pct(totalFat, MAX_FAT) > 100}>
+          <PctLeft $over={pct(totalFat, MAX_FAT) > 100} $isDarkMode={isDarkMode}>
             {Math.round(pct(totalFat, MAX_FAT))}%
           </PctLeft>
-          <RightInfo>
+          <RightInfo $isDarkMode={isDarkMode}>
             <span>Lipides</span>
             <span>
               {Math.round(totalFat)} g / {MAX_FAT} g
@@ -222,12 +225,12 @@ export const HistoryTab = () => {
         </Track>
 
         {/* Protéines */}
-        <Track>
+        <Track $isDarkMode={isDarkMode}>
           <Fill $pct={pct(totalProt, MAX_PROT)} $color="#1dd1a1" />
-          <PctLeft $over={pct(totalProt, MAX_PROT) > 100}>
+          <PctLeft $over={pct(totalProt, MAX_PROT) > 100} $isDarkMode={isDarkMode}>
             {Math.round(pct(totalProt, MAX_PROT))}%
           </PctLeft>
-          <RightInfo>
+          <RightInfo $isDarkMode={isDarkMode}>
             <span>Protéines</span>
             <span>
               {Math.round(totalProt)} g / {MAX_PROT} g
@@ -238,7 +241,7 @@ export const HistoryTab = () => {
 
       <ListScroll>
         {itemsForSelectedDay.length === 0 ? (
-          <Hint>Aucun aliment enregistré ce jour.</Hint>
+          <Hint $isDarkMode={isDarkMode}>Aucun aliment enregistré ce jour.</Hint>
         ) : (
           itemsForSelectedDay.map((it) => {
             const nf = it.nutriments;
@@ -250,7 +253,7 @@ export const HistoryTab = () => {
               (nf as any)?.energy_kcal_100g ??
               null;
             return (
-              <Card key={it.id}>
+              <Card key={it.id} $isDarkMode={isDarkMode}>
                 <Row>
                   <LeftRow>
                     <IconButton
@@ -261,10 +264,11 @@ export const HistoryTab = () => {
                         <Trash2 size={20} />
                       </Trash>
                     </IconButton>
-                    <ProductName>{it.product_name}</ProductName>
+                    <ProductName $isDarkMode={isDarkMode}>{it.product_name}</ProductName>
                   </LeftRow>
                   <Row>
                     <QtyInput
+                      $isDarkMode={isDarkMode}
                       inputMode="numeric"
                       value={String(it.quantity ?? 100)}
                       onChange={async (e) => {
@@ -277,31 +281,31 @@ export const HistoryTab = () => {
                         await storage.setItem(storageKey, JSON.stringify(next));
                       }}
                     />
-                    <InlineHint>g</InlineHint>
+                    <InlineHint $isDarkMode={isDarkMode}>g</InlineHint>
                   </Row>
                 </Row>
                 <Row>
-                  <Label>Calories</Label>
+                  <Label $isDarkMode={isDarkMode}>Calories</Label>
                   <RightColumn>
                     <NutriScore grade={it.nutriscore_grade} />
                   </RightColumn>
-                  <Value>
+                  <Value $isDarkMode={isDarkMode}>
                     {k !== null
                       ? `${Math.round((k * (it.quantity ?? 100)) / 100)} kcal`
                       : "—"}
                   </Value>
                 </Row>
                 <Row>
-                  <Label>Lipides</Label>
-                  <Value>{f !== null ? `${f} g` : "—"}</Value>
+                  <Label $isDarkMode={isDarkMode}>Lipides</Label>
+                  <Value $isDarkMode={isDarkMode}>{f !== null ? `${f} g` : "—"}</Value>
                 </Row>
                 <Row>
-                  <Label>Sucres</Label>
-                  <Value>{s !== null ? `${s} g` : "—"}</Value>
+                  <Label $isDarkMode={isDarkMode}>Sucres</Label>
+                  <Value $isDarkMode={isDarkMode}>{s !== null ? `${s} g` : "—"}</Value>
                 </Row>
                 <Row>
-                  <Label>Protéines</Label>
-                  <Value>{p !== null ? `${p} g` : "—"}</Value>
+                  <Label $isDarkMode={isDarkMode}>Protéines</Label>
+                  <Value $isDarkMode={isDarkMode}>{p !== null ? `${p} g` : "—"}</Value>
                 </Row>
               </Card>
             );

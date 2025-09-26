@@ -7,30 +7,33 @@ import {
   NotFoundException,
 } from "@zxing/library";
 
-const Backdrop = styled.div`
+const Backdrop = styled.div<{ $isDarkMode: boolean }>`
   position: fixed;
   inset: 0;
   z-index: 50;
-  background: rgba(0, 0, 0, 0.7);
+  background: ${(p) => (p.$isDarkMode ? "rgba(0, 0, 0, 0.7)" : "rgba(0, 0, 0, 0.5)")};
   display: grid;
   place-items: center;
+  transition: background-color 0.3s ease;
 `;
-const Sheet = styled.div`
+const Sheet = styled.div<{ $isDarkMode: boolean }>`
   width: min(640px, 92vw);
-  background: #0b0b0f;
-  border: 1px solid #262631;
+  background: ${(p) => (p.$isDarkMode ? "#0b0b0f" : "#ffffff")};
+  border: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
   border-radius: 16px;
   padding: 16px;
   display: grid;
   gap: 12px;
+  transition: all 0.3s ease;
 `;
-const VideoBox = styled.div`
+const VideoBox = styled.div<{ $isDarkMode: boolean }>`
   position: relative;
   border-radius: 12px;
   overflow: hidden;
   aspect-ratio: 16/10;
-  background: #13131a;
-  border: 1px solid #262631;
+  background: ${(p) => (p.$isDarkMode ? "#13131a" : "#f9fafb")};
+  border: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
+  transition: all 0.3s ease;
 `;
 const Video = styled.video`
   width: 100%;
@@ -52,18 +55,22 @@ const Btn = styled.button`
   font-weight: 700;
   cursor: pointer;
 `;
-const Ghost = styled(Btn)`
-  background: #1a1a22;
+const Ghost = styled(Btn)<{ $isDarkMode: boolean }>`
+  background: ${(p) => (p.$isDarkMode ? "#1a1a22" : "#f3f4f6")};
+  color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
+  transition: all 0.3s ease;
 `;
 
 type BarCodeScannerProps = {
   onClose: () => void;
   onDetected: (ean: string) => void;
+  isDarkMode: boolean;
 };
 
 export const BarCodeScanner = ({
   onClose,
   onDetected,
+  isDarkMode,
 }: BarCodeScannerProps) => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
   const readerRef = React.useRef<BrowserMultiFormatReader | null>(null);
@@ -121,14 +128,14 @@ export const BarCodeScanner = ({
   }, [onDetected]);
 
   return (
-    <Backdrop role="dialog" aria-modal="true" aria-label="Scanner code-barres">
-      <Sheet>
-        <VideoBox>
+    <Backdrop $isDarkMode={isDarkMode} role="dialog" aria-modal="true" aria-label="Scanner code-barres">
+      <Sheet $isDarkMode={isDarkMode}>
+        <VideoBox $isDarkMode={isDarkMode}>
           <Video ref={videoRef} playsInline muted />
         </VideoBox>
         {error ? <div style={{ color: "#f87171" }}>{error}</div> : null}
         <Controls>
-          <Ghost onClick={onClose}>Fermer</Ghost>
+          <Ghost $isDarkMode={isDarkMode} onClick={onClose}>Fermer</Ghost>
         </Controls>
       </Sheet>
     </Backdrop>

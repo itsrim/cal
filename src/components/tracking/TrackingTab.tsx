@@ -32,7 +32,9 @@ import {
 } from "../../utils/helpers";
 
 /* ========== Component ========== */
-export const TrackingTab = () => {
+type TrackingTabProps = { isDarkMode: boolean };
+
+export const TrackingTab = ({ isDarkMode }: TrackingTabProps) => {
   /* objectif partagé (utilisé aussi par HistoryTab si tu lis la même clé) */
   const TARGET_KEY = "cal-target-kcal";
   // const [target, setTarget] = React.useState<number>(2000);
@@ -142,20 +144,21 @@ export const TrackingTab = () => {
 
   return (
     <Wrap onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-      <Header>
-        <Title>{monthLabel}</Title>{" "}
+      <Header $isDarkMode={isDarkMode}>
+        <Title $isDarkMode={isDarkMode}>{monthLabel}</Title>{" "}
         <Nav>
-          <IconBtn aria-label="Mois précédent" onClick={goPrev}>
+          <IconBtn $isDarkMode={isDarkMode} aria-label="Mois précédent" onClick={goPrev}>
             ‹
           </IconBtn>
-          <IconBtn aria-label="Mois suivant" onClick={goNext}>
+          <IconBtn $isDarkMode={isDarkMode} aria-label="Mois suivant" onClick={goNext}>
             ›
           </IconBtn>
         </Nav>
         <Right>
-          <TargetWrap>
+          <TargetWrap $isDarkMode={isDarkMode}>
             max
             <TargetInput
+              $isDarkMode={isDarkMode}
               type="number"
               min={800}
               step={50}
@@ -180,7 +183,7 @@ export const TrackingTab = () => {
         </Right>
       </Header>
 
-      <Legend>
+      <Legend $isDarkMode={isDarkMode}>
         <span>Objectif</span>
         <LegendBarWrap>
           <Bar />
@@ -199,7 +202,7 @@ export const TrackingTab = () => {
             const dd = String(w.getDate()).padStart(2, "0");
             const mm = String(w.getMonth() + 1).padStart(2, "0");
             return (
-              <WeekLabel key={w.toISOString()}>
+              <WeekLabel key={w.toISOString()} $isDarkMode={isDarkMode}>
                 {dd}/{mm}
               </WeekLabel>
             );
@@ -207,7 +210,7 @@ export const TrackingTab = () => {
 
           {weekdayNames.map((label, row) => (
             <React.Fragment key={label}>
-              <DayLabel>{label}</DayLabel>
+              <DayLabel $isDarkMode={isDarkMode}>{label}</DayLabel>
               {weeks.map((w) => {
                 const day = new Date(w);
                 day.setDate(day.getDate() + row);
@@ -216,12 +219,13 @@ export const TrackingTab = () => {
                 const kcal = Math.round(kcalByDay.get(key) || 0);
                 const pct = Math.min(200, (kcal / Math.max(1, target)) * 100);
                 const over = pct > 100;
-                const bg = inMonth ? colorFor(pct) : "#121218";
+                const bg = inMonth ? colorFor(pct) : (isDarkMode ? "#121218" : "#f3f4f6");
                 return (
                   <Cell
                     key={key + String(row)}
                     $bg={bg}
                     $over={over}
+                    $isDarkMode={isDarkMode}
                     title={`${day.toLocaleDateString(
                       "fr-FR"
                     )} · ${kcal} kcal (${Math.round(pct)}%)`}
