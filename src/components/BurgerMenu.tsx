@@ -213,14 +213,14 @@ export const BurgerMenu = ({
         </MenuItem>
         <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
           e.stopPropagation();
-          setPwaModalOpen(true);
+          setDemoModalOpen(true);
           setMenuOpen(false);
         }}>
           {t('app.menu.demo')}
         </MenuItem>
         <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
           e.stopPropagation();
-          setDemoModalOpen(true);
+          setPwaModalOpen(true);
           setMenuOpen(false);
         }}>
           {t('app.menu.installation')}
