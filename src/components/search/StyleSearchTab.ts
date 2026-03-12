@@ -302,3 +302,42 @@ export const ClearBtn = styled.button<{ $isDarkMode: boolean }>`
   touch-action: manipulation;
   transition: all 0.3s ease;
 `;
+export const NutrientGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+`;
+
+export const NutrientColumn = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const ColorBar = styled.div<{ $color: string }>`
+  width: 4px;
+  height: 32px;
+  background-color: ${(p) => p.$color};
+  border-radius: 2px;
+`;
+
+export const NutrientInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+export const NutrientLabel = styled.div<{ $isDarkMode: boolean }>`
+  font-size: 14px;
+  color: ${(p) => (p.$isDarkMode ? "#9da3ae" : "#6b7280")};
+  line-height: 1.2;
+`;
+
+export const NutrientValue = styled.div<{ $isDarkMode: boolean }>`
+  font-size: 16px;
+  font-weight: 700;
+  color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
+  line-height: 1.2;
+`;

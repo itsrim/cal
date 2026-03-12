@@ -32,6 +32,12 @@ import {
   ScanIconBtnLeft,
   RightColumn,
   Spinner,
+  NutrientGrid,
+  NutrientColumn,
+  ColorBar,
+  NutrientInfo,
+  NutrientLabel,
+  NutrientValue,
 } from "./StyleSearchTab";
 import { fetchProductByBarcode } from "../../api/openfoodfacts";
 import { BarCodeScanner } from "../codeBar/BarreCodeScanner";
@@ -165,7 +171,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
 
   const nutriments: Nutriments | undefined = result?.nutriments;
   const fat = nutriments?.fat_100g ?? null;
-  const sugars = nutriments?.sugars_100g ?? null;
+  const carbohydrates = nutriments?.carbohydrates_100g ?? nutriments?.sugars_100g ?? null;
   const proteins = nutriments?.proteins_100g ?? null;
   const kcal =
     (nutriments as any)?.["energy-kcal_100g"] ??
@@ -289,24 +295,29 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
               <NutriScore grade={result.nutriscore_grade} />
             </RightColumn>
           </HeaderRow>
-          <Row
-            style={{ justifyContent: "space-between" } as React.CSSProperties}
-          >
-            <Label $isDarkMode={isDarkMode}>{t('search.fats')}</Label>
-            <Value $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</Value>
-          </Row>
-          <Row
-            style={{ justifyContent: "space-between" } as React.CSSProperties}
-          >
-            <Label $isDarkMode={isDarkMode}>{t('search.sugars')}</Label>
-            <Value $isDarkMode={isDarkMode}>{sugars !== null ? `${sugars} g` : "—"}</Value>
-          </Row>
-          <Row
-            style={{ justifyContent: "space-between" } as React.CSSProperties}
-          >
-            <Label $isDarkMode={isDarkMode}>{t('search.proteins')}</Label>
-            <Value $isDarkMode={isDarkMode}>{proteins !== null ? `${proteins} g` : "—"}</Value>
-          </Row>
+          <NutrientGrid>
+            <NutrientColumn>
+              <ColorBar $color="#ff9f43" />
+              <NutrientInfo>
+                <NutrientLabel $isDarkMode={isDarkMode}>{t('history.carbs')}</NutrientLabel>
+                <NutrientValue $isDarkMode={isDarkMode}>{carbohydrates !== null ? `${carbohydrates} g` : "—"}</NutrientValue>
+              </NutrientInfo>
+            </NutrientColumn>
+            <NutrientColumn>
+              <ColorBar $color="#9980FA" />
+              <NutrientInfo>
+                <NutrientLabel $isDarkMode={isDarkMode}>{t('search.fats')}</NutrientLabel>
+                <NutrientValue $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</NutrientValue>
+              </NutrientInfo>
+            </NutrientColumn>
+            <NutrientColumn>
+              <ColorBar $color="#1dd1a1" />
+              <NutrientInfo>
+                <NutrientLabel $isDarkMode={isDarkMode}>{t('search.proteins')}</NutrientLabel>
+                <NutrientValue $isDarkMode={isDarkMode}>{proteins !== null ? `${proteins} g` : "—"}</NutrientValue>
+              </NutrientInfo>
+            </NutrientColumn>
+          </NutrientGrid>
           <Button onClick={handleSave}>{t('search.save')}</Button>
         </Card>
       )}
@@ -358,7 +369,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                 const r = h.item;
                 const n: Nutriments | undefined = r.nutriments;
                 const fat = n?.fat_100g ?? null;
-                const sugars = n?.sugars_100g ?? null;
+                const carbohydrates = n?.carbohydrates_100g ?? n?.sugars_100g ?? null;
                 const proteins = n?.proteins_100g ?? null;
                 const kcal =
                   (n as any)?.["energy-kcal_100g"] ??
@@ -394,42 +405,33 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                     </HeaderRow>
                     {isOpen && (
                       <>
+                        <NutrientGrid>
+                          <NutrientColumn>
+                            <ColorBar $color="#ff9f43" />
+                            <NutrientInfo>
+                              <NutrientLabel $isDarkMode={isDarkMode}>{t('history.carbs')}</NutrientLabel>
+                              <NutrientValue $isDarkMode={isDarkMode}>{carbohydrates !== null ? `${carbohydrates} g` : "—"}</NutrientValue>
+                            </NutrientInfo>
+                          </NutrientColumn>
+                          <NutrientColumn>
+                            <ColorBar $color="#9980FA" />
+                            <NutrientInfo>
+                              <NutrientLabel $isDarkMode={isDarkMode}>{t('search.fats')}</NutrientLabel>
+                              <NutrientValue $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</NutrientValue>
+                            </NutrientInfo>
+                          </NutrientColumn>
+                          <NutrientColumn>
+                            <ColorBar $color="#1dd1a1" />
+                            <NutrientInfo>
+                              <NutrientLabel $isDarkMode={isDarkMode}>{t('search.proteins')}</NutrientLabel>
+                              <NutrientValue $isDarkMode={isDarkMode}>{proteins !== null ? `${proteins} g` : "—"}</NutrientValue>
+                            </NutrientInfo>
+                          </NutrientColumn>
+                        </NutrientGrid>
                         <Row
                           style={
                             {
-                              justifyContent: "space-between",
-                            } as React.CSSProperties
-                          }
-                        >
-                          <Label $isDarkMode={isDarkMode}>{t('search.fats')}</Label>
-                          <Value $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</Value>
-                        </Row>
-                        <Row
-                          style={
-                            {
-                              justifyContent: "space-between",
-                            } as React.CSSProperties
-                          }
-                        >
-                          <Label $isDarkMode={isDarkMode}>{t('search.sugars')}</Label>
-                          <Value $isDarkMode={isDarkMode}>{sugars !== null ? `${sugars} g` : "—"}</Value>
-                        </Row>
-                        <Row
-                          style={
-                            {
-                              justifyContent: "space-between",
-                            } as React.CSSProperties
-                          }
-                        >
-                          <Label $isDarkMode={isDarkMode}>{t('search.proteins')}</Label>
-                          <Value $isDarkMode={isDarkMode}>
-                            {proteins !== null ? `${proteins} g` : "—"}
-                          </Value>
-                        </Row>
-                        <Row
-                          style={
-                            {
-                              justifyContent: "space-between",
+                              justifyContent: "flex-end",
                             } as React.CSSProperties
                           }
                         >
@@ -467,7 +469,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                   const r = h.item;
                   const n: Nutriments | undefined = r.nutriments;
                   const fat = n?.fat_100g ?? null;
-                  const sugars = n?.sugars_100g ?? null;
+                  const carbohydrates = n?.carbohydrates_100g ?? n?.sugars_100g ?? null;
                   const proteins = n?.proteins_100g ?? null;
                   const kcal =
                     (n as any)?.["energy-kcal_100g"] ??
@@ -505,40 +507,29 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                       </HeaderRow>
                       {isOpen && (
                         <>
-                          <Row
-                            style={
-                              {
-                                justifyContent: "space-between",
-                              } as React.CSSProperties
-                            }
-                          >
-                            <Label $isDarkMode={isDarkMode}>{t('search.fats')}</Label>
-                            <Value $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</Value>
-                          </Row>
-                          <Row
-                            style={
-                              {
-                                justifyContent: "space-between",
-                              } as React.CSSProperties
-                            }
-                          >
-                            <Label $isDarkMode={isDarkMode}>{t('search.sugars')}</Label>
-                            <Value $isDarkMode={isDarkMode}>
-                              {sugars !== null ? `${sugars} g` : "—"}
-                            </Value>
-                          </Row>
-                          <Row
-                            style={
-                              {
-                                justifyContent: "space-between",
-                              } as React.CSSProperties
-                            }
-                          >
-                            <Label $isDarkMode={isDarkMode}>{t('search.proteins')}</Label>
-                            <Value $isDarkMode={isDarkMode}>
-                              {proteins !== null ? `${proteins} g` : "—"}
-                            </Value>
-                          </Row>
+                          <NutrientGrid>
+                            <NutrientColumn>
+                              <ColorBar $color="#ff9f43" />
+                              <NutrientInfo>
+                                <NutrientLabel $isDarkMode={isDarkMode}>{t('history.carbs')}</NutrientLabel>
+                                <NutrientValue $isDarkMode={isDarkMode}>{carbohydrates !== null ? `${carbohydrates} g` : "—"}</NutrientValue>
+                              </NutrientInfo>
+                            </NutrientColumn>
+                            <NutrientColumn>
+                              <ColorBar $color="#9980FA" />
+                              <NutrientInfo>
+                                <NutrientLabel $isDarkMode={isDarkMode}>{t('search.fats')}</NutrientLabel>
+                                <NutrientValue $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</NutrientValue>
+                              </NutrientInfo>
+                            </NutrientColumn>
+                            <NutrientColumn>
+                              <ColorBar $color="#1dd1a1" />
+                              <NutrientInfo>
+                                <NutrientLabel $isDarkMode={isDarkMode}>{t('search.proteins')}</NutrientLabel>
+                                <NutrientValue $isDarkMode={isDarkMode}>{proteins !== null ? `${proteins} g` : "—"}</NutrientValue>
+                              </NutrientInfo>
+                            </NutrientColumn>
+                          </NutrientGrid>
                           <Button onClick={() => saveResult(r)}>
                             {t('search.save')}
                           </Button>

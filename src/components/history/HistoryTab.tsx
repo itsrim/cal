@@ -26,7 +26,15 @@ import {
   Value,
 } from "./StyleHistoryTab";
 import { NutriScore } from "../nutriscore/NutriScore";
-import { RightColumn } from "../search/StyleSearchTab";
+import {
+  ColorBar,
+  NutrientColumn,
+  NutrientGrid,
+  NutrientInfo,
+  NutrientLabel,
+  NutrientValue,
+  RightColumn,
+} from "../search/StyleSearchTab";
 
 const storageKey = "cal-history-v1";
 // en haut de HistoryTab:
@@ -245,73 +253,90 @@ export const HistoryTab = ({ isDarkMode }: HistoryTabProps) => {
         {itemsForSelectedDay.length === 0 ? (
           <Hint $isDarkMode={isDarkMode}>{t('history.noFoodToday')}</Hint>
         ) : (
-          itemsForSelectedDay.map((it) => {
-            const nf = it.nutriments;
-            const f = nf?.fat_100g ?? null;
-            const s = nf?.sugars_100g ?? null;
-            const p = nf?.proteins_100g ?? null;
-            const k =
-              (nf as any)?.["energy-kcal_100g"] ??
-              (nf as any)?.energy_kcal_100g ??
-              null;
-            return (
-              <Card key={it.id} $isDarkMode={isDarkMode}>
-                <Row>
-                  <LeftRow>
-                    <IconButton
-                      onClick={() => removeItem(it.id)}
-                      aria-label={t('history.delete')}
-                    >
-                      <Trash>
-                        <Trash2 size={20} />
-                      </Trash>
-                    </IconButton>
-                    <ProductName $isDarkMode={isDarkMode}>{it.product_name}</ProductName>
-                  </LeftRow>
+            itemsForSelectedDay.map((it) => {
+              const nf = it.nutriments;
+              const qty = it.quantity ?? 100;
+              const f = getFat100(nf);
+              const c = getCarbs100(nf);
+              const p = getProt100(nf);
+              const k =
+                (nf as any)?.["energy-kcal_100g"] ??
+                (nf as any)?.energy_kcal_100g ??
+                null;
+              
+              const adjF = f !== null ? Math.round((f * qty) / 100 * 10) / 10 : null;
+              const adjC = c !== null ? Math.round((c * qty) / 100 * 10) / 10 : null;
+              const adjP = p !== null ? Math.round((p * qty) / 100 * 10) / 10 : null;
+
+              return (
+                <Card key={it.id} $isDarkMode={isDarkMode}>
                   <Row>
-                    <QtyInput
-                      $isDarkMode={isDarkMode}
-                      inputMode="numeric"
-                      value={String(it.quantity ?? 100)}
-                      onChange={async (e) => {
-                        const text = (e.target as HTMLInputElement).value;
-                        const v = Math.max(0, parseInt(text || "0", 10) || 0);
-                        const next = saved.map((s) =>
-                          s.id === it.id ? { ...s, quantity: v } : s
-                        );
-                        setSaved(next);
-                        await storage.setItem(storageKey, JSON.stringify(next));
-                      }}
-                    />
-                    <InlineHint $isDarkMode={isDarkMode}>g</InlineHint>
+                    <LeftRow>
+                      <IconButton
+                        onClick={() => removeItem(it.id)}
+                        aria-label={t('history.delete')}
+                      >
+                        <Trash>
+                          <Trash2 size={20} />
+                        </Trash>
+                      </IconButton>
+                      <ProductName $isDarkMode={isDarkMode}>{it.product_name}</ProductName>
+                    </LeftRow>
+                    <Row>
+                      <QtyInput
+                        $isDarkMode={isDarkMode}
+                        inputMode="numeric"
+                        value={String(it.quantity ?? 100)}
+                        onChange={async (e) => {
+                          const text = (e.target as HTMLInputElement).value;
+                          const v = Math.max(0, parseInt(text || "0", 10) || 0);
+                          const next = saved.map((s) =>
+                            s.id === it.id ? { ...s, quantity: v } : s
+                          );
+                          setSaved(next);
+                          await storage.setItem(storageKey, JSON.stringify(next));
+                        }}
+                      />
+                      <InlineHint $isDarkMode={isDarkMode}>g</InlineHint>
+                    </Row>
                   </Row>
-                </Row>
-                <Row>
-                  <Label $isDarkMode={isDarkMode}>Calories</Label>
-                  <RightColumn>
-                    <NutriScore grade={it.nutriscore_grade} />
-                  </RightColumn>
-                  <Value $isDarkMode={isDarkMode}>
-                    {k !== null
-                      ? `${Math.round((k * (it.quantity ?? 100)) / 100)} kcal`
-                      : "—"}
-                  </Value>
-                </Row>
-                <Row>
-                  <Label $isDarkMode={isDarkMode}>{t('history.fats')}</Label>
-                  <Value $isDarkMode={isDarkMode}>{f !== null ? `${f} g` : "—"}</Value>
-                </Row>
-                <Row>
-                  <Label $isDarkMode={isDarkMode}>{t('history.sugars')}</Label>
-                  <Value $isDarkMode={isDarkMode}>{s !== null ? `${s} g` : "—"}</Value>
-                </Row>
-                <Row>
-                  <Label $isDarkMode={isDarkMode}>{t('history.proteins')}</Label>
-                  <Value $isDarkMode={isDarkMode}>{p !== null ? `${p} g` : "—"}</Value>
-                </Row>
-              </Card>
-            );
-          })
+                  <Row>
+                    <Label $isDarkMode={isDarkMode}>Calories</Label>
+                    <RightColumn>
+                      <NutriScore grade={it.nutriscore_grade} />
+                    </RightColumn>
+                    <Value $isDarkMode={isDarkMode}>
+                      {k !== null
+                        ? `${Math.round((k * qty) / 100)} kcal`
+                        : "—"}
+                    </Value>
+                  </Row>
+                  <NutrientGrid>
+                    <NutrientColumn>
+                      <ColorBar $color="#ff9f43" />
+                      <NutrientInfo>
+                        <NutrientLabel $isDarkMode={isDarkMode}>{t('history.carbs')}</NutrientLabel>
+                        <NutrientValue $isDarkMode={isDarkMode}>{adjC !== null ? `${adjC} g` : "—"}</NutrientValue>
+                      </NutrientInfo>
+                    </NutrientColumn>
+                    <NutrientColumn>
+                      <ColorBar $color="#9980FA" />
+                      <NutrientInfo>
+                        <NutrientLabel $isDarkMode={isDarkMode}>{t('history.fats')}</NutrientLabel>
+                        <NutrientValue $isDarkMode={isDarkMode}>{adjF !== null ? `${adjF} g` : "—"}</NutrientValue>
+                      </NutrientInfo>
+                    </NutrientColumn>
+                    <NutrientColumn>
+                      <ColorBar $color="#1dd1a1" />
+                      <NutrientInfo>
+                        <NutrientLabel $isDarkMode={isDarkMode}>{t('history.proteins')}</NutrientLabel>
+                        <NutrientValue $isDarkMode={isDarkMode}>{adjP !== null ? `${adjP} g` : "—"}</NutrientValue>
+                      </NutrientInfo>
+                    </NutrientColumn>
+                  </NutrientGrid>
+                </Card>
+              );
+            })
         )}
       </ListScroll>
     </>
