@@ -37,17 +37,39 @@ export const Nav = styled.div`
 `;
 
 export const IconBtn = styled.button<{ $isDarkMode: boolean }>`
-  border: 0;
-  background: ${(p) => (p.$isDarkMode ? "#1a1a22" : "#f9fafb")};
-  border: 1px solid ${(p) => (p.$isDarkMode ? "grey" : "#e5e7eb")};
+  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.1)" : "#e5e7eb")};
+  background: ${(p) => (p.$isDarkMode ? "rgba(26, 26, 34, 0.6)" : "rgba(249, 250, 251, 0.8)")};
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
+  width: 28px;
+  height: 32px;
+  border-radius: 10px;
   display: grid;
   place-items: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  box-shadow: ${(p) => p.$isDarkMode 
+    ? "0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05)" 
+    : "0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8)"
+  };
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    background: ${(p) => (p.$isDarkMode ? "rgba(26, 26, 34, 0.8)" : "rgba(249, 250, 251, 1)")};
+    transform: translateY(-2px);
+    box-shadow: ${(p) => p.$isDarkMode 
+      ? "0 4px 12px rgba(0, 0, 0, 0.3)" 
+      : "0 4px 12px rgba(0, 0, 0, 0.1)"
+    };
+  }
+  
+  &:active {
+    transform: translateY(0) scale(0.95);
+    box-shadow: ${(p) => p.$isDarkMode 
+      ? "0 1px 4px rgba(0, 0, 0, 0.2)" 
+      : "0 1px 4px rgba(0, 0, 0, 0.05)"
+    };
+  }
 `;
 
 export const TargetWrap = styled.label<{ $isDarkMode: boolean }>`
@@ -59,14 +81,32 @@ export const TargetWrap = styled.label<{ $isDarkMode: boolean }>`
   transition: color 0.3s ease;
 `;
 export const TargetInput = styled.input<{ $isDarkMode: boolean }>`
-  width: 86px;
-  height: 32px;
-  padding: 0 10px;
+  width: 30px;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 6px;
   border-radius: 8px;
   border: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
-  background-color: ${(p) => (p.$isDarkMode ? "rgb(70, 70, 74)" : "#ffffff")};
+  background-color: ${(p) => (p.$isDarkMode ? "rgba(70, 70, 74, 0.6)" : "rgba(255, 255, 255, 0.9)")};
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
-  transition: all 0.3s ease;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: ${(p) => p.$isDarkMode 
+    ? "0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05)" 
+    : "0 2px 6px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8)"
+  };
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:focus {
+    outline: none;
+    border-color: ${(p) => (p.$isDarkMode ? "#8b5cf6" : "#6366f1")};
+    box-shadow: ${(p) => p.$isDarkMode 
+      ? "0 0 0 3px rgba(139, 92, 246, 0.2), 0 4px 12px rgba(0, 0, 0, 0.3)" 
+      : "0 0 0 3px rgba(99, 102, 241, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1)"
+    };
+  }
 `;
 
 export const Legend = styled.div<{ $isDarkMode: boolean }>`
@@ -129,17 +169,28 @@ export const DayLabel = styled.div<{ $isDarkMode: boolean }>`
 `;
 
 export const Cell = styled.button<{ $bg: string; $over?: boolean; $isDarkMode: boolean }>`
-  height: 28px;
-  border-radius: 6px;
+  height: 32px;
+  border-radius: 8px;
   border: 0;
   background: ${(p) => p.$bg};
   color: ${(p) => (p.$over ? "#fff" : (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f"))};
   font-size: 11px;
+  font-weight: 600;
   cursor: default;
   display: grid;
   place-items: center;
   opacity: 0.98;
-  transition: color 0.3s ease;
+  box-shadow: ${(p) => p.$over 
+    ? "0 2px 8px rgba(0, 0, 0, 0.3)" 
+    : (p.$isDarkMode 
+      ? "0 1px 3px rgba(0, 0, 0, 0.2)" 
+      : "0 1px 3px rgba(0, 0, 0, 0.1)")
+  };
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:active {
+    transform: scale(0.95);
+  }
 `;
 
 /* Slide anim */

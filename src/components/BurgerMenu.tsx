@@ -17,16 +17,21 @@ const BurgerButton = styled.button<{ $isDarkMode: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  border-radius: 10px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   
   &:hover {
     color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
-    background: ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)")};
+    background: ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)")};
+    transform: scale(1.05);
+  }
+  
+  &:active {
+    transform: scale(0.95);
   }
   
   &:focus-visible {
-    box-shadow: 0 0 0 2px #6366f1aa;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
   }
 `;
 
@@ -34,20 +39,26 @@ const MenuDropdown = styled.div<{ $open: boolean; $isDarkMode: boolean }>`
   position: absolute;
   top: 100%;
   right: 0;
-  background: ${(p) => (p.$isDarkMode ? "#1a1a1f" : "#ffffff")};
-  border: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
-  border-radius: 12px;
+  background: ${(p) => (p.$isDarkMode 
+    ? "rgba(26, 26, 31, 0.95)" 
+    : "rgba(255, 255, 255, 0.95)"
+  )};
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)")};
+  border-radius: 16px;
   box-shadow: ${(p) => p.$isDarkMode 
-    ? "0 8px 32px rgba(0, 0, 0, 0.3)" 
-    : "0 8px 32px rgba(0, 0, 0, 0.1)"
+    ? "0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)" 
+    : "0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)"
   };
-  min-width: 200px;
+  min-width: 220px;
   z-index: 1000;
   opacity: ${(p) => (p.$open ? 1 : 0)};
   visibility: ${(p) => (p.$open ? 'visible' : 'hidden')};
-  transform: ${(p) => (p.$open ? 'translateY(0)' : 'translateY(-8px)')};
-  transition: all 0.2s ease;
+  transform: ${(p) => (p.$open ? 'translateY(0) scale(1)' : 'translateY(-8px) scale(0.95)')};
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   margin-top: 8px;
+  overflow: hidden;
 `;
 
 const MenuItem = styled.button<{ $isDarkMode: boolean }>`
@@ -56,24 +67,34 @@ const MenuItem = styled.button<{ $isDarkMode: boolean }>`
   background: transparent;
   cursor: pointer;
   color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
-  padding: 12px 16px;
+  padding: 14px 18px;
   width: 100%;
   text-align: left;
   font-size: 14px;
-  transition: background-color 0.2s ease;
-  border-bottom: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)")};
   
   &:last-child {
     border-bottom: none;
   }
   
   &:hover {
-    background: ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)")};
+    background: ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.05)")};
+    transform: translateX(4px);
+  }
+  
+  &:active {
+    transform: translateX(2px) scale(0.98);
+    background: ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.08)")};
   }
   
   &:focus-visible {
-    outline: 2px solid #6366f1aa;
+    outline: 2px solid rgba(99, 102, 241, 0.5);
     outline-offset: -2px;
+    border-radius: 8px;
   }
 `;
 

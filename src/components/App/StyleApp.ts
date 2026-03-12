@@ -21,10 +21,15 @@ export const Title = styled.h1<{ $isDarkMode: boolean }>`
 
 export const Content = styled.main`
   flex: 1;
-  padding: clamp(16px, 2vw, 24px);
+  padding: clamp(20px, 2vw, 28px);
   display: flex; /* ← au lieu de grid */
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  
+  @media (max-width: 480px) {
+    padding: 16px;
+    gap: 16px;
+  }
 `;
 
 export const Panel = styled.section`
@@ -37,11 +42,20 @@ export const TabBar = styled.div<{ $isDarkMode: boolean }>`
   position: sticky;
   top: 0; /* colle en haut de la page */
   z-index: 10; /* passe devant le contenu au scroll */
-  background: ${(p) => (p.$isDarkMode ? "#0b0b0f" : "#ffffff")}; /* évite la transparence pendant le scroll */
+  background: ${(p) => (p.$isDarkMode 
+    ? "rgba(11, 11, 15, 0.8)" 
+    : "rgba(255, 255, 255, 0.8)"
+  )};
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   display: flex;
   gap: 24px; /* horizontal seulement */
-  border-bottom: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  border-bottom: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)")};
+  box-shadow: ${(p) => p.$isDarkMode 
+    ? "0 4px 20px rgba(0, 0, 0, 0.2)" 
+    : "0 4px 20px rgba(0, 0, 0, 0.05)"
+  };
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
 export const TabBtn = styled.button<{ $active?: boolean; $isDarkMode: boolean }>`
@@ -57,12 +71,17 @@ export const TabBtn = styled.button<{ $active?: boolean; $isDarkMode: boolean }>
   font-weight: 700;
   font-size: 16px;
   line-height: 1;
-  padding: 10px 2px 12px;
+  padding: 12px 4px 14px;
   position: relative;
   outline: none;
-  transition: color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
   &:focus-visible {
-    box-shadow: 0 0 0 2px #6366f1aa;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
     border-radius: 8px;
   }
 `;

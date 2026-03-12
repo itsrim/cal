@@ -181,7 +181,7 @@ export const HistoryTab = ({ isDarkMode }: HistoryTabProps) => {
 
   return (
     <>
-      <CalendarStrip>
+      <CalendarStrip $isDarkMode={isDarkMode}>
         {daysStrip.map((d) => {
           const selected = sameDay(d.getTime(), selectedDate.getTime());
           return (
