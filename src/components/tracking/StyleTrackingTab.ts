@@ -4,6 +4,8 @@ import styled, { css, keyframes } from "styled-components";
 export const Wrap = styled.div`
   display: grid;
   gap: 12px;
+  overflow-x: hidden;
+  max-width: 100%;
 `;
 
 export const Header = styled.div<{ $isDarkMode: boolean }>`

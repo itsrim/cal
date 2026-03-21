@@ -11,15 +11,16 @@ import { storage } from "../../utils/storage";
 import { useI18n } from "../../contexts/I18nContext";
 import {
   Button,
+  SearchIconButton,
+  SaveButton,
   Card,
   HeaderRow,
   Heart,
   Hint,
   ErrorHint,
   InlineHint,
-  InnerIndicator,
-  InnerTabBar,
-  InnerTabBtn,
+  SegmentedControl,
+  SegmentBtn,
   Label,
   LeftRow,
   ListScroll,
@@ -89,24 +90,6 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
   }, []);
   // sous-onglets
   const [innerTab, setInnerTab] = React.useState<InnerTabId>("favorites");
-  const innerTabs = [
-    { id: "favorites" as const, label: t('search.favorites') },
-    { id: "recents" as const, label: t('search.recents') },
-  ];
-  const innerRef = React.useRef<HTMLDivElement>(null);
-  const [underline, setUnderline] = React.useState({ x: 0, w: 0 });
-  const updateUnderline = (id: InnerTabId) => {
-    const el = innerRef.current?.querySelector<HTMLButtonElement>(
-      `[data-in-tab="${id}"]`
-    );
-    if (!el || !innerRef.current) return;
-    const { left, width } = el.getBoundingClientRect();
-    const baseLeft = innerRef.current.getBoundingClientRect().left;
-    setUnderline({ x: left - baseLeft, w: width });
-  };
-  React.useEffect(() => {
-    updateUnderline(innerTab);
-  }, [innerTab]);
 
   React.useEffect(() => {
     (async () => {
@@ -227,7 +210,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
 
   return (
     <>
-      {/* Barre de recherche + bouton clear */}
+      {/* Barre de recherche */}
       <Row>
         <InputWrap>
           <ScanIconBtnLeft
@@ -243,7 +226,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
           <SearchInputWithLeftIcon
             $isDarkMode={isDarkMode}
             as="input"
-            type="search" // garde la croix native
+            type="search"
             inputMode="search"
             placeholder={t('search.placeholder')}
             value={query}
@@ -257,13 +240,13 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
           />
         </InputWrap>
 
-        <Button
+        <SearchIconButton
           onClick={fetchFirstProduct}
           disabled={!canSearch}
           aria-label={t('search.searchPlaceholder')}
         >
           {loading ? <Spinner aria-label={t('search.loading')} /> : <Search />}
-        </Button>
+        </SearchIconButton>
       </Row>
 
       {error ? <ErrorHint $isDarkMode={isDarkMode}>{error}</ErrorHint> : null}
@@ -297,28 +280,28 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
           </HeaderRow>
           <NutrientGrid>
             <NutrientColumn>
-              <ColorBar $color="#ff9f43" />
+              <ColorBar $color="#fb923c" />
               <NutrientInfo>
                 <NutrientLabel $isDarkMode={isDarkMode}>{t('history.carbs')}</NutrientLabel>
-                <NutrientValue $isDarkMode={isDarkMode}>{carbohydrates !== null ? `${carbohydrates} g` : "—"}</NutrientValue>
+                <NutrientValue $isDarkMode={isDarkMode}>{carbohydrates !== null ? `${Math.round(carbohydrates * 10) / 10} g` : "—"}</NutrientValue>
               </NutrientInfo>
             </NutrientColumn>
             <NutrientColumn>
-              <ColorBar $color="#9980FA" />
+              <ColorBar $color="#c084fc" />
               <NutrientInfo>
                 <NutrientLabel $isDarkMode={isDarkMode}>{t('search.fats')}</NutrientLabel>
-                <NutrientValue $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</NutrientValue>
+                <NutrientValue $isDarkMode={isDarkMode}>{fat !== null ? `${Math.round(fat * 10) / 10} g` : "—"}</NutrientValue>
               </NutrientInfo>
             </NutrientColumn>
             <NutrientColumn>
-              <ColorBar $color="#1dd1a1" />
+              <ColorBar $color="#2dd4bf" />
               <NutrientInfo>
                 <NutrientLabel $isDarkMode={isDarkMode}>{t('search.proteins')}</NutrientLabel>
-                <NutrientValue $isDarkMode={isDarkMode}>{proteins !== null ? `${proteins} g` : "—"}</NutrientValue>
+                <NutrientValue $isDarkMode={isDarkMode}>{proteins !== null ? `${Math.round(proteins * 10) / 10} g` : "—"}</NutrientValue>
               </NutrientInfo>
             </NutrientColumn>
           </NutrientGrid>
-          <Button onClick={handleSave}>{t('search.save')}</Button>
+          <SaveButton onClick={handleSave}>{t('search.save')}</SaveButton>
         </Card>
       )}
 
@@ -327,29 +310,22 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
       ) : null}
 
       {/* Sous-onglets Favoris / Récents */}
-      <InnerTabBar
-        $isDarkMode={isDarkMode}
-        role="tablist"
-        aria-label="Favoris et récents"
-        ref={innerRef}
-      >
-        {innerTabs.map((t) => (
-          <InnerTabBtn
-            key={t.id}
-            data-in-tab={t.id}
-            role="tab"
-            aria-selected={innerTab === t.id}
-            aria-controls={`inner-panel-${t.id}`}
-            id={`inner-tab-${t.id}`}
-            $active={innerTab === t.id}
-            $isDarkMode={isDarkMode}
-            onClick={() => setInnerTab(t.id)}
-          >
-            {t.label}
-          </InnerTabBtn>
-        ))}
-        <InnerIndicator $x={underline.x} $w={underline.w} />
-      </InnerTabBar>
+      <SegmentedControl $isDarkMode={isDarkMode}>
+        <SegmentBtn 
+          $isDarkMode={isDarkMode} 
+          $active={innerTab === "favorites"} 
+          onClick={() => setInnerTab("favorites")}
+        >
+          {t('search.favorites')}
+        </SegmentBtn>
+        <SegmentBtn 
+          $isDarkMode={isDarkMode} 
+          $active={innerTab === "recents"} 
+          onClick={() => setInnerTab("recents")}
+        >
+          {t('search.recents')}
+        </SegmentBtn>
+      </SegmentedControl>
 
       <ListScroll>
         {/* Panel Favoris */}
@@ -407,24 +383,24 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                       <>
                         <NutrientGrid>
                           <NutrientColumn>
-                            <ColorBar $color="#ff9f43" />
+                            <ColorBar $color="#fb923c" />
                             <NutrientInfo>
                               <NutrientLabel $isDarkMode={isDarkMode}>{t('history.carbs')}</NutrientLabel>
-                              <NutrientValue $isDarkMode={isDarkMode}>{carbohydrates !== null ? `${carbohydrates} g` : "—"}</NutrientValue>
+                              <NutrientValue $isDarkMode={isDarkMode}>{carbohydrates !== null ? `${Math.round(carbohydrates * 10) / 10} g` : "—"}</NutrientValue>
                             </NutrientInfo>
                           </NutrientColumn>
                           <NutrientColumn>
-                            <ColorBar $color="#9980FA" />
+                            <ColorBar $color="#c084fc" />
                             <NutrientInfo>
                               <NutrientLabel $isDarkMode={isDarkMode}>{t('search.fats')}</NutrientLabel>
-                              <NutrientValue $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</NutrientValue>
+                              <NutrientValue $isDarkMode={isDarkMode}>{fat !== null ? `${Math.round(fat * 10) / 10} g` : "—"}</NutrientValue>
                             </NutrientInfo>
                           </NutrientColumn>
                           <NutrientColumn>
-                            <ColorBar $color="#1dd1a1" />
+                            <ColorBar $color="#2dd4bf" />
                             <NutrientInfo>
                               <NutrientLabel $isDarkMode={isDarkMode}>{t('search.proteins')}</NutrientLabel>
-                              <NutrientValue $isDarkMode={isDarkMode}>{proteins !== null ? `${proteins} g` : "—"}</NutrientValue>
+                              <NutrientValue $isDarkMode={isDarkMode}>{proteins !== null ? `${Math.round(proteins * 10) / 10} g` : "—"}</NutrientValue>
                             </NutrientInfo>
                           </NutrientColumn>
                         </NutrientGrid>
@@ -432,12 +408,13 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                           style={
                             {
                               justifyContent: "flex-end",
+                              marginTop: 4,
                             } as React.CSSProperties
                           }
                         >
-                          <Button onClick={() => saveResult(r)}>
+                          <SaveButton onClick={() => saveResult(r)}>
                             {t('search.save')}
-                          </Button>
+                          </SaveButton>
                         </Row>
                       </>
                     )}
@@ -509,30 +486,30 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                         <>
                           <NutrientGrid>
                             <NutrientColumn>
-                              <ColorBar $color="#ff9f43" />
+                              <ColorBar $color="#fb923c" />
                               <NutrientInfo>
                                 <NutrientLabel $isDarkMode={isDarkMode}>{t('history.carbs')}</NutrientLabel>
-                                <NutrientValue $isDarkMode={isDarkMode}>{carbohydrates !== null ? `${carbohydrates} g` : "—"}</NutrientValue>
+                                <NutrientValue $isDarkMode={isDarkMode}>{carbohydrates !== null ? `${Math.round(carbohydrates * 10) / 10} g` : "—"}</NutrientValue>
                               </NutrientInfo>
                             </NutrientColumn>
                             <NutrientColumn>
-                              <ColorBar $color="#9980FA" />
+                              <ColorBar $color="#c084fc" />
                               <NutrientInfo>
                                 <NutrientLabel $isDarkMode={isDarkMode}>{t('search.fats')}</NutrientLabel>
-                                <NutrientValue $isDarkMode={isDarkMode}>{fat !== null ? `${fat} g` : "—"}</NutrientValue>
+                                <NutrientValue $isDarkMode={isDarkMode}>{fat !== null ? `${Math.round(fat * 10) / 10} g` : "—"}</NutrientValue>
                               </NutrientInfo>
                             </NutrientColumn>
                             <NutrientColumn>
-                              <ColorBar $color="#1dd1a1" />
+                              <ColorBar $color="#2dd4bf" />
                               <NutrientInfo>
                                 <NutrientLabel $isDarkMode={isDarkMode}>{t('search.proteins')}</NutrientLabel>
-                                <NutrientValue $isDarkMode={isDarkMode}>{proteins !== null ? `${proteins} g` : "—"}</NutrientValue>
+                                <NutrientValue $isDarkMode={isDarkMode}>{proteins !== null ? `${Math.round(proteins * 10) / 10} g` : "—"}</NutrientValue>
                               </NutrientInfo>
                             </NutrientColumn>
                           </NutrientGrid>
-                          <Button onClick={() => saveResult(r)}>
+                          <SaveButton onClick={() => saveResult(r)}>
                             {t('search.save')}
-                          </Button>
+                          </SaveButton>
                         </>
                       )}
                     </Card>

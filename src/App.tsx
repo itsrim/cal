@@ -4,15 +4,17 @@ import { SearchTab } from "./components/search/SearchTab";
 import { TrackingTab } from "./components/tracking/TrackingTab";
 import { BurgerMenu } from "./components/BurgerMenu";
 import { I18nProvider, useI18n, Language } from "./contexts/I18nContext";
+import { Search, History, LineChart } from "lucide-react";
 import {
   Container,
   Title,
   Content,
   Panel,
-  TabBar,
+  BottomTabBar,
   TabBtn,
+  TabBtnLabel,
   Indicator,
-  TabBarContainer,
+  HeaderContainer,
 } from "./components/App/StyleApp";
 
 
@@ -25,9 +27,9 @@ function AppContent() {
   const [isDarkMode, setIsDarkMode] = React.useState(true); // Dark mode par défaut
   
   const tabs = [
-    { id: "search" as const, label: t('app.tabs.search') },
-    { id: "history" as const, label: t('app.tabs.history') },
-    { id: "suivi" as const, label: t('app.tabs.tracking') },
+    { id: "search" as const, label: t('app.tabs.search'), icon: Search },
+    { id: "history" as const, label: t('app.tabs.history'), icon: History },
+    { id: "suivi" as const, label: t('app.tabs.tracking'), icon: LineChart },
   ];
 
   // pour l'indicateur (underline)
@@ -116,41 +118,18 @@ function AppContent() {
   return (
     <Container $isDarkMode={isDarkMode}>
       <Content>
-        <Title $isDarkMode={isDarkMode}>{t('app.title')}</Title>
+        <HeaderContainer data-menu-container>
+          <Title $isDarkMode={isDarkMode}>{t('app.title')}</Title>
+          <div style={{ position: "absolute", right: 0 }}>
+            <BurgerMenu
+              isDarkMode={isDarkMode}
+              onToggleDarkMode={toggleDarkMode}
+              onToggleLanguage={toggleLanguage}
+              storageSize={storageSize}
+            />
+          </div>
+        </HeaderContainer>
 
-        <TabBarContainer data-menu-container>
-          <TabBar
-            role="tablist"
-            aria-label="Navigation principale"
-            ref={listRef}
-            onKeyDown={onKeyDown}
-            $isDarkMode={isDarkMode}
-          >
-            {tabs.map((t) => (
-              <TabBtn
-                key={t.id}
-                data-tab={t.id}
-                role="tab"
-                aria-selected={active === t.id}
-                aria-controls={`panel-${t.id}`}
-                id={`tab-${t.id}`}
-                $active={active === t.id}
-                $isDarkMode={isDarkMode}
-                onClick={() => setActive(t.id)}
-              >
-                {t.label}
-              </TabBtn>
-            ))}
-            <Indicator $x={underline.x} $w={underline.w} />
-          </TabBar>
-          
-          <BurgerMenu
-            isDarkMode={isDarkMode}
-            onToggleDarkMode={toggleDarkMode}
-            onToggleLanguage={toggleLanguage}
-            storageSize={storageSize}
-          />
-        </TabBarContainer>
 
         <Panel
           id="panel-search"
@@ -179,6 +158,37 @@ function AppContent() {
           {active === "suivi" && <TrackingTab isDarkMode={isDarkMode} />}
         </Panel>
       </Content>
+      
+      <BottomTabBar
+        role="tablist"
+        aria-label="Navigation principale"
+        ref={listRef}
+        onKeyDown={onKeyDown}
+        $isDarkMode={isDarkMode}
+      >
+        {tabs.map((t) => {
+          const Icon = t.icon;
+          return (
+            <TabBtn
+              key={t.id}
+              data-tab={t.id}
+              role="tab"
+              aria-selected={active === t.id}
+              aria-controls={`panel-${t.id}`}
+              id={`tab-${t.id}`}
+              $active={active === t.id}
+              $isDarkMode={isDarkMode}
+              onClick={() => setActive(t.id)}
+            >
+              <Icon size={24} strokeWidth={active === t.id ? 2.5 : 2} />
+              <TabBtnLabel $active={active === t.id} $isDarkMode={isDarkMode}>
+                {t.label}
+              </TabBtnLabel>
+            </TabBtn>
+          );
+        })}
+        <Indicator $x={underline.x} $w={underline.w} />
+      </BottomTabBar>
     </Container>
   );
 }
