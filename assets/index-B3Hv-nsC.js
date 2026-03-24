@@ -147,7 +147,7 @@ Error generating stack: `+o.message+`
   width: 60px;
   min-width: 60px;
   border-radius: 16px;
-  border: 1px solid ${t=>t.$selected?"transparent":t.$isDarkMode?"rgba(255, 255, 255, 0.1)":"#e5e7eb"};
+  border: 1px solid ${t=>t.$selected?"transparent":t.$isDarkMode?"rgba(255, 255, 255, 0.38)":"#e5e7eb"};
   background: ${t=>t.$selected?"linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)":t.$isDarkMode?"rgba(19, 19, 26, 0.6)":"rgba(249, 250, 251, 0.8)"};
   backdrop-filter: ${t=>t.$selected?"none":"blur(10px)"};
   -webkit-backdrop-filter: ${t=>t.$selected?"none":"blur(10px)"};
@@ -173,7 +173,7 @@ Error generating stack: `+o.message+`
   padding: 4px;
   border-radius: 16px;
   background-color: ${t=>t.$isDarkMode?"#13131a":"#f9fafb"};
-  border: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.05)":"rgba(0, 0, 0, 0.05)"};
+  border: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.32)":"rgba(0, 0, 0, 0.08)"};
   box-shadow: ${t=>t.$isDarkMode?"0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.02)":"0 4px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04)"};
   display: grid;
   gap: 6px;
@@ -229,8 +229,8 @@ Error generating stack: `+o.message+`
   -webkit-backdrop-filter: blur(10px);
   color: ${t=>t.$isDarkMode?"#f5f5f7":"#1a1a1f"};
   text-align: center;
-  border: 1px solid ${t=>t.$isDarkMode?"#262631":"#e5e7eb"};
-  font-size: 13px;
+  border: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.32)":"#e5e7eb"};
+  font-size: 16px; /* ≥16px évite le zoom automatique sur iOS */
   font-weight: 600;
   box-shadow: ${t=>t.$isDarkMode?"0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05)":"0 2px 6px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8)"};
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -408,7 +408,7 @@ Error generating stack: `+o.message+`
   height: 52px;
   padding: 0 16px;
   border-radius: 16px;
-  border: ${t=>t.$isDarkMode?"1px solid transparent":"1px solid #e5e7eb"};
+  border: ${t=>t.$isDarkMode?"1px solid rgba(255, 255, 255, 0.32)":"1px solid #e5e7eb"};
   background-color: ${t=>t.$isDarkMode?"#2c2c2e":"rgba(255, 255, 255, 0.9)"};
   color: ${t=>t.$isDarkMode?"#f5f5f7":"#1a1a1f"};
   font-size: 16px;
@@ -506,7 +506,7 @@ Error generating stack: `+o.message+`
   padding: 16px;
   border-radius: 20px;
   background-color: ${t=>t.$isDarkMode?"#121212":"#ffffff"};
-  border: ${t=>t.$isDarkMode?"1px solid #222222":"1px solid #e5e7eb"};
+  border: ${t=>t.$isDarkMode?"1px solid rgba(255, 255, 255, 0.32)":"1px solid #e5e7eb"};
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -723,7 +723,7 @@ ${D}`},v=ce.useMemo(()=>i.filter(O=>c(O.timestamp,r.getTime())),[i,r]),x=ce.useM
 `,Ew=P.div`
   width: min(640px, 92vw);
   background: ${t=>t.$isDarkMode?"#0b0b0f":"#ffffff"};
-  border: 1px solid ${t=>t.$isDarkMode?"#262631":"#e5e7eb"};
+  border: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.15)":"#e5e7eb"};
   border-radius: 16px;
   padding: 16px;
   display: grid;
@@ -735,7 +735,7 @@ ${D}`},v=ce.useMemo(()=>i.filter(O=>c(O.timestamp,r.getTime())),[i,r]),x=ce.useM
   overflow: hidden;
   aspect-ratio: 16/10;
   background: ${t=>t.$isDarkMode?"#13131a":"#f9fafb"};
-  border: 1px solid ${t=>t.$isDarkMode?"#262631":"#e5e7eb"};
+  border: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.15)":"#e5e7eb"};
   transition: all 0.3s ease;
 `,Aw=P.video`
   width: 100%;
@@ -786,7 +786,7 @@ ${D}`},v=ce.useMemo(()=>i.filter(O=>c(O.timestamp,r.getTime())),[i,r]),x=ce.useM
   display: flex;
   gap: 8px;
 `,Z0=P.button`
-  border: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.1)":"#e5e7eb"};
+  border: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.2)":"#e5e7eb"};
   background: ${t=>t.$isDarkMode?"rgba(26, 26, 34, 0.6)":"rgba(249, 250, 251, 0.8)"};
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -823,7 +823,7 @@ ${D}`},v=ce.useMemo(()=>i.filter(O=>c(O.timestamp,r.getTime())),[i,r]),x=ce.useM
   min-height: 28px !important;
   padding: 0 6px;
   border-radius: 8px;
-  border: 1px solid ${t=>t.$isDarkMode?"#262631":"#e5e7eb"};
+  border: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.15)":"#e5e7eb"};
   background-color: ${t=>t.$isDarkMode?"rgba(70, 70, 74, 0.6)":"rgba(255, 255, 255, 0.9)"};
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -945,7 +945,7 @@ ${D}`},v=ce.useMemo(()=>i.filter(O=>c(O.timestamp,r.getTime())),[i,r]),x=ce.useM
   background: ${t=>t.$isDarkMode?"rgba(26, 26, 31, 0.95)":"rgba(255, 255, 255, 0.95)"};
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.1)":"rgba(0, 0, 0, 0.1)"};
+  border: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.2)":"rgba(0, 0, 0, 0.1)"};
   border-radius: 16px;
   box-shadow: ${t=>t.$isDarkMode?"0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)":"0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)"};
   min-width: 220px;
@@ -970,7 +970,7 @@ ${D}`},v=ce.useMemo(()=>i.filter(O=>c(O.timestamp,r.getTime())),[i,r]),x=ce.useM
   display: flex;
   align-items: center;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border-bottom: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.05)":"rgba(0, 0, 0, 0.05)"};
+  border-bottom: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.15)":"rgba(0, 0, 0, 0.05)"};
   
   &:last-child {
     border-bottom: none;
@@ -1090,7 +1090,7 @@ ${D}`},v=ce.useMemo(()=>i.filter(O=>c(O.timestamp,r.getTime())),[i,r]),x=ce.useM
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-top: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.05)":"rgba(0, 0, 0, 0.05)"};
+  border-top: 1px solid ${t=>t.$isDarkMode?"rgba(255, 255, 255, 0.35)":"rgba(0, 0, 0, 0.08)"};
   box-shadow: ${t=>t.$isDarkMode?"0 -4px 20px rgba(0, 0, 0, 0.3)":"0 -4px 20px rgba(0, 0, 0, 0.05)"};
   z-index: 50;
   padding-left: 8px;
