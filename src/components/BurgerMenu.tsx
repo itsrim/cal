@@ -45,7 +45,7 @@ const MenuDropdown = styled.div<{ $open: boolean; $isDarkMode: boolean }>`
   )};
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)")};
+  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)")};
   border-radius: 16px;
   box-shadow: ${(p) => p.$isDarkMode 
     ? "0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)" 
@@ -75,7 +75,7 @@ const MenuItem = styled.button<{ $isDarkMode: boolean }>`
   display: flex;
   align-items: center;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border-bottom: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)")};
+  border-bottom: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.05)")};
   
   &:last-child {
     border-bottom: none;

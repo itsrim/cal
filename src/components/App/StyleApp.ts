@@ -67,7 +67,7 @@ export const BottomTabBar = styled.nav<{ $isDarkMode: boolean }>`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-top: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)")};
+  border-top: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.35)" : "rgba(0, 0, 0, 0.08)")};
   box-shadow: ${(p) => p.$isDarkMode
     ? "0 -4px 20px rgba(0, 0, 0, 0.3)"
     : "0 -4px 20px rgba(0, 0, 0, 0.05)"

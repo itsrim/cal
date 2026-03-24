@@ -47,7 +47,7 @@ export const SearchInput = styled.input<{ $isDarkMode: boolean }>`
   height: 52px;
   padding: 0 16px;
   border-radius: 16px;
-  border: ${(p) => (p.$isDarkMode ? "1px solid transparent" : "1px solid #e5e7eb")};
+  border: ${(p) => (p.$isDarkMode ? "1px solid rgba(255, 255, 255, 0.32)" : "1px solid #e5e7eb")};
   background-color: ${(p) => (p.$isDarkMode ? "#2c2c2e" : "rgba(255, 255, 255, 0.9)")};
   color: ${(p) => (p.$isDarkMode ? "#f5f5f7" : "#1a1a1f")};
   font-size: 16px;
@@ -162,7 +162,7 @@ export const Card = styled.div<{ $isDarkMode: boolean }>`
   padding: 16px;
   border-radius: 20px;
   background-color: ${(p) => (p.$isDarkMode ? "#121212" : "#ffffff")};
-  border: ${(p) => (p.$isDarkMode ? "1px solid #222222" : "1px solid #e5e7eb")};
+  border: ${(p) => (p.$isDarkMode ? "1px solid rgba(255, 255, 255, 0.32)" : "1px solid #e5e7eb")};
   display: flex;
   flex-direction: column;
   gap: 12px;

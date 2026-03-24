@@ -39,7 +39,7 @@ export const Nav = styled.div`
 `;
 
 export const IconBtn = styled.button<{ $isDarkMode: boolean }>`
-  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.1)" : "#e5e7eb")};
+  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.2)" : "#e5e7eb")};
   background: ${(p) => (p.$isDarkMode ? "rgba(26, 26, 34, 0.6)" : "rgba(249, 250, 251, 0.8)")};
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -88,7 +88,7 @@ export const TargetInput = styled.input<{ $isDarkMode: boolean }>`
   min-height: 28px !important;
   padding: 0 6px;
   border-radius: 8px;
-  border: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
+  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.15)" : "#e5e7eb")};
   background-color: ${(p) => (p.$isDarkMode ? "rgba(70, 70, 74, 0.6)" : "rgba(255, 255, 255, 0.9)")};
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);

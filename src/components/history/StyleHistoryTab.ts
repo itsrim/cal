@@ -44,7 +44,7 @@ export const DayPill = styled.button<{ $selected?: boolean; $isDarkMode: boolean
   border-radius: 16px;
   border: 1px solid ${(p) => (p.$selected 
     ? "transparent" 
-    : (p.$isDarkMode ? "rgba(255, 255, 255, 0.1)" : "#e5e7eb")
+    : (p.$isDarkMode ? "rgba(255, 255, 255, 0.38)" : "#e5e7eb")
   )};
   background: ${(p) => p.$selected 
     ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)" 
@@ -86,7 +86,7 @@ export const Card = styled.div<{ $isDarkMode: boolean }>`
   padding: 4px;
   border-radius: 16px;
   background-color: ${(p) => (p.$isDarkMode ? "#13131a" : "#f9fafb")};
-  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)")};
+  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.32)" : "rgba(0, 0, 0, 0.08)")};
   box-shadow: ${(p) => p.$isDarkMode 
     ? "0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.02)" 
     : "0 4px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04)"
@@ -164,7 +164,7 @@ export const QtyInput = styled.input<{ $isDarkMode: boolean }>`
   -webkit-backdrop-filter: blur(10px);
   color: ${(p) => (p.$isDarkMode ? "#f5f5f7" : "#1a1a1f")};
   text-align: center;
-  border: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
+  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.32)" : "#e5e7eb")};
   font-size: 13px;
   font-weight: 600;
   box-shadow: ${(p) => p.$isDarkMode 

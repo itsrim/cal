@@ -19,7 +19,7 @@ const Backdrop = styled.div<{ $isDarkMode: boolean }>`
 const Sheet = styled.div<{ $isDarkMode: boolean }>`
   width: min(640px, 92vw);
   background: ${(p) => (p.$isDarkMode ? "#0b0b0f" : "#ffffff")};
-  border: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
+  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.15)" : "#e5e7eb")};
   border-radius: 16px;
   padding: 16px;
   display: grid;
@@ -32,7 +32,7 @@ const VideoBox = styled.div<{ $isDarkMode: boolean }>`
   overflow: hidden;
   aspect-ratio: 16/10;
   background: ${(p) => (p.$isDarkMode ? "#13131a" : "#f9fafb")};
-  border: 1px solid ${(p) => (p.$isDarkMode ? "#262631" : "#e5e7eb")};
+  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.15)" : "#e5e7eb")};
   transition: all 0.3s ease;
 `;
 const Video = styled.video`
