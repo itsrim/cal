@@ -165,7 +165,7 @@ export const QtyInput = styled.input<{ $isDarkMode: boolean }>`
   color: ${(p) => (p.$isDarkMode ? "#f5f5f7" : "#1a1a1f")};
   text-align: center;
   border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.32)" : "#e5e7eb")};
-  font-size: 13px;
+  font-size: 16px; /* ≥16px évite le zoom automatique sur iOS */
   font-weight: 600;
   box-shadow: ${(p) => p.$isDarkMode 
     ? "0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05)" 
