@@ -64,6 +64,67 @@ const inputBase = `
   outline: none;
 `;
 
+export const GenderSwitch = styled.button<{
+  $isDarkMode: boolean;
+  $isFemme: boolean;
+}>`
+  ${inputBase}
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  min-height: 52px;
+  padding: 6px;
+  border-radius: 999px;
+  background: ${(p) => (p.$isDarkMode ? "rgba(255,255,255,0.08)" : "#f8fafc")};
+  border: 1px solid
+    ${(p) => (p.$isDarkMode ? "rgba(255,255,255,0.12)" : "#d1d5db")};
+  color: ${(p) => (p.$isDarkMode ? "#e2e8f0" : "#374151")};
+  cursor: pointer;
+  overflow: hidden;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: ${(p) => (p.$isFemme ? "calc(50% + 6px)" : "6px")};
+    width: calc(50% - 12px);
+    height: calc(100% - 12px);
+    border-radius: 999px;
+    background: ${(p) =>
+      p.$isFemme
+        ? "rgba(139, 92, 246, 0.9)"
+        : p.$isDarkMode
+          ? "rgba(139, 92, 246, 0.9)"
+          : "rgba(139, 92, 246, 0.9)"};
+    transition:
+      left 0.2s ease,
+      background 0.2s ease;
+  }
+
+  > span {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  > span:first-child {
+    color: ${(p) =>
+      p.$isFemme ? (p.$isDarkMode ? "#cbd5e1" : "#9ca3af") : "#ffffff"};
+  }
+
+  > span:last-child {
+    color: ${(p) =>
+      p.$isFemme ? "#ffffff" : p.$isDarkMode ? "#cbd5e1" : "#9ca3af"};
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.14);
+  }
+`;
+
 export const ToggleButton = styled.button<{
   $isActive: boolean;
   $isDarkMode: boolean;

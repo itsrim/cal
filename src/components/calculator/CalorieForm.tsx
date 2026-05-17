@@ -9,8 +9,7 @@ import {
   FieldGrid,
   Input,
   Select,
-  ToggleGroup,
-  ToggleButton,
+  GenderSwitch,
   Button,
   ResultCard,
   ResultTitle,
@@ -73,30 +72,24 @@ export default function CalorieForm({ isDarkMode }: { isDarkMode: boolean }) {
 
   return (
     <Wrap>
-      <Title $isDarkMode={isDarkMode}>Calculateur de calories</Title>
+      {/* <Title $isDarkMode={isDarkMode}>Calculateur de calories</Title> */}
       <Section $isDarkMode={isDarkMode}>
         <Form onSubmit={handleSubmit}>
           <FieldGrid>
             <Field $isDarkMode={isDarkMode}>
               Sexe
-              <ToggleGroup>
-                <ToggleButton
-                  type="button"
-                  $isActive={form.sexe === "homme"}
-                  $isDarkMode={isDarkMode}
-                  onClick={() => toggleSexe("homme")}
-                >
-                  Homme
-                </ToggleButton>
-                <ToggleButton
-                  type="button"
-                  $isActive={form.sexe === "femme"}
-                  $isDarkMode={isDarkMode}
-                  onClick={() => toggleSexe("femme")}
-                >
-                  Femme
-                </ToggleButton>
-              </ToggleGroup>
+              <GenderSwitch
+                type="button"
+                $isDarkMode={isDarkMode}
+                $isFemme={form.sexe === "femme"}
+                aria-pressed={form.sexe === "femme"}
+                onClick={() =>
+                  toggleSexe(form.sexe === "homme" ? "femme" : "homme")
+                }
+              >
+                <span>Homme</span>
+                <span>Femme</span>
+              </GenderSwitch>
             </Field>
 
             <Field $isDarkMode={isDarkMode}>
