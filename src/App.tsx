@@ -1,7 +1,9 @@
 import React from "react";
+import styled from "styled-components";
 import { HistoryTab } from "./components/history/HistoryTab";
 import { SearchTab } from "./components/search/SearchTab";
 import { TrackingTab } from "./components/tracking/TrackingTab";
+import CalorieForm from "./components/calculator/CalorieForm";
 import { BurgerMenu } from "./components/BurgerMenu";
 import { I18nProvider, useI18n, Language } from "./contexts/I18nContext";
 import { Search, History, LineChart } from "lucide-react";
@@ -17,7 +19,6 @@ import {
   HeaderContainer,
 } from "./components/App/StyleApp";
 
-
 type TabId = "search" | "history" | "suivi";
 
 function AppContent() {
@@ -25,11 +26,12 @@ function AppContent() {
   const [active, setActive] = React.useState<TabId>("search");
   const [storageSize, setStorageSize] = React.useState(0);
   const [isDarkMode, setIsDarkMode] = React.useState(true); // Dark mode par défaut
-  
+  const [calculatorModalOpen, setCalculatorModalOpen] = React.useState(false);
+
   const tabs = [
-    { id: "search" as const, label: t('app.tabs.search'), icon: Search },
-    { id: "history" as const, label: t('app.tabs.history'), icon: History },
-    { id: "suivi" as const, label: t('app.tabs.tracking'), icon: LineChart },
+    { id: "search" as const, label: t("app.tabs.search"), icon: Search },
+    { id: "history" as const, label: t("app.tabs.history"), icon: History },
+    { id: "suivi" as const, label: t("app.tabs.tracking"), icon: LineChart },
   ];
 
   // pour l'indicateur (underline)
@@ -37,7 +39,7 @@ function AppContent() {
   const [underline, setUnderline] = React.useState({ x: 0, w: 0 });
   const updateUnderline = (id: TabId) => {
     const el = listRef.current?.querySelector<HTMLButtonElement>(
-      `[data-tab="${id}"]`
+      `[data-tab="${id}"]`,
     );
     if (!el) return;
     const { left, width } = el.getBoundingClientRect();
@@ -74,9 +76,14 @@ function AppContent() {
 
   // Charger la préférence du thème depuis le localStorage
   React.useEffect(() => {
-    const savedTheme = localStorage.getItem('cal-theme');
+    const savedTheme = localStorage.getItem("cal-theme");
     if (savedTheme) {
-      setIsDarkMode(savedTheme === 'dark');
+      setIsDarkMode(savedTheme === "dark");
+    }
+
+    const calculatorSeen = localStorage.getItem("cal-calculator-seen");
+    if (!calculatorSeen) {
+      setCalculatorModalOpen(true);
     }
   }, []);
 
@@ -84,12 +91,21 @@ function AppContent() {
   const toggleDarkMode = React.useCallback(() => {
     const newTheme = !isDarkMode;
     setIsDarkMode(newTheme);
-    localStorage.setItem('cal-theme', newTheme ? 'dark' : 'light');
+    localStorage.setItem("cal-theme", newTheme ? "dark" : "light");
   }, [isDarkMode]);
+
+  const closeCalculatorModal = React.useCallback(() => {
+    setCalculatorModalOpen(false);
+    localStorage.setItem("cal-calculator-seen", "true");
+  }, []);
+
+  const openCalculatorModal = React.useCallback(() => {
+    setCalculatorModalOpen(true);
+  }, []);
 
   // Changer de langue
   const toggleLanguage = React.useCallback(() => {
-    const newLanguage: Language = language === 'fr' ? 'en' : 'fr';
+    const newLanguage: Language = language === "fr" ? "en" : "fr";
     setLanguage(newLanguage);
   }, [language, setLanguage]);
 
@@ -119,17 +135,17 @@ function AppContent() {
     <Container $isDarkMode={isDarkMode}>
       <Content>
         <HeaderContainer data-menu-container>
-          <Title $isDarkMode={isDarkMode}>{t('app.title')}</Title>
+          <Title $isDarkMode={isDarkMode}>{t("app.title")}</Title>
           <div style={{ position: "absolute", right: 0 }}>
             <BurgerMenu
               isDarkMode={isDarkMode}
               onToggleDarkMode={toggleDarkMode}
               onToggleLanguage={toggleLanguage}
+              onOpenCalculatorModal={openCalculatorModal}
               storageSize={storageSize}
             />
           </div>
         </HeaderContainer>
-
 
         <Panel
           id="panel-search"
@@ -138,7 +154,10 @@ function AppContent() {
           hidden={active !== "search"}
         >
           {active === "search" && (
-            <SearchTab onSaved={() => setActive("history")} isDarkMode={isDarkMode} />
+            <SearchTab
+              onSaved={() => setActive("history")}
+              isDarkMode={isDarkMode}
+            />
           )}
         </Panel>
         <Panel
@@ -158,7 +177,28 @@ function AppContent() {
           {active === "suivi" && <TrackingTab isDarkMode={isDarkMode} />}
         </Panel>
       </Content>
-      
+
+      <ModalOverlay $open={calculatorModalOpen} onClick={closeCalculatorModal}>
+        <ModalContent
+          $isDarkMode={isDarkMode}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <ModalHeader $isDarkMode={isDarkMode}>
+            <ModalTitle $isDarkMode={isDarkMode}>
+              {t("app.menu.calculator")}
+            </ModalTitle>
+            <ModalClose
+              type="button"
+              onClick={closeCalculatorModal}
+              aria-label={t("app.menu.close")}
+            >
+              ×
+            </ModalClose>
+          </ModalHeader>
+          <CalorieForm isDarkMode={isDarkMode} />
+        </ModalContent>
+      </ModalOverlay>
+
       <BottomTabBar
         role="tablist"
         aria-label="Navigation principale"
@@ -192,6 +232,61 @@ function AppContent() {
     </Container>
   );
 }
+
+const ModalOverlay = styled.div<{ $open: boolean }>`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: ${(p) => (p.$open ? "flex" : "none")};
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 2000;
+`;
+
+const ModalContent = styled.div<{ $isDarkMode: boolean }>`
+  width: min(900px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 22px;
+  background: ${(p) => (p.$isDarkMode ? "#111118" : "#ffffff")};
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.35);
+`;
+
+const ModalHeader = styled.div<{ $isDarkMode: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid
+    ${(p) => (p.$isDarkMode ? "rgba(255,255,255,0.08)" : "#e5e7eb")};
+`;
+
+const ModalTitle = styled.h3<{ $isDarkMode: boolean }>`
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: ${(p) => (p.$isDarkMode ? "#f8fafc" : "#111827")};
+`;
+
+const ModalClose = styled.button`
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: #f8fafc;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+
+  &:hover {
+    color: #e5e7eb;
+  }
+`;
 
 export default function App() {
   return (

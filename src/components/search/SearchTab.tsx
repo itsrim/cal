@@ -49,6 +49,11 @@ const storageKey = "cal-history-v1";
 const recentKey = "cal-recents-v1";
 const favoritesKey = "cal-favorites-v1";
 
+const parseKcal = (value: unknown): number | null => {
+  const n = Number(value);
+  return Number.isFinite(n) ? Math.round(n) : null;
+};
+
 type SearchTabProps = { onSaved?: () => void; isDarkMode: boolean };
 type InnerTabId = "favorites" | "recents";
 
@@ -71,12 +76,12 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
     try {
       const prod = await fetchProductByBarcode(ean);
       const first = {
-        product_name: prod.product_name ?? t('search.product'),
+        product_name: prod.product_name ?? t("search.product"),
         nutriments: prod.nutriments ?? {},
         nutriscore_grade: prod.nutriscore_grade,
       } as SearchResult;
       setResult(first);
-      const id = `${Date.now()}-${first.product_name || t('search.product')}`;
+      const id = `${Date.now()}-${first.product_name || t("search.product")}`;
       setHistory((prev) => {
         const next = [{ id, item: first }, ...prev].slice(0, 10);
         storage.setItem("cal-recents-v1", JSON.stringify(next)).catch(() => {});
@@ -112,7 +117,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
 
   const canSearch = React.useMemo(
     () => query.trim().length > 0 && !loading,
-    [query, loading]
+    [query, loading],
   );
 
   const fetchFirstProduct = React.useCallback(async () => {
@@ -134,11 +139,11 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
       const data = await res.json();
       const first: SearchResult | undefined = data?.products?.[0];
       if (!first) {
-        setError(t('search.noProductFound'));
+        setError(t("search.noProductFound"));
         setResult(null);
       } else {
         setResult(first);
-        const id = `${Date.now()}-${first.product_name || t('search.product')}`;
+        const id = `${Date.now()}-${first.product_name || t("search.product")}`;
         setHistory((prev) => {
           const next = [{ id, item: first }, ...prev].slice(0, 10);
           storage.setItem(recentKey, JSON.stringify(next)).catch(() => {});
@@ -154,19 +159,21 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
 
   const nutriments: Nutriments | undefined = result?.nutriments;
   const fat = nutriments?.fat_100g ?? null;
-  const carbohydrates = nutriments?.carbohydrates_100g ?? nutriments?.sugars_100g ?? null;
+  const carbohydrates =
+    nutriments?.carbohydrates_100g ?? nutriments?.sugars_100g ?? null;
   const proteins = nutriments?.proteins_100g ?? null;
-  const kcal =
+  const kcal = parseKcal(
     (nutriments as any)?.["energy-kcal_100g"] ??
-    (nutriments as any)?.energy_kcal_100g ??
-    null;
+      (nutriments as any)?.energy_kcal_100g ??
+      null,
+  );
 
   const saveResult = React.useCallback(
     async (r: SearchResult | null) => {
       if (!r || !r.nutriments) return;
       const item: SavedItem = {
         id: `${Date.now()}`,
-        product_name: r.product_name || t('search.product'),
+        product_name: r.product_name || t("search.product"),
         nutriments: r.nutriments,
         timestamp: Date.now(),
         quantity: 100,
@@ -180,12 +187,12 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
         onSaved?.();
       } catch {}
     },
-    [onSaved]
+    [onSaved],
   );
 
   const handleSave = React.useCallback(
     () => saveResult(result),
-    [saveResult, result]
+    [saveResult, result],
   );
 
   const toggleExpand = React.useCallback((id: string) => {
@@ -195,7 +202,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
   const toggleFavorite = React.useCallback(async (entry: RecentEntry) => {
     setFavorites((prev) => {
       const exists = prev.some(
-        (f) => f.item.product_name === entry.item.product_name
+        (f) => f.item.product_name === entry.item.product_name,
       );
       const next = exists
         ? prev.filter((f) => f.item.product_name !== entry.item.product_name)
@@ -216,7 +223,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
           <ScanIconBtnLeft
             $isDarkMode={isDarkMode}
             aria-label="Scanner code-barres"
-            title={t('search.scanner')}
+            title={t("search.scanner")}
             onClick={() => setScanOpen(true)}
             disabled={loading}
           >
@@ -228,7 +235,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
             as="input"
             type="search"
             inputMode="search"
-            placeholder={t('search.placeholder')}
+            placeholder={t("search.placeholder")}
             value={query}
             onChange={(e) => setQuery((e.target as HTMLInputElement).value)}
             onKeyDown={(e) => {
@@ -243,9 +250,9 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
         <SearchIconButton
           onClick={fetchFirstProduct}
           disabled={!canSearch}
-          aria-label={t('search.searchPlaceholder')}
+          aria-label={t("search.searchPlaceholder")}
         >
-          {loading ? <Spinner aria-label={t('search.loading')} /> : <Search />}
+          {loading ? <Spinner aria-label={t("search.loading")} /> : <Search />}
         </SearchIconButton>
       </Row>
 
@@ -255,26 +262,34 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
         <Card $isDarkMode={isDarkMode}>
           <HeaderRow>
             <LeftRow>
-              <Heart 
-                $active={favorites.some(f => f.item.product_name === result.product_name)}
-                $isDarkMode={isDarkMode} 
+              <Heart
+                $active={favorites.some(
+                  (f) => f.item.product_name === result.product_name,
+                )}
+                $isDarkMode={isDarkMode}
                 onClick={() => {
                   const entry: RecentEntry = {
-                    id: `${Date.now()}-${result.product_name || t('search.product')}`,
-                    item: result
+                    id: `${Date.now()}-${result.product_name || t("search.product")}`,
+                    item: result,
                   };
                   toggleFavorite(entry);
                 }}
               >
-                {favorites.some(f => f.item.product_name === result.product_name) ? "♥" : "♡"}
+                {favorites.some(
+                  (f) => f.item.product_name === result.product_name,
+                )
+                  ? "♥"
+                  : "♡"}
               </Heart>
               <ProductName $isDarkMode={isDarkMode}>
-                {result.product_name || t('search.product')}
+                {result.product_name || t("search.product")}
                 <InlineHint $isDarkMode={isDarkMode}>(100g)</InlineHint>
               </ProductName>
             </LeftRow>
             <RightColumn>
-              <Value $isDarkMode={isDarkMode}>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
+              <Value $isDarkMode={isDarkMode}>
+                {kcal !== null ? `${kcal} kcal` : "—"}
+              </Value>
               <NutriScore grade={result.nutriscore_grade} />
             </RightColumn>
           </HeaderRow>
@@ -282,52 +297,68 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
             <NutrientColumn>
               <ColorBar $color="#fb923c" />
               <NutrientInfo>
-                <NutrientLabel $isDarkMode={isDarkMode}>{t('history.carbs')}</NutrientLabel>
-                <NutrientValue $isDarkMode={isDarkMode}>{carbohydrates !== null ? `${Math.round(carbohydrates * 10) / 10} g` : "—"}</NutrientValue>
+                <NutrientLabel $isDarkMode={isDarkMode}>
+                  {t("history.carbs")}
+                </NutrientLabel>
+                <NutrientValue $isDarkMode={isDarkMode}>
+                  {carbohydrates !== null
+                    ? `${Math.round(carbohydrates * 10) / 10} g`
+                    : "—"}
+                </NutrientValue>
               </NutrientInfo>
             </NutrientColumn>
             <NutrientColumn>
               <ColorBar $color="#c084fc" />
               <NutrientInfo>
-                <NutrientLabel $isDarkMode={isDarkMode}>{t('search.fats')}</NutrientLabel>
-                <NutrientValue $isDarkMode={isDarkMode}>{fat !== null ? `${Math.round(fat * 10) / 10} g` : "—"}</NutrientValue>
+                <NutrientLabel $isDarkMode={isDarkMode}>
+                  {t("search.fats")}
+                </NutrientLabel>
+                <NutrientValue $isDarkMode={isDarkMode}>
+                  {fat !== null ? `${Math.round(fat * 10) / 10} g` : "—"}
+                </NutrientValue>
               </NutrientInfo>
             </NutrientColumn>
             <NutrientColumn>
               <ColorBar $color="#2dd4bf" />
               <NutrientInfo>
-                <NutrientLabel $isDarkMode={isDarkMode}>{t('search.proteins')}</NutrientLabel>
-                <NutrientValue $isDarkMode={isDarkMode}>{proteins !== null ? `${Math.round(proteins * 10) / 10} g` : "—"}</NutrientValue>
+                <NutrientLabel $isDarkMode={isDarkMode}>
+                  {t("search.proteins")}
+                </NutrientLabel>
+                <NutrientValue $isDarkMode={isDarkMode}>
+                  {proteins !== null
+                    ? `${Math.round(proteins * 10) / 10} g`
+                    : "—"}
+                </NutrientValue>
               </NutrientInfo>
             </NutrientColumn>
           </NutrientGrid>
-          <SaveButton onClick={handleSave}>{t('search.save')}</SaveButton>
+          <SaveButton onClick={handleSave}>{t("search.save")}</SaveButton>
         </Card>
       )}
 
       {!result && !error && !loading ? (
-        <Hint $isDarkMode={isDarkMode}>{t('search.hint')}</Hint>
+        <Hint $isDarkMode={isDarkMode}>{t("search.hint")}</Hint>
       ) : null}
 
       {/* Sous-onglets Favoris / Récents */}
       <SegmentedControl $isDarkMode={isDarkMode}>
-        <SegmentBtn 
-          $isDarkMode={isDarkMode} 
-          $active={innerTab === "favorites"} 
+        <SegmentBtn
+          $isDarkMode={isDarkMode}
+          $active={innerTab === "favorites"}
           onClick={() => setInnerTab("favorites")}
         >
-          {t('search.favorites')}
+          {t("search.favorites")}
         </SegmentBtn>
-        <SegmentBtn 
-          $isDarkMode={isDarkMode} 
-          $active={innerTab === "recents"} 
+        <SegmentBtn
+          $isDarkMode={isDarkMode}
+          $active={innerTab === "recents"}
           onClick={() => setInnerTab("recents")}
         >
-          {t('search.recents')}
+          {t("search.recents")}
         </SegmentBtn>
       </SegmentedControl>
 
-      <ListScroll>
+      <>
         {/* Panel Favoris */}
         <Section
           id="inner-panel-favorites"
@@ -338,25 +369,31 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
           {innerTab === "favorites" && (
             <>
               {favorites.length === 0 ? (
-                <Hint $isDarkMode={isDarkMode}>{t('search.noFavorites')}</Hint>
+                <Hint $isDarkMode={isDarkMode}>{t("search.noFavorites")}</Hint>
               ) : null}
 
               {favorites.map((h) => {
                 const r = h.item;
                 const n: Nutriments | undefined = r.nutriments;
                 const fat = n?.fat_100g ?? null;
-                const carbohydrates = n?.carbohydrates_100g ?? n?.sugars_100g ?? null;
+                const carbohydrates =
+                  n?.carbohydrates_100g ?? n?.sugars_100g ?? null;
                 const proteins = n?.proteins_100g ?? null;
-                const kcal =
+                const kcal = parseKcal(
                   (n as any)?.["energy-kcal_100g"] ??
-                  (n as any)?.energy_kcal_100g ??
-                  null;
+                    (n as any)?.energy_kcal_100g ??
+                    null,
+                );
                 const isOpen = !!expanded[`fav-${h.id}`];
                 return (
                   <Card key={`fav-${h.id}`} $isDarkMode={isDarkMode}>
                     <HeaderRow>
                       <LeftRow>
-                        <Heart $active $isDarkMode={isDarkMode} onClick={() => toggleFavorite(h)}>
+                        <Heart
+                          $active
+                          $isDarkMode={isDarkMode}
+                          onClick={() => toggleFavorite(h)}
+                        >
                           ♥
                         </Heart>
                         <div
@@ -370,12 +407,16 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                         >
                           <ProductName $isDarkMode={isDarkMode}>
                             {r.product_name || "Produit"}
-                            <InlineHint $isDarkMode={isDarkMode}>(100g)</InlineHint>
+                            <InlineHint $isDarkMode={isDarkMode}>
+                              (100g)
+                            </InlineHint>
                           </ProductName>
                         </div>
                       </LeftRow>
                       <RightColumn>
-                        <Value $isDarkMode={isDarkMode}>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
+                        <Value $isDarkMode={isDarkMode}>
+                          {kcal !== null ? `${kcal} kcal` : "—"}
+                        </Value>
                         <NutriScore grade={r.nutriscore_grade} />
                       </RightColumn>
                     </HeaderRow>
@@ -385,22 +426,40 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                           <NutrientColumn>
                             <ColorBar $color="#fb923c" />
                             <NutrientInfo>
-                              <NutrientLabel $isDarkMode={isDarkMode}>{t('history.carbs')}</NutrientLabel>
-                              <NutrientValue $isDarkMode={isDarkMode}>{carbohydrates !== null ? `${Math.round(carbohydrates * 10) / 10} g` : "—"}</NutrientValue>
+                              <NutrientLabel $isDarkMode={isDarkMode}>
+                                {t("history.carbs")}
+                              </NutrientLabel>
+                              <NutrientValue $isDarkMode={isDarkMode}>
+                                {carbohydrates !== null
+                                  ? `${Math.round(carbohydrates * 10) / 10} g`
+                                  : "—"}
+                              </NutrientValue>
                             </NutrientInfo>
                           </NutrientColumn>
                           <NutrientColumn>
                             <ColorBar $color="#c084fc" />
                             <NutrientInfo>
-                              <NutrientLabel $isDarkMode={isDarkMode}>{t('search.fats')}</NutrientLabel>
-                              <NutrientValue $isDarkMode={isDarkMode}>{fat !== null ? `${Math.round(fat * 10) / 10} g` : "—"}</NutrientValue>
+                              <NutrientLabel $isDarkMode={isDarkMode}>
+                                {t("search.fats")}
+                              </NutrientLabel>
+                              <NutrientValue $isDarkMode={isDarkMode}>
+                                {fat !== null
+                                  ? `${Math.round(fat * 10) / 10} g`
+                                  : "—"}
+                              </NutrientValue>
                             </NutrientInfo>
                           </NutrientColumn>
                           <NutrientColumn>
                             <ColorBar $color="#2dd4bf" />
                             <NutrientInfo>
-                              <NutrientLabel $isDarkMode={isDarkMode}>{t('search.proteins')}</NutrientLabel>
-                              <NutrientValue $isDarkMode={isDarkMode}>{proteins !== null ? `${Math.round(proteins * 10) / 10} g` : "—"}</NutrientValue>
+                              <NutrientLabel $isDarkMode={isDarkMode}>
+                                {t("search.proteins")}
+                              </NutrientLabel>
+                              <NutrientValue $isDarkMode={isDarkMode}>
+                                {proteins !== null
+                                  ? `${Math.round(proteins * 10) / 10} g`
+                                  : "—"}
+                              </NutrientValue>
                             </NutrientInfo>
                           </NutrientColumn>
                         </NutrientGrid>
@@ -413,7 +472,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                           }
                         >
                           <SaveButton onClick={() => saveResult(r)}>
-                            {t('search.save')}
+                            {t("search.save")}
                           </SaveButton>
                         </Row>
                       </>
@@ -436,7 +495,9 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
             <>
               {history.filter((h) => h.item !== result).slice(0, 5).length ===
               0 ? (
-                <Hint $isDarkMode={isDarkMode}>{t('search.noRecentSearch')}</Hint>
+                <Hint $isDarkMode={isDarkMode}>
+                  {t("search.noRecentSearch")}
+                </Hint>
               ) : null}
 
               {history
@@ -446,15 +507,17 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                   const r = h.item;
                   const n: Nutriments | undefined = r.nutriments;
                   const fat = n?.fat_100g ?? null;
-                  const carbohydrates = n?.carbohydrates_100g ?? n?.sugars_100g ?? null;
+                  const carbohydrates =
+                    n?.carbohydrates_100g ?? n?.sugars_100g ?? null;
                   const proteins = n?.proteins_100g ?? null;
-                  const kcal =
+                  const kcal = parseKcal(
                     (n as any)?.["energy-kcal_100g"] ??
-                    (n as any)?.energy_kcal_100g ??
-                    null;
+                      (n as any)?.energy_kcal_100g ??
+                      null,
+                  );
                   const isOpen = !!expanded[h.id];
                   const isFav = favorites.some(
-                    (f) => f.item.product_name === r.product_name
+                    (f) => f.item.product_name === r.product_name,
                   );
                   return (
                     <Card key={h.id} $isDarkMode={isDarkMode}>
@@ -473,12 +536,17 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                           >
                             <ProductName $isDarkMode={isDarkMode}>
                               {r.product_name || "Produit"}
-                              <InlineHint $isDarkMode={isDarkMode}> (100g)</InlineHint>
+                              <InlineHint $isDarkMode={isDarkMode}>
+                                {" "}
+                                (100g)
+                              </InlineHint>
                             </ProductName>
                           </div>
                         </LeftRow>
                         <RightColumn>
-                          <Value $isDarkMode={isDarkMode}>{kcal !== null ? `${kcal} kcal` : "—"}</Value>
+                          <Value $isDarkMode={isDarkMode}>
+                            {kcal !== null ? `${kcal} kcal` : "—"}
+                          </Value>
                           <NutriScore grade={r.nutriscore_grade} />
                         </RightColumn>
                       </HeaderRow>
@@ -488,27 +556,45 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
                             <NutrientColumn>
                               <ColorBar $color="#fb923c" />
                               <NutrientInfo>
-                                <NutrientLabel $isDarkMode={isDarkMode}>{t('history.carbs')}</NutrientLabel>
-                                <NutrientValue $isDarkMode={isDarkMode}>{carbohydrates !== null ? `${Math.round(carbohydrates * 10) / 10} g` : "—"}</NutrientValue>
+                                <NutrientLabel $isDarkMode={isDarkMode}>
+                                  {t("history.carbs")}
+                                </NutrientLabel>
+                                <NutrientValue $isDarkMode={isDarkMode}>
+                                  {carbohydrates !== null
+                                    ? `${Math.round(carbohydrates * 10) / 10} g`
+                                    : "—"}
+                                </NutrientValue>
                               </NutrientInfo>
                             </NutrientColumn>
                             <NutrientColumn>
                               <ColorBar $color="#c084fc" />
                               <NutrientInfo>
-                                <NutrientLabel $isDarkMode={isDarkMode}>{t('search.fats')}</NutrientLabel>
-                                <NutrientValue $isDarkMode={isDarkMode}>{fat !== null ? `${Math.round(fat * 10) / 10} g` : "—"}</NutrientValue>
+                                <NutrientLabel $isDarkMode={isDarkMode}>
+                                  {t("search.fats")}
+                                </NutrientLabel>
+                                <NutrientValue $isDarkMode={isDarkMode}>
+                                  {fat !== null
+                                    ? `${Math.round(fat * 10) / 10} g`
+                                    : "—"}
+                                </NutrientValue>
                               </NutrientInfo>
                             </NutrientColumn>
                             <NutrientColumn>
                               <ColorBar $color="#2dd4bf" />
                               <NutrientInfo>
-                                <NutrientLabel $isDarkMode={isDarkMode}>{t('search.proteins')}</NutrientLabel>
-                                <NutrientValue $isDarkMode={isDarkMode}>{proteins !== null ? `${Math.round(proteins * 10) / 10} g` : "—"}</NutrientValue>
+                                <NutrientLabel $isDarkMode={isDarkMode}>
+                                  {t("search.proteins")}
+                                </NutrientLabel>
+                                <NutrientValue $isDarkMode={isDarkMode}>
+                                  {proteins !== null
+                                    ? `${Math.round(proteins * 10) / 10} g`
+                                    : "—"}
+                                </NutrientValue>
                               </NutrientInfo>
                             </NutrientColumn>
                           </NutrientGrid>
                           <SaveButton onClick={() => saveResult(r)}>
-                            {t('search.save')}
+                            {t("search.save")}
                           </SaveButton>
                         </>
                       )}
@@ -518,7 +604,7 @@ export const SearchTab = ({ onSaved, isDarkMode }: SearchTabProps) => {
             </>
           )}
         </Section>
-      </ListScroll>
+      </>
       {scanOpen && (
         <BarCodeScanner
           onClose={() => setScanOpen(false)}

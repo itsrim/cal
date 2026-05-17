@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Menu, Sun, Moon, Languages, X } from "lucide-react";
+import { Menu, Sun, Moon, Languages, X, Activity } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext";
 import { storage } from "../utils/storage";
 // import { storage } from "../../utils/storage";
@@ -19,17 +19,18 @@ const BurgerButton = styled.button<{ $isDarkMode: boolean }>`
   justify-content: center;
   border-radius: 10px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   &:hover {
     color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
-    background: ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)")};
+    background: ${(p) =>
+      p.$isDarkMode ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)"};
     transform: scale(1.05);
   }
-  
+
   &:active {
     transform: scale(0.95);
   }
-  
+
   &:focus-visible {
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
   }
@@ -39,23 +40,24 @@ const MenuDropdown = styled.div<{ $open: boolean; $isDarkMode: boolean }>`
   position: absolute;
   top: 100%;
   right: 0;
-  background: ${(p) => (p.$isDarkMode 
-    ? "rgba(26, 26, 31, 0.95)" 
-    : "rgba(255, 255, 255, 0.95)"
-  )};
+  background: ${(p) =>
+    p.$isDarkMode ? "rgba(26, 26, 31, 0.95)" : "rgba(255, 255, 255, 0.95)"};
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)")};
+  border: 1px solid
+    ${(p) =>
+      p.$isDarkMode ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)"};
   border-radius: 16px;
-  box-shadow: ${(p) => p.$isDarkMode 
-    ? "0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)" 
-    : "0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)"
-  };
+  box-shadow: ${(p) =>
+    p.$isDarkMode
+      ? "0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)"
+      : "0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)"};
   min-width: 220px;
   z-index: 1000;
   opacity: ${(p) => (p.$open ? 1 : 0)};
-  visibility: ${(p) => (p.$open ? 'visible' : 'hidden')};
-  transform: ${(p) => (p.$open ? 'translateY(0) scale(1)' : 'translateY(-8px) scale(0.95)')};
+  visibility: ${(p) => (p.$open ? "visible" : "hidden")};
+  transform: ${(p) =>
+    p.$open ? "translateY(0) scale(1)" : "translateY(-8px) scale(0.95)"};
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   margin-top: 8px;
   overflow: hidden;
@@ -75,22 +77,26 @@ const MenuItem = styled.button<{ $isDarkMode: boolean }>`
   display: flex;
   align-items: center;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border-bottom: 1px solid ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.05)")};
-  
+  border-bottom: 1px solid
+    ${(p) =>
+      p.$isDarkMode ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.05)"};
+
   &:last-child {
     border-bottom: none;
   }
-  
+
   &:hover {
-    background: ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.05)")};
+    background: ${(p) =>
+      p.$isDarkMode ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.05)"};
     transform: translateX(4px);
   }
-  
+
   &:active {
     transform: translateX(2px) scale(0.98);
-    background: ${(p) => (p.$isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.08)")};
+    background: ${(p) =>
+      p.$isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.08)"};
   }
-  
+
   &:focus-visible {
     outline: 2px solid rgba(99, 102, 241, 0.5);
     outline-offset: -2px;
@@ -110,7 +116,7 @@ const ModalOverlay = styled.div<{ $open: boolean }>`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.8);
-  display: ${(p) => (p.$open ? 'flex' : 'none')};
+  display: ${(p) => (p.$open ? "flex" : "none")};
   align-items: center;
   justify-content: center;
   z-index: 2000;
@@ -148,7 +154,7 @@ const CloseButton = styled.button`
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s ease;
-  
+
   &:hover {
     background: rgba(0, 0, 0, 0.9);
   }
@@ -158,14 +164,16 @@ type BurgerMenuProps = {
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
   onToggleLanguage: () => void;
+  onOpenCalculatorModal: () => void;
   storageSize: number;
 };
 
-export const BurgerMenu = ({ 
-  isDarkMode, 
-  onToggleDarkMode, 
-  onToggleLanguage, 
-  storageSize 
+export const BurgerMenu = ({
+  isDarkMode,
+  onToggleDarkMode,
+  onToggleLanguage,
+  onOpenCalculatorModal,
+  storageSize,
 }: BurgerMenuProps) => {
   const { language, t } = useI18n();
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -194,13 +202,16 @@ export const BurgerMenu = ({
       if (menuOpen) {
         // Ne pas fermer si on clique dans le menu déroulant ou sur le bouton burger
         const target = event.target as Element;
-        if (!target.closest('[data-menu-dropdown]') && !target.closest('[data-burger-button]')) {
+        if (
+          !target.closest("[data-menu-dropdown]") &&
+          !target.closest("[data-burger-button]")
+        ) {
           setMenuOpen(false);
         }
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
   return (
@@ -214,69 +225,114 @@ export const BurgerMenu = ({
       >
         <Menu size={20} />
       </BurgerButton>
-      
-      <MenuDropdown $open={menuOpen} $isDarkMode={isDarkMode} data-menu-dropdown onClick={(e) => e.stopPropagation()}>
-        <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
-          e.stopPropagation();
-          onToggleDarkMode();
-          setMenuOpen(false);
-        }}>
-          {isDarkMode ? <Sun size={16} style={{ marginRight: '8px' }} /> : <Moon size={16} style={{ marginRight: '8px' }} />}
-          {isDarkMode ? t('app.menu.lightMode') : t('app.menu.darkMode')}
+
+      <MenuDropdown
+        $open={menuOpen}
+        $isDarkMode={isDarkMode}
+        data-menu-dropdown
+        onClick={(e) => e.stopPropagation()}
+      >
+        <MenuItem
+          $isDarkMode={isDarkMode}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleDarkMode();
+            setMenuOpen(false);
+          }}
+        >
+          {isDarkMode ? (
+            <Sun size={16} style={{ marginRight: "8px" }} />
+          ) : (
+            <Moon size={16} style={{ marginRight: "8px" }} />
+          )}
+          {isDarkMode ? t("app.menu.lightMode") : t("app.menu.darkMode")}
         </MenuItem>
-        <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
-          e.stopPropagation();
-          onToggleLanguage();
-          setMenuOpen(false);
-        }}>
-          <Languages size={16} style={{ marginRight: '8px' }} />
-          {t('app.menu.language')} ({language === 'fr' ? 'FR 🇫🇷' : 'EN 🇺🇸'}) {'->'} {language === 'fr' ? 'EN 🇺🇸' : 'FR 🇫🇷'}
+        <MenuItem
+          $isDarkMode={isDarkMode}
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenCalculatorModal();
+            setMenuOpen(false);
+          }}
+        >
+          <Activity size={16} style={{ marginRight: "8px" }} />
+          {t("app.menu.calculator")}
         </MenuItem>
-        <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
-          e.stopPropagation();
-          setDemoModalOpen(true);
-          setMenuOpen(false);
-        }}>
-          {t('app.menu.demo')}
+        <MenuItem
+          $isDarkMode={isDarkMode}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleLanguage();
+            setMenuOpen(false);
+          }}
+        >
+          <Languages size={16} style={{ marginRight: "8px" }} />
+          {t("app.menu.language")} ({language === "fr" ? "FR 🇫🇷" : "EN 🇺🇸"}){" "}
+          {"->"} {language === "fr" ? "EN 🇺🇸" : "FR 🇫🇷"}
         </MenuItem>
-        <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
-          e.stopPropagation();
-          setPwaModalOpen(true);
-          setMenuOpen(false);
-        }}>
-          {t('app.menu.installation')}
+        <MenuItem
+          $isDarkMode={isDarkMode}
+          onClick={(e) => {
+            e.stopPropagation();
+            setDemoModalOpen(true);
+            setMenuOpen(false);
+          }}
+        >
+          {t("app.menu.demo")}
         </MenuItem>
-        <MenuItem $isDarkMode={isDarkMode} onClick={(e) => {
-          e.stopPropagation();
-          clearStorage();
-        }}>
-          {t('app.menu.clearData')} (<StorageSize>{storageSize} Mo</StorageSize>)
+        <MenuItem
+          $isDarkMode={isDarkMode}
+          onClick={(e) => {
+            e.stopPropagation();
+            setPwaModalOpen(true);
+            setMenuOpen(false);
+          }}
+        >
+          {t("app.menu.installation")}
+        </MenuItem>
+        <MenuItem
+          $isDarkMode={isDarkMode}
+          onClick={(e) => {
+            e.stopPropagation();
+            clearStorage();
+          }}
+        >
+          {t("app.menu.clearData")} (<StorageSize>{storageSize} Mo</StorageSize>
+          )
         </MenuItem>
       </MenuDropdown>
 
       {/* Modal PWA */}
       <ModalOverlay $open={pwaModalOpen} onClick={() => setPwaModalOpen(false)}>
-        <ModalContent $isDarkMode={isDarkMode} onClick={(e) => e.stopPropagation()}>
+        <ModalContent
+          $isDarkMode={isDarkMode}
+          onClick={(e) => e.stopPropagation()}
+        >
           <CloseButton onClick={() => setPwaModalOpen(false)}>
-            {t('app.menu.close')}<X size={20} />
+            {t("app.menu.close")}
+            <X size={20} />
           </CloseButton>
-          <ModalImage 
-            src="/cal/pwa_ios.png" 
-            alt={t('app.menu.installInstructions')}
+          <ModalImage
+            src="/cal/pwa_ios.png"
+            alt={t("app.menu.installInstructions")}
           />
         </ModalContent>
       </ModalOverlay>
-      
+
       {/* Modal Demo */}
-      <ModalOverlay $open={demoModalOpen} onClick={() => setDemoModalOpen(false)}>
-        <ModalContent $isDarkMode={isDarkMode} onClick={(e) => e.stopPropagation()}>
+      <ModalOverlay
+        $open={demoModalOpen}
+        onClick={() => setDemoModalOpen(false)}
+      >
+        <ModalContent
+          $isDarkMode={isDarkMode}
+          onClick={(e) => e.stopPropagation()}
+        >
           <CloseButton onClick={() => setDemoModalOpen(false)}>
-            {t('app.menu.close')}<X size={20} />
+            {t("app.menu.close")}
+            <X size={20} />
           </CloseButton>
-          <ModalImage 
-            src="/cal/demo.gif" 
-            alt={t('app.menu.demoAlt')}
-          />
+          <ModalImage src="/cal/demo.gif" alt={t("app.menu.demoAlt")} />
         </ModalContent>
       </ModalOverlay>
     </>
