@@ -189,6 +189,7 @@ function AppContent() {
             </ModalTitle>
             <ModalClose
               type="button"
+              $isDarkMode={isDarkMode}
               onClick={closeCalculatorModal}
               aria-label={t("app.menu.close")}
             >
@@ -236,7 +237,8 @@ function AppContent() {
 const ModalOverlay = styled.div<{ $open: boolean }>`
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(8px);
   display: ${(p) => (p.$open ? "flex" : "none")};
   align-items: center;
   justify-content: center;
@@ -245,46 +247,72 @@ const ModalOverlay = styled.div<{ $open: boolean }>`
 `;
 
 const ModalContent = styled.div<{ $isDarkMode: boolean }>`
-  width: min(900px, 100%);
-  max-height: 90vh;
+  width: min(900px, 98vw);
+  max-height: 92vh;
   overflow-y: auto;
-  border-radius: 22px;
-  background: ${(p) => (p.$isDarkMode ? "#111118" : "#ffffff")};
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.35);
+  border-radius: 28px;
+  background: ${(p) => (p.$isDarkMode ? "#0e0e16" : "#ffffff")};
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  @media (max-width: 760px) {
+    width: calc(100vw - 32px);
+    max-height: 95vh;
+  }
 `;
 
 const ModalHeader = styled.div<{ $isDarkMode: boolean }>`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  padding: 20px 24px;
+  padding: 24px 28px 18px;
+  gap: 16px;
   border-bottom: 1px solid
     ${(p) => (p.$isDarkMode ? "rgba(255,255,255,0.08)" : "#e5e7eb")};
 `;
 
+const ModalHeaderContent = styled.div`
+  display: grid;
+  gap: 8px;
+`;
+
 const ModalTitle = styled.h3<{ $isDarkMode: boolean }>`
   margin: 0;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   color: ${(p) => (p.$isDarkMode ? "#f8fafc" : "#111827")};
 `;
 
-const ModalClose = styled.button`
+const ModalSubtitle = styled.p<{ $isDarkMode: boolean }>`
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 540px;
+  color: ${(p) => (p.$isDarkMode ? "#cbd5e1" : "#4b5563")};
+`;
+
+const ModalClose = styled.button<{ $isDarkMode: boolean }>`
   appearance: none;
   border: 0;
-  background: transparent;
-  color: #f8fafc;
-  font-size: 28px;
+  background: rgba(255, 255, 255, 0.08);
+  color: ${(p) => (p.$isDarkMode ? "#f8fafc" : "#111827")};
+  font-size: 26px;
   line-height: 1;
   cursor: pointer;
   padding: 0;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
   display: grid;
   place-items: center;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
 
   &:hover {
-    color: #e5e7eb;
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.14);
   }
 `;
 

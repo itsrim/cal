@@ -28,7 +28,47 @@ export const Section = styled.div<{ $isDarkMode: boolean }>`
 
 export const Form = styled.form`
   display: grid;
+  gap: 24px;
+`;
+
+export const FormHeader = styled.div`
+  display: grid;
+  gap: 10px;
+`;
+
+export const Subtitle = styled.p<{ $isDarkMode: boolean }>`
+  margin: 0;
+  color: ${(p) => (p.$isDarkMode ? "#94a3b8" : "#6b7280")};
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 680px;
+`;
+
+export const FormLayout = styled.div`
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(320px, 380px);
+  gap: 22px;
+
+  @media (max-width: 760px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const SummaryPanel = styled.div<{ $isDarkMode: boolean }>`
+  display: grid;
   gap: 16px;
+  min-height: 100%;
+  padding: 20px;
+  border-radius: 24px;
+  background: ${(p) => (p.$isDarkMode ? "rgba(255,255,255,0.05)" : "#fafafc")};
+  border: 1px solid
+    ${(p) => (p.$isDarkMode ? "rgba(255,255,255,0.1)" : "#e5e7eb")};
+`;
+
+export const ResultEmpty = styled.div<{ $isDarkMode: boolean }>`
+  color: ${(p) => (p.$isDarkMode ? "#cbd5e1" : "#6b7280")};
+  font-size: 14px;
+  line-height: 1.7;
 `;
 
 export const Field = styled.label<{ $isDarkMode: boolean }>`
@@ -36,8 +76,11 @@ export const Field = styled.label<{ $isDarkMode: boolean }>`
   gap: 8px;
   min-width: 0;
   width: 100%;
-  font-size: 13px;
-  color: ${(p) => (p.$isDarkMode ? "#cbd5e1" : "#4b5563")};
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: ${(p) => (p.$isDarkMode ? "#cbd5e1" : "#6b7280")};
 `;
 
 export const Control = styled.div`
@@ -59,9 +102,14 @@ const inputBase = `
   padding: 14px 16px;
   font-size: 14px;
   font-weight: 600;
-  transition: all 0.25s ease;
+  transition: all 0.25s ease, box-shadow 0.25s ease;
   appearance: none;
   outline: none;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.16);
+
+  &::placeholder {
+    color: rgba(203, 213, 225, 0.65);
+  }
 `;
 
 export const GenderSwitch = styled.button<{
@@ -169,13 +217,17 @@ export const Input = styled.input<{ $isDarkMode: boolean }>`
   height: 52px;
   line-height: 20px;
   box-sizing: border-box;
-  background: ${(p) => (p.$isDarkMode ? "rgba(255,255,255,0.05)" : "#f8fafc")};
+  background: ${(p) =>
+    p.$isDarkMode ? "rgba(255,255,255,0.08)" : "rgba(248,250,252,0.9)"};
   color: ${(p) => (p.$isDarkMode ? "#f8fafc" : "#111827")};
-  border-color: ${(p) => (p.$isDarkMode ? "rgba(255,255,255,0.1)" : "#d1d5db")};
+  border-color: ${(p) =>
+    p.$isDarkMode ? "rgba(255,255,255,0.16)" : "#d1d5db"};
 
   &:focus {
     border-color: ${(p) => (p.$isDarkMode ? "#8b5cf6" : "#6366f1")};
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.14);
+    box-shadow: 0 0 0 4px
+      ${(p) =>
+        p.$isDarkMode ? "rgba(99,102,241,0.14)" : "rgba(99,102,241,0.14)"};
   }
 `;
 
@@ -185,33 +237,40 @@ export const Select = styled.select<{ $isDarkMode: boolean }>`
   height: 52px;
   line-height: 20px;
   box-sizing: border-box;
-  background: ${(p) => (p.$isDarkMode ? "rgba(255,255,255,0.05)" : "#f8fafc")};
+  background: ${(p) =>
+    p.$isDarkMode ? "rgba(255,255,255,0.08)" : "rgba(248,250,252,0.9)"};
   color: ${(p) => (p.$isDarkMode ? "#f8fafc" : "#111827")};
-  border-color: ${(p) => (p.$isDarkMode ? "rgba(255,255,255,0.1)" : "#d1d5db")};
+  border-color: ${(p) =>
+    p.$isDarkMode ? "rgba(255,255,255,0.16)" : "#d1d5db"};
 
   &:focus {
     border-color: ${(p) => (p.$isDarkMode ? "#8b5cf6" : "#6366f1")};
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.14);
+    box-shadow: 0 0 0 4px
+      ${(p) =>
+        p.$isDarkMode ? "rgba(99,102,241,0.14)" : "rgba(99,102,241,0.14)"};
   }
 `;
 
 export const Button = styled.button<{ $isDarkMode: boolean }>`
+  margin-top: 18px;
   width: fit-content;
-  padding: 12px 18px;
-  border-radius: 14px;
+  padding: 14px 22px;
+  border-radius: 16px;
   border: none;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: #ffffff;
   background: linear-gradient(135deg, #8b5cf6, #ec4899);
-  box-shadow: 0 16px 30px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 18px 36px rgba(139, 92, 246, 0.24);
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
 
   &:hover {
     transform: translateY(-1px);
+    filter: saturate(1.05);
   }
 
   &:active {

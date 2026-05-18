@@ -27,7 +27,7 @@ const translations = {
     "app.tabs.calculator": "Calculateur",
     "app.menu.darkMode": "Mode sombre",
     "app.menu.lightMode": "Mode clair",
-    "app.menu.calculator": "Calculateur",
+    "app.menu.calculator": "Calculateur de calories",
     "app.menu.language": "Langue",
     "app.menu.demo": "démo d'utilisation",
     "app.menu.installation": "Installation",
@@ -65,6 +65,39 @@ const translations = {
     // TrackingTab
     "tracking.previousMonth": "Mois précédent",
     "tracking.nextMonth": "Mois suivant",
+
+    // Calculator
+    "calculator.title": "Calculateur de calories",
+    "calculator.description":
+      "Remplissez vos données pour obtenir un objectif personnalisé et mesurer votre métabolisme de base.",
+    "calculator.gender": "Sexe",
+    "calculator.man": "Homme",
+    "calculator.woman": "Femme",
+    "calculator.activityFactor": "Facteur d'activité",
+    "calculator.activity.sedentary": "Sédentaire",
+    "calculator.activity.light": "Léger",
+    "calculator.activity.moderate": "Modéré",
+    "calculator.activity.active": "Élevé",
+    "calculator.activity.veryActive": "Très élevé",
+    "calculator.age": "Âge",
+    "calculator.height": "Taille (cm)",
+    "calculator.currentWeight": "Poids actuel (kg)",
+    "calculator.targetWeight": "Poids cible (kg)",
+    "calculator.duration": "Durée (jours)",
+    "calculator.submit": "Calculer et enregistrer",
+    "calculator.results": "Résultats",
+    "calculator.bmr": "BMR",
+    "calculator.bmrDescription": "Métabolisme de base",
+    "calculator.tdee": "TDEE",
+    "calculator.tdeeDescription": "Dépense énergétique journalière",
+    "calculator.dailyDeficit": "Déficit/jour",
+    "calculator.caloriesPerDay": "Calories max / jour",
+    "calculator.perDay": "jour",
+    "calculator.emptyState":
+      'Remplissez le formulaire à gauche puis cliquez sur "Calculer et enregistrer" pour afficher vos résultats.',
+    "calculator.note":
+      "Ce calculateur génère un objectif journalier, puis l'enregistre automatiquement pour le suivi.",
+    "calculator.objectiveSaved": "Objectif enregistré",
   },
   en: {
     // App.tsx
@@ -75,7 +108,7 @@ const translations = {
     "app.tabs.calculator": "Calculator",
     "app.menu.darkMode": "Dark mode",
     "app.menu.lightMode": "Light mode",
-    "app.menu.calculator": "Calculator",
+    "app.menu.calculator": "Calculator Calorie",
     "app.menu.language": "Language",
     "app.menu.demo": "usage demo",
     "app.menu.installation": "Installation",
@@ -113,6 +146,39 @@ const translations = {
     // TrackingTab
     "tracking.previousMonth": "Previous month",
     "tracking.nextMonth": "Next month",
+
+    // Calculator
+    "calculator.title": "Calorie calculator",
+    "calculator.description":
+      "Enter your data to get a personalized goal and see your basal metabolic rate.",
+    "calculator.gender": "Gender",
+    "calculator.man": "Man",
+    "calculator.woman": "Woman",
+    "calculator.activityFactor": "Activity factor",
+    "calculator.activity.sedentary": "Sedentary",
+    "calculator.activity.light": "Light",
+    "calculator.activity.moderate": "Moderate",
+    "calculator.activity.active": "Active",
+    "calculator.activity.veryActive": "Very active",
+    "calculator.age": "Age",
+    "calculator.height": "Height (cm)",
+    "calculator.currentWeight": "Current weight (kg)",
+    "calculator.targetWeight": "Target weight (kg)",
+    "calculator.duration": "Duration (days)",
+    "calculator.submit": "Calculate and save",
+    "calculator.results": "Results",
+    "calculator.bmr": "BMR",
+    "calculator.bmrDescription": "Basal metabolic rate",
+    "calculator.tdee": "TDEE",
+    "calculator.tdeeDescription": "Total daily energy expenditure",
+    "calculator.dailyDeficit": "Daily deficit",
+    "calculator.caloriesPerDay": "Max calories/day",
+    "calculator.perDay": "day",
+    "calculator.emptyState":
+      'Fill the form on the left and click "Calculate and save" to view your results.',
+    "calculator.note":
+      "This calculator creates a daily goal and saves it automatically for tracking.",
+    "calculator.objectiveSaved": "Goal saved",
   },
 };
 

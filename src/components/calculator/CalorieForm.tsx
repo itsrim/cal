@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useCalorieCalculator } from "./useCalorieCalculator";
+import { useI18n } from "../../contexts/I18nContext";
 import {
   Wrap,
   Title,
   Section,
   Form,
+  FormHeader,
+  Subtitle,
+  FormLayout,
+  SummaryPanel,
   Field,
   FieldGrid,
   Input,
@@ -15,6 +20,7 @@ import {
   ResultTitle,
   ResultRow,
   ResultLabel,
+  ResultEmpty,
   Note,
 } from "./StyleCalorieForm";
 
@@ -39,7 +45,9 @@ const initialForm: CalorieFormState = {
 };
 
 export default function CalorieForm({ isDarkMode }: { isDarkMode: boolean }) {
+  const { t } = useI18n();
   const { resultat, calculer } = useCalorieCalculator();
+  const resultRef = useRef<HTMLDivElement | null>(null);
   const [form, setForm] = useState<CalorieFormState>(initialForm);
   const [message, setMessage] = useState<string>("");
 
@@ -67,146 +75,185 @@ export default function CalorieForm({ isDarkMode }: { isDarkMode: boolean }) {
     };
 
     const result = calculer(values);
-    setMessage(`Objectif enregistré : ${result.caloriesCible} kcal/jour`);
+    setMessage(
+      `${t("calculator.objectiveSaved")} : ${result.caloriesCible} kcal/${t(
+        "calculator.perDay",
+      )}`,
+    );
+
+    requestAnimationFrame(() => {
+      resultRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+    });
   }
 
   return (
     <Wrap>
-      {/* <Title $isDarkMode={isDarkMode}>Calculateur de calories</Title> */}
       <Section $isDarkMode={isDarkMode}>
         <Form onSubmit={handleSubmit}>
-          <FieldGrid>
-            <Field $isDarkMode={isDarkMode}>
-              Sexe
-              <GenderSwitch
-                type="button"
-                $isDarkMode={isDarkMode}
-                $isFemme={form.sexe === "femme"}
-                aria-pressed={form.sexe === "femme"}
-                onClick={() =>
-                  toggleSexe(form.sexe === "homme" ? "femme" : "homme")
-                }
-              >
-                <span>Homme</span>
-                <span>Femme</span>
-              </GenderSwitch>
-            </Field>
+          <FormHeader>
+            {/* <Title $isDarkMode={isDarkMode}>{t("calculator.title")}</Title> */}
+            <Subtitle $isDarkMode={isDarkMode}>
+              {t("calculator.description")}
+            </Subtitle>
+          </FormHeader>
 
-            <Field $isDarkMode={isDarkMode}>
-              Facteur d'activité
-              <Select
-                name="facteurActivite"
-                value={form.facteurActivite}
-                onChange={handleChange}
-                $isDarkMode={isDarkMode}
-              >
-                <option value="1.2">Sédentaire</option>
-                <option value="1.375">Léger</option>
-                <option value="1.55">Modéré</option>
-                <option value="1.725">Élevé</option>
-                <option value="1.9">Très élevé</option>
-              </Select>
-            </Field>
+          <FormLayout>
+            <div>
+              <FieldGrid>
+                <Field $isDarkMode={isDarkMode}>
+                  {t("calculator.gender")}
+                  <GenderSwitch
+                    type="button"
+                    $isDarkMode={isDarkMode}
+                    $isFemme={form.sexe === "femme"}
+                    aria-pressed={form.sexe === "femme"}
+                    onClick={() =>
+                      toggleSexe(form.sexe === "homme" ? "femme" : "homme")
+                    }
+                  >
+                    <span>{t("calculator.man")}</span>
+                    <span>{t("calculator.woman")}</span>
+                  </GenderSwitch>
+                </Field>
 
-            <Field $isDarkMode={isDarkMode}>
-              Âge
-              <Input
-                type="number"
-                name="age"
-                min={10}
-                value={form.age}
-                onChange={handleChange}
-                $isDarkMode={isDarkMode}
-              />
-            </Field>
+                <Field $isDarkMode={isDarkMode}>
+                  {t("calculator.activityFactor")}
+                  <Select
+                    name="facteurActivite"
+                    value={form.facteurActivite}
+                    onChange={handleChange}
+                    $isDarkMode={isDarkMode}
+                  >
+                    <option value="1.2">
+                      {t("calculator.activity.sedentary")}
+                    </option>
+                    <option value="1.375">
+                      {t("calculator.activity.light")}
+                    </option>
+                    <option value="1.55">
+                      {t("calculator.activity.moderate")}
+                    </option>
+                    <option value="1.725">
+                      {t("calculator.activity.active")}
+                    </option>
+                    <option value="1.9">
+                      {t("calculator.activity.veryActive")}
+                    </option>
+                  </Select>
+                </Field>
 
-            <Field $isDarkMode={isDarkMode}>
-              Taille (cm)
-              <Input
-                type="number"
-                name="taille"
-                min={100}
-                value={form.taille}
-                onChange={handleChange}
-                $isDarkMode={isDarkMode}
-              />
-            </Field>
+                <Field $isDarkMode={isDarkMode}>
+                  {t("calculator.age")}
+                  <Input
+                    type="number"
+                    name="age"
+                    min={10}
+                    value={form.age}
+                    onChange={handleChange}
+                    $isDarkMode={isDarkMode}
+                  />
+                </Field>
 
-            <Field $isDarkMode={isDarkMode}>
-              Poids actuel (kg)
-              <Input
-                type="number"
-                name="poidsActuel"
-                min={30}
-                value={form.poidsActuel}
-                onChange={handleChange}
-                $isDarkMode={isDarkMode}
-              />
-            </Field>
+                <Field $isDarkMode={isDarkMode}>
+                  {t("calculator.height")}
+                  <Input
+                    type="number"
+                    name="taille"
+                    min={100}
+                    value={form.taille}
+                    onChange={handleChange}
+                    $isDarkMode={isDarkMode}
+                  />
+                </Field>
 
-            <Field $isDarkMode={isDarkMode}>
-              Poids cible (kg)
-              <Input
-                type="number"
-                name="poidsCible"
-                min={30}
-                value={form.poidsCible}
-                onChange={handleChange}
-                $isDarkMode={isDarkMode}
-              />
-            </Field>
+                <Field $isDarkMode={isDarkMode}>
+                  {t("calculator.currentWeight")}
+                  <Input
+                    type="number"
+                    name="poidsActuel"
+                    min={30}
+                    value={form.poidsActuel}
+                    onChange={handleChange}
+                    $isDarkMode={isDarkMode}
+                  />
+                </Field>
 
-            <Field $isDarkMode={isDarkMode}>
-              Durée (jours)
-              <Input
-                type="number"
-                name="dureeJours"
-                min={14}
-                value={form.dureeJours}
-                onChange={handleChange}
-                $isDarkMode={isDarkMode}
-              />
-            </Field>
-          </FieldGrid>
+                <Field $isDarkMode={isDarkMode}>
+                  {t("calculator.targetWeight")}
+                  <Input
+                    type="number"
+                    name="poidsCible"
+                    min={30}
+                    value={form.poidsCible}
+                    onChange={handleChange}
+                    $isDarkMode={isDarkMode}
+                  />
+                </Field>
 
-          <Button type="submit" $isDarkMode={isDarkMode}>
-            Calculer et enregistrer
-          </Button>
+                <Field $isDarkMode={isDarkMode}>
+                  {t("calculator.duration")}
+                  <Input
+                    type="number"
+                    name="dureeJours"
+                    min={14}
+                    value={form.dureeJours}
+                    onChange={handleChange}
+                    $isDarkMode={isDarkMode}
+                  />
+                </Field>
+              </FieldGrid>
 
-          {resultat && (
-            <ResultCard $isDarkMode={isDarkMode}>
-              <ResultTitle $isDarkMode={isDarkMode}>Résultats</ResultTitle>
-              <ResultRow $isDarkMode={isDarkMode}>
-                <ResultLabel $isDarkMode={isDarkMode}>
-                  <span>BMR</span>
-                  <small>Métabolisme de base</small>
-                </ResultLabel>
-                <strong>{resultat.BMR} kcal</strong>
-              </ResultRow>
-              <ResultRow $isDarkMode={isDarkMode}>
-                <ResultLabel $isDarkMode={isDarkMode}>
-                  <span>TDEE</span>
-                  <small>Dépense énergétique journalière</small>
-                </ResultLabel>
-                <strong>{resultat.TDEE} kcal</strong>
-              </ResultRow>
-              <ResultRow $isDarkMode={isDarkMode}>
-                <span>Déficit/jour</span>
-                <strong>{resultat.deficitJour} kcal</strong>
-              </ResultRow>
-              <ResultRow $isDarkMode={isDarkMode}>
-                <span>Calories max / jour</span>
-                <strong>{resultat.caloriesCible} kcal/jour</strong>
-              </ResultRow>
-              {message ? <Note $isDarkMode={isDarkMode}>{message}</Note> : null}
-            </ResultCard>
-          )}
+              <Button type="submit" $isDarkMode={isDarkMode}>
+                {t("calculator.submit")}
+              </Button>
+            </div>
+
+            <SummaryPanel $isDarkMode={isDarkMode}>
+              <ResultTitle $isDarkMode={isDarkMode}>
+                {t("calculator.results")}
+              </ResultTitle>
+              {resultat ? (
+                <ResultCard ref={resultRef} $isDarkMode={isDarkMode}>
+                  <ResultRow $isDarkMode={isDarkMode}>
+                    <ResultLabel $isDarkMode={isDarkMode}>
+                      <span>{t("calculator.bmr")}</span>
+                      <small>{t("calculator.bmrDescription")}</small>
+                    </ResultLabel>
+                    <strong>{resultat.BMR} kcal</strong>
+                  </ResultRow>
+                  <ResultRow $isDarkMode={isDarkMode}>
+                    <ResultLabel $isDarkMode={isDarkMode}>
+                      <span>{t("calculator.tdee")}</span>
+                      <small>{t("calculator.tdeeDescription")}</small>
+                    </ResultLabel>
+                    <strong>{resultat.TDEE} kcal</strong>
+                  </ResultRow>
+                  <ResultRow $isDarkMode={isDarkMode}>
+                    <span>{t("calculator.dailyDeficit")}</span>
+                    <strong>{resultat.deficitJour} kcal</strong>
+                  </ResultRow>
+                  <ResultRow $isDarkMode={isDarkMode}>
+                    <span>{t("calculator.caloriesPerDay")}</span>
+                    <strong>
+                      {resultat.caloriesCible} kcal/{t("calculator.perDay")}
+                    </strong>
+                  </ResultRow>
+                  {message ? (
+                    <Note $isDarkMode={isDarkMode}>{message}</Note>
+                  ) : null}
+                </ResultCard>
+              ) : (
+                <ResultEmpty $isDarkMode={isDarkMode}>
+                  {t("calculator.emptyState")}
+                </ResultEmpty>
+              )}
+            </SummaryPanel>
+          </FormLayout>
         </Form>
-
-        <Note $isDarkMode={isDarkMode}>
-          Ce calculateur génère un objectif journalier, puis l'enregistre
-          automatiquement pour le suivi.
-        </Note>
       </Section>
     </Wrap>
   );
