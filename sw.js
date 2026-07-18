@@ -1212,6 +1212,6 @@ function te(a) {
 function se(a, e) {
   te(a), ee(e);
 }
-se([{"revision":null,"url":"assets/index-C7J546c-.js"},{"revision":null,"url":"assets/index-UZxPTRyy.css"},{"revision":null,"url":"assets/workbox-window.prod.es5-B9K5rw8f.js"},{"revision":"300f383eae301a5c2062181ec7354143","url":"index.html"},{"revision":"f8f740894087805bed4200a1a656b912","url":"manifest.webmanifest"}]);
+se([{"revision":null,"url":"assets/index-b37Jsjxo.js"},{"revision":null,"url":"assets/index-UZxPTRyy.css"},{"revision":null,"url":"assets/workbox-window.prod.es5-B9K5rw8f.js"},{"revision":"e82f816aaa593554d7e715a7a7839a29","url":"index.html"},{"revision":"f8f740894087805bed4200a1a656b912","url":"manifest.webmanifest"}]);
 self.addEventListener("fetch", (a) => {
 });
