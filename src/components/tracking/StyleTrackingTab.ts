@@ -99,7 +99,7 @@ export const TargetInput = styled.input<{ $isDarkMode: boolean }>`
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: ${(p) => (p.$isDarkMode ? "#e6e6eb" : "#1a1a1f")};
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   box-shadow: ${(p) =>
     p.$isDarkMode

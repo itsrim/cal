@@ -100,12 +100,13 @@ const inputBase = `
   border-radius: 14px;
   border: 1px solid transparent;
   padding: 14px 16px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   transition: all 0.25s ease, box-shadow 0.25s ease;
   appearance: none;
   outline: none;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.16);
+  touch-action: manipulation;
 
   &::placeholder {
     color: rgba(203, 213, 225, 0.65);
