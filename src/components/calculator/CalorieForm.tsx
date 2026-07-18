@@ -44,7 +44,13 @@ const initialForm: CalorieFormState = {
   facteurActivite: 1.55,
 };
 
-export default function CalorieForm({ isDarkMode }: { isDarkMode: boolean }) {
+export default function CalorieForm({
+  isDarkMode,
+  onClose,
+}: {
+  isDarkMode: boolean;
+  onClose: () => void;
+}) {
   const { t } = useI18n();
   const { resultat, calculer } = useCalorieCalculator();
   const resultRef = useRef<HTMLDivElement | null>(null);
@@ -220,14 +226,14 @@ export default function CalorieForm({ isDarkMode }: { isDarkMode: boolean }) {
                 <ResultCard ref={resultRef} $isDarkMode={isDarkMode}>
                   <ResultRow $isDarkMode={isDarkMode}>
                     <ResultLabel $isDarkMode={isDarkMode}>
-                      <span>{t("calculator.bmr")}</span>
+                      {/* <span>{t("calculator.bmr")}</span> */}
                       <small>{t("calculator.bmrDescription")}</small>
                     </ResultLabel>
                     <strong>{resultat.BMR} kcal</strong>
                   </ResultRow>
                   <ResultRow $isDarkMode={isDarkMode}>
                     <ResultLabel $isDarkMode={isDarkMode}>
-                      <span>{t("calculator.tdee")}</span>
+                      {/* <span>{t("calculator.tdee")}</span> */}
                       <small>{t("calculator.tdeeDescription")}</small>
                     </ResultLabel>
                     <strong>{resultat.TDEE} kcal</strong>
@@ -253,6 +259,15 @@ export default function CalorieForm({ isDarkMode }: { isDarkMode: boolean }) {
               )}
             </SummaryPanel>
           </FormLayout>
+
+          <Button
+            type="button"
+            $isDarkMode={isDarkMode}
+            onClick={onClose}
+            style={{ marginTop: "30px" }}
+          >
+            {t("app.menu.close")}
+          </Button>
         </Form>
       </Section>
     </Wrap>

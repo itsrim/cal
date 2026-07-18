@@ -196,7 +196,7 @@ function AppContent() {
               ×
             </ModalClose>
           </ModalHeader>
-          <CalorieForm isDarkMode={isDarkMode} />
+          <CalorieForm isDarkMode={isDarkMode} onClose={closeCalculatorModal} />
         </ModalContent>
       </ModalOverlay>
 
